@@ -1,25 +1,23 @@
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Box,
   Flex,
   Avatar,
-  Link,
   Button,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
   MenuDivider,
-  useDisclosure,
   useColorModeValue,
   Stack,
   useColorMode,
   Center,
   Heading,
-  Text,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-
+import { useQuery } from "@apollo/client";
+import { MY_ACCOUNT } from "src/graphql/auth/query/me";
+import apolloClient from "src/apollo/apollo-client";
 // const NavLink = ({ children }: { children: ReactNode }) => (
 //   <Link
 //     px={2}
@@ -44,7 +42,16 @@ type UserState = {
 };
 export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
-
+  const [user, setUser] = useState<UserState | null>(null);
+  useEffect(() => {
+    (async function getUser() {
+      const { data } = await apolloClient.query({
+        query: MY_ACCOUNT,
+      });
+      console.log(data);
+      setUser(data);
+    })();
+  }, []);
   return (
     <>
       <Flex
@@ -67,7 +74,7 @@ export default function Header() {
           <Flex alignItems={"center"} justify="space-between">
             <Stack direction={"row"} spacing={5}>
               <Center display={{ base: "none", lg: "flex" }}>
-                Welcome, [username]
+                Welcome, {user?.me?.firstname}
               </Center>
 
               <Menu>

@@ -4,13 +4,21 @@ import {
   Flex,
   HStack,
   Stack,
+  Tag,
   Text,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
+import { usePokemonGenderIdentifier } from "src/hooks/usePokemonGenderIdentifier";
+import useStore from "src/hooks/useStore";
 
 const About = () => {
+  const state = useStore((state) => state);
+  const { gender } = usePokemonGenderIdentifier({
+    gender_rate: state.pokemonDetails.pokemon_specy?.gender_rate,
+  });
+
   return (
     <Stack spacing={"2rem"} mb={"5.5rem"}>
       <Text lineHeight="1.625rem">
@@ -31,12 +39,12 @@ const About = () => {
       >
         <VStack spacing="0.5rem" align="center" justify="center" w="100%">
           <Text color={"tertiary"}>Weight</Text>
-          <Text>220.00kg</Text>
+          <Text>{state.pokemonDetails.weight?.toFixed(2)}KG</Text>
         </VStack>
         <Divider orientation="vertical" borderColor={"black.800"} />
         <VStack spacing="0.5rem" align="center" justify="center" w="100%">
           <Text color={"tertiary"}>Height</Text>
-          <Text>220.00kg</Text>
+          <Text>{state.pokemonDetails.height?.toFixed(2)}M</Text>
         </VStack>
       </HStack>
       <Box
@@ -52,15 +60,23 @@ const About = () => {
           <Stack direction={"row"} spacing={"2.25rem"}>
             <HStack>
               <Text>Gender:</Text>
-              <Text>88.7% Male</Text>
+              <Text>{gender}</Text>
             </HStack>
-            <HStack>
+            <HStack align={"end"}>
               <Text>Egg Group:</Text>
-              <Text>Monster</Text>
+
+              {state.pokemonDetails.pokemon_specy?.eggroups.length! > 0 &&
+                state.pokemonDetails.pokemon_specy?.eggroups.map((data) => {
+                  return (
+                    <Tag size="sm" key={data.names?.name}>
+                      {data.names?.name}
+                    </Tag>
+                  );
+                })}
             </HStack>
             <HStack>
               <Text>Egg Cycle:</Text>
-              <Text>Grass</Text>
+              <Text>{state.pokemonDetails.pokemon_specy?.egg_cycle}</Text>
             </HStack>
           </Stack>
         </VStack>

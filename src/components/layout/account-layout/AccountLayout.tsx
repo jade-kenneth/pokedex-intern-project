@@ -10,6 +10,8 @@ import {
 import { BuiltInProviderType } from "next-auth/providers";
 import React, { useEffect, useState } from "react";
 import { AccountLayoutProps } from "src/types/AccountLayout";
+import { useRouter } from "next/router";
+import toast, { Toaster } from "react-hot-toast";
 
 const AccountLayout: React.FC<AccountLayoutProps> = ({
   thumbnail,
@@ -20,17 +22,39 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({
     LiteralUnion<BuiltInProviderType, string>,
     ClientSafeProvider
   > | null>(null);
-
+  const router = useRouter();
   useEffect(() => {
     (async function getProvider() {
       const provider = await getProviders();
       setProviders(provider);
     })();
   }, []);
+  useEffect(() => {
+    if (router.query.error) {
+      toast(`${router.query.error}`, {
+        duration: 3000,
+        position: "top-center",
+        // Styling
+        style: {},
 
+        // Custom Icon
+        icon: "😵‍💫",
+        // Change colors of success/error/loading icon
+        iconTheme: {
+          primary: "#000",
+          secondary: "#fff",
+        },
+        // Aria
+        ariaProps: {
+          role: "status",
+          "aria-live": "polite",
+        },
+      });
+    }
+  }, [router.query]);
   return (
     <Stack
-      h={"100vh"}
+      minH={"100vh"}
       bg={"bg"}
       color="white"
       direction={{ base: "column", md: "row-reverse" }}
@@ -59,8 +83,8 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({
         </Flex>
       </Flex>
       {/** flex 1.5 to dominate login page than background  */}
-      <Flex flex={1} position="relative">
-        <Image alt={"Login Image"} layout={"fill"} src={thumbnail} />
+      <Flex flex={1}>
+        <Image alt={"Login Image"} objectFit={"cover"} src={thumbnail} />
       </Flex>
     </Stack>
   );

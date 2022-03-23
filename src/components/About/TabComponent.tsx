@@ -9,6 +9,10 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import {
+  GetEachPokemon,
+  GetEachPokemon_pokemonDetails,
+} from "src/types/pokemon/GetEachPokemon";
 import About from "./TabPanel/About";
 import Evolutions from "./TabPanel/Evolutions";
 import Moves from "./TabPanel/Moves";

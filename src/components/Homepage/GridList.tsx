@@ -2,7 +2,11 @@ import React from "react";
 import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import Image from "next/image";
 import loginBg from "public/backgrounds/loginBg.png";
-const GridList = () => {
+import { GetAllPokemons } from "src/types/pokemon/GetAllPokemons";
+import PokemonThemeChanger from "../PokemonThemeChanger";
+import EachPokemon from "../EachPokemon";
+
+const GridList = ({ pokemons }: GetAllPokemons) => {
   // auto-fill, minmax(11.5rem,1fr)
 
   return (
@@ -21,30 +25,14 @@ const GridList = () => {
       gap="2rem"
     >
       {/**grid*/}
-      <Flex position="relative" h="100%" w="100%">
-        <Image src={loginBg} alt="bg" layout="fill" />
-      </Flex>
-      <Flex position="relative" h="100%" w="100%">
-        <Image src={loginBg} alt="bg" layout="fill" />
-      </Flex>
-      <Flex position="relative" h="100%" w="100%">
-        <Image src={loginBg} alt="bg" layout="fill" />
-      </Flex>
-      <Flex position="relative" h="100%" w="100%">
-        <Image src={loginBg} alt="bg" layout="fill" />
-      </Flex>
-      <Flex position="relative" h="100%" w="100%">
-        <Image src={loginBg} alt="bg" layout="fill" />
-      </Flex>
-      <Flex position="relative" h="100%" w="100%">
-        <Image src={loginBg} alt="bg" layout="fill" />
-      </Flex>
-      <Flex position="relative" h="100%" w="100%">
-        <Image src={loginBg} alt="bg" layout="fill" />
-      </Flex>
-      <Flex position="relative" h="100%" w="100%">
-        <Image src={loginBg} alt="bg" layout="fill" />
-      </Flex>
+      {pokemons.map((pokemon) => {
+        const { id, types, name } = pokemon;
+        return (
+          <EachPokemon key={id} id={id} types={types}>
+            {name}
+          </EachPokemon>
+        );
+      })}
     </Grid>
   );
 };

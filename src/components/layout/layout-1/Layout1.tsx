@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import pokeballsmall from "public/backgrounds/pokeballsmall.png";
 import pokeballlarge from "public/backgrounds/pokeball.png";
 import Image from "next/image";
-import { items } from "src/data";
+import { items } from "src/utils/bgDataAndCoordinates";
 
 const Layout1: React.FC<{}> = ({ children }) => {
   return (

@@ -15,8 +15,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
+import { GetAllPokemons } from "src/types/pokemon/GetAllPokemons";
 
-const List = () => {
+const List = ({ pokemons }: GetAllPokemons) => {
   return (
     <Table
       variant="simple"

@@ -11,28 +11,27 @@ import {
 import React, { useState } from "react";
 import { InputWithValidatorProps } from "src/types/InputWithValidator";
 
-const InputWithValidator: React.FC<InputWithValidatorProps> = ({
-  required,
-  errorMessage,
-  check,
-  type,
-  placeholder,
-  register,
-  children,
-  id,
-  ...props
-}) => {
+{
+  /**Refactored: Using forwardRef to pass a ref through a component to one of its children */
+  /*source https://stackoverflow.com/questions/68565378/use-react-hook-form-with-custom-textinput */
+  /* */
+}
+const InputWithValidator = React.forwardRef<
+  HTMLInputElement,
+  InputWithValidatorProps
+>(({ errorMessage, check, type, children, ...props }, ref) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <FormControl isInvalid={!!check}>
       <FormLabel>{children}</FormLabel>
-      {id === "password" ? (
+      {type === "password" ? (
         <InputGroup>
           <Input
-            placeholder={placeholder}
             type={showPassword ? "text" : "password"}
+            autoComplete="off"
+            focusBorderColor={"primary"}
+            ref={ref}
             {...props}
-            {...register(id, { required: required })}
           />
           <InputRightElement h={"full"}>
             <Button
@@ -45,14 +44,15 @@ const InputWithValidator: React.FC<InputWithValidatorProps> = ({
         </InputGroup>
       ) : (
         <Input
-          placeholder={placeholder}
-          {...register(id, { required: required })}
+          autoComplete="off"
+          focusBorderColor={"primary"}
+          ref={ref}
           {...props}
         />
       )}
       <FormErrorMessage>{errorMessage}</FormErrorMessage>
     </FormControl>
   );
-};
-
+});
+InputWithValidator.displayName = "InputWithValidator";
 export default InputWithValidator;

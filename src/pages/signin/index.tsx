@@ -11,18 +11,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProps } from "src/types/Form";
 import AccountLayout from "src/components/layout/account-layout/AccountLayout";
 
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import InputWithValidator from "src/components/Form/InputWithValidator";
 import FormButton from "src/components/Form/FormButton";
 let schema = yup.object().shape({
   email: yup.string().email().required("Email is required"),
-  password: yup
-    .string()
-
-    .required("Password is required"),
+  password: yup.string().required("Password is required"),
 });
 const SignIn = ({ provider }: FormProps) => {
-  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
@@ -33,6 +28,7 @@ const SignIn = ({ provider }: FormProps) => {
     resolver: yupResolver(schema),
   });
   const router = useRouter();
+  console.log(router);
   const onSubmit: SubmitHandler<SigninInputs> = (data) => {
     signIn(provider?.credentials.id, {
       email: data.email,
@@ -41,32 +37,26 @@ const SignIn = ({ provider }: FormProps) => {
       callbackUrl: "http://localhost:3000/homepage",
     });
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
       <Stack spacing={4}>
         <InputWithValidator
           check={errors.email}
           errorMessage={errors.email?.message}
-          required={true}
           type="email"
-          register={register}
           placeholder="Enter email"
-          id="email"
-          autoComplete="off"
-          focusBorderColor={"primary"}
+          {...register("email", { required: true })}
         >
           Email Address
         </InputWithValidator>
+
         <InputWithValidator
           check={errors.password}
           errorMessage={errors.password?.message}
-          required={true}
           type="password"
-          register={register}
           placeholder="Password"
-          id="password"
-          autoComplete="off"
-          focusBorderColor={"primary"}
+          {...register("password", { required: true })}
         >
           Password
         </InputWithValidator>

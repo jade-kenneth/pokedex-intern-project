@@ -1,22 +1,19 @@
-type CommonInput = {
-  email: string;
-  password: string;
-};
-
-export type SignupInputs = CommonInput & {
+export type SignupInputs = {
   firstName: string;
   lastName: string;
+  password: string;
+  email: string;
 };
-export type SigninInputs = CommonInput & {
-  firstName?: never;
-  lastName?: never;
+export type SigninInputs = {
+  password: string;
+  email: string;
 };
 
 export type ResetInputs = {
   email: string;
 };
 
-export type AllInputs = CommonInput & {
-  firstName: string;
-  lastName: string;
+export type ChangePasswordInput = {
+  password: string;
+  confirmPassword: string;
 };

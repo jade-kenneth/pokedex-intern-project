@@ -7,15 +7,11 @@ import {
   MenuButton,
   Menu,
   MenuList,
-  MenuItem,
   CheckboxGroup,
-  MenuOptionGroup,
   Stack,
   Checkbox,
-  MenuItemOption,
   Image,
   Flex,
-  Divider,
   Text,
   Button,
 } from "@chakra-ui/react";
@@ -25,16 +21,38 @@ import { BiFilterAlt, BiGridAlt, BiListUl } from "react-icons/bi";
 import List from "src/components/Homepage/List";
 import GridList from "src/components/Homepage/GridList";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-import { menuItems } from "src/data";
-import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
 
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
+import { menuItems } from "src/utils/menuItems";
+import Pagination from "src/components/Pagination";
+import { usePagination } from "src/hooks/usePagination";
+import { GetAllPokemons } from "src/types/pokemon/GetAllPokemons";
+import { useQuery } from "@apollo/client";
+import { GET_ALL_POKEMON } from "src/graphql/pokemon/queries/pokemon";
 // export const getServerSideProps: GetServerSideProps = async(context)=> {
 
 // }
 
 const PokedexHomePage = () => {
-  const [options, setOptions] = useState<string>("grid");
+  const { loading, error, data, networkStatus, fetchMore } =
+    useQuery<GetAllPokemons>(GET_ALL_POKEMON, {
+      variables: { offset: 0, limit: 100 },
+      context: { clientName: "pokedexapi" },
+    });
 
+  const [options, setOptions] = useState<string>("grid");
+  const {
+    handleNext,
+    handlePrev,
+    data: pokemonData,
+    currentPage,
+    pageNumbers,
+    paginate,
+  } = usePagination(8, {
+    pokemons: data?.pokemons!,
+  });
+  if (loading) return <h2>Loading</h2>;
+  console.log(currentPage);
   return (
     <Box width={"container.md"} mx="auto" position="relative" zIndex={998}>
       <HStack justify="space-between" pt="2rem" mb={"3rem"}>
@@ -99,9 +117,15 @@ const PokedexHomePage = () => {
         </HStack>
       </HStack>
       <Box>
-        {options === "list" ? <List /> : <GridList />}
+        {options === "list" ? (
+          <List pokemons={pokemonData()} />
+        ) : (
+          <GridList pokemons={pokemonData()} />
+        )}
         <HStack justify="flex-end" mt="1rem">
-          <Text fontSize="0.875rem">Showing 1-10 of 20 </Text>
+          <Text fontSize="0.875rem">
+            Showing 1-10 of {data?.pokemons.length}{" "}
+          </Text>
         </HStack>
         <HStack spacing="1.85rem" justify="center" pb="3.688rem">
           <IconButton
@@ -111,14 +135,13 @@ const PokedexHomePage = () => {
             icon={<MdKeyboardArrowLeft />}
             aria-label="prev button"
           />
-          <HStack>
-            <Button h="2rem" w="2rem" bg="primary">
-              1
-            </Button>
-            <Button h="2rem" w="2rem" bg="primary">
-              2
-            </Button>
-          </HStack>
+          <Pagination
+            handleNext={handleNext}
+            handlePrev={handlePrev}
+            currentPage={currentPage}
+            pageNumbers={pageNumbers}
+            paginate={paginate}
+          />
           <IconButton
             w="0.3rem"
             h="0.5rem"

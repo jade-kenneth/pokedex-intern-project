@@ -1,5 +1,32 @@
 import { gql } from "@apollo/client";
 
+export const GET_POKEMON_DATA_LIST = gql`
+  query GetPokemonDataList {
+    pokemon: pokemon_v2_pokemon(limit: 100, offset: 0) {
+      id
+      name
+      base_experience
+      element: pokemon_v2_pokemontypes {
+        type: pokemon_v2_type {
+          name
+        }
+      }
+    }
+  }
+`;
+
+export const GET_POKEMON_EGG_GROUP = gql`
+  query GetEggGroup($id: Int!) {
+    egg_group: pokemon_v2_pokemonspecies_by_pk(id: $id) {
+      pokemon_v2_pokemonegggroups {
+        group: pokemon_v2_egggroup {
+          name
+        }
+      }
+    }
+  }
+`;
+
 const CORE_POKEMON_DATA = gql`
   fragment CorePokemonData on pokemon_v2_pokemon {
     id
@@ -24,19 +51,63 @@ export const GET_ALL_POKEMON = gql`
 export const GET_EACH_POKEMON = gql`
   query GetEachPokemon($id: Int!) {
     pokemonDetails: pokemon_v2_pokemon_by_pk(id: $id) {
-      ...CorePokemonData
-      stats: pokemon_v2_pokemonstats {
-        base_stat: base_stat
-        stat_name: pokemon_v2_stat {
-          name
-        }
-      }
+      id
+      name
+      height
+      weight
       types: pokemon_v2_pokemontypes {
         type: pokemon_v2_type {
           name
         }
       }
+      abilities: pokemon_v2_pokemonabilities {
+        ability: pokemon_v2_ability {
+          name
+        }
+      }
+
+      stats: pokemon_v2_pokemonstats {
+        base_stat
+        stat: pokemon_v2_stat {
+          name
+        }
+      }
+      pokemon_specy: pokemon_v2_pokemonspecy {
+        eggroups: pokemon_v2_pokemonegggroups {
+          names: pokemon_v2_egggroup {
+            name
+          }
+        }
+        egg_cycle: hatch_counter
+        gender_rate
+        evolution_chain: pokemon_v2_evolutionchain {
+          id
+          evolutions: pokemon_v2_pokemonspecies {
+            evovleTrigger: pokemon_v2_pokemonevolutions {
+              min_level
+            }
+            id
+            evolveFrom: evolves_from_species_id
+            name
+          }
+        }
+      }
+      moves: pokemon_v2_pokemonmoves(
+        limit: 9
+        where: { pokemon_v2_move: { power: { _gte: 50 } } }
+        distinct_on: move_id
+      ) {
+        move: pokemon_v2_move {
+          accuracy
+          name
+          power
+          effects: pokemon_v2_moveeffect {
+            effect: pokemon_v2_moveeffecteffecttexts {
+              effect
+            }
+          }
+        }
+      }
     }
   }
-  ${CORE_POKEMON_DATA}
 `;

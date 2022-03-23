@@ -1,26 +1,37 @@
 import NextAuth, { EventCallbacks } from "next-auth";
 
-import FacebookProvider from "next-auth/providers/facebook";
-import GoogleProvider from "next-auth/providers/google";
-import GithubProvider from "next-auth/providers/github";
+import EmailProvider from "next-auth/providers/email";
 import CredentialProvider from "next-auth/providers/credentials";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { LOGIN } from "src/graphql/auth/mutations/authenticate";
 import { REGISTER_USER } from "src/graphql/auth/mutations/register";
-import { LoginVariables } from "src/types/Login";
+import { DgraphAdapter } from "@next-auth/dgraph-adapter";
 import apolloClient from "src/apollo/apollo-client";
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   // Do whatever you want here, before the request is passed down to `NextAuth`
   return await NextAuth(req, res, {
     secret: process.env.NEXTAUTH_SECRET,
-    session: { strategy: "jwt", maxAge: 1 * 1 * 1 * 100 },
-
+    session: { strategy: "jwt", maxAge: 1 * 1 * 1 * 100000 },
+    adapter: DgraphAdapter({
+      endpoint: process.env.DGRAPH_GRAPHQL_ENDPOINT!,
+      authToken: process.env.DGRAPH_GRAPHQL_KEY!,
+    }),
     providers: [
       // OAuth authentication providers
-
+      EmailProvider({
+        server: {
+          host: process.env.EMAIL_SERVER_HOST,
+          port: process.env.EMAIL_SERVER_PORT,
+          auth: {
+            user: process.env.EMAIL_SERVER_USER,
+            pass: process.env.EMAIL_SERVER_PASSWORD,
+          },
+        },
+        from: process.env.EMAIL_FROM,
+      }),
       CredentialProvider({
         name: "NEXT AUTH",
         credentials: {
@@ -59,9 +70,9 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
             if (data.signUp.token) {
               return data.signUp.token;
             }
-            return { message: errors };
+            return errors;
           }
-          const { data } = await apolloClient.mutate({
+          const { data, errors } = await apolloClient.mutate({
             mutation: LOGIN,
             variables: {
               emailAddress: credentials?.email,
@@ -71,14 +82,15 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
           if (data.authenticate.token) {
             return data.authenticate.token;
           }
-          return { message: "Invalid credentials" };
+
+          return null;
         },
       }),
     ],
     pages: {
-      signIn: "/",
+      signIn: "/signin",
       newUser: "/newUser",
-      // error: "/error",
+      error: "/signin",
     },
     callbacks: {
       // async signIn({ user, account, profile, email, credentials }) {

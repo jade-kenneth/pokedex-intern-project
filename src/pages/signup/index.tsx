@@ -18,9 +18,18 @@ import { SignupInputs } from "src/types/Input";
 import FormButton from "src/components/Form/FormButton";
 
 let schema = yup.object().shape({
-  email: yup.string().email().required("Email is required"),
-  firstName: yup.string().min(3).required("First name is required"),
-  lastName: yup.string().min(3).required("Last name is required"),
+  email: yup
+    .string()
+    .email("Email must be a valid email")
+    .required("Email is required"),
+  firstName: yup
+    .string()
+    .min(3, "First name must be atleast 3 characters")
+    .required("First name is required"),
+  lastName: yup
+    .string()
+    .min(3, "Last name must be atleast 3 characters")
+    .required("Last name is required"),
   password: yup
     .string()
 
@@ -53,39 +62,28 @@ const Signup = ({ provider }: FormProps) => {
         <InputWithValidator
           check={errors.firstName}
           errorMessage={errors.firstName?.message}
-          required={true}
           type="text"
-          register={register}
           placeholder="Enter first name"
-          id="firstName"
-          autoComplete="off"
-          focusBorderColor={"primary"}
+          {...register("firstName", { required: true })}
         >
           First name
         </InputWithValidator>
+
         <InputWithValidator
           check={errors.lastName}
           errorMessage={errors.lastName?.message}
-          required={true}
           type="text"
-          register={register}
           placeholder="Enter last name"
-          id="lastName"
-          autoComplete="off"
-          focusBorderColor={"primary"}
+          {...register("lastName", { required: true })}
         >
           Last name
         </InputWithValidator>
         <InputWithValidator
           check={errors.email}
           errorMessage={errors.email?.message}
-          required={true}
           type="email"
-          register={register}
           placeholder="Enter email"
-          id="email"
-          autoComplete="off"
-          focusBorderColor={"primary"}
+          {...register("email", { required: true })}
         >
           Email Address
         </InputWithValidator>
@@ -93,20 +91,16 @@ const Signup = ({ provider }: FormProps) => {
         <InputWithValidator
           check={errors.password}
           errorMessage={errors.password?.message}
-          required={true}
           type="password"
-          register={register}
           placeholder="Password"
-          id="password"
-          autoComplete="off"
-          focusBorderColor={"primary"}
+          {...register("password", { required: true })}
         >
           Password
         </InputWithValidator>
 
         <FormButton>Create account</FormButton>
 
-        <Stack pt={"3rem"}>
+        <Stack>
           <Text align={"center"}>
             Already have an account?{" "}
             <Link color={"primary"} onClick={() => router.push("/signin")}>
