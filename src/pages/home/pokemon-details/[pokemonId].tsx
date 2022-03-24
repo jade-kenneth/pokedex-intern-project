@@ -42,9 +42,11 @@ import {
   GetAllPokemonsVariables,
 } from "src/types/pokemon/GetAllPokemons";
 import PokemonThemeChanger from "src/components/PokemonThemeChanger";
-import useStore from "src/hooks/useStore";
+import usePokemonDetailStore from "src/hooks/usePokemonDetailStore";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
+import useRecentViewStore from "src/hooks/useRecentViewStore";
+import { usePagination } from "src/hooks/usePagination";
 export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await apolloClient.query<
     GetAllPokemons,
@@ -86,13 +88,17 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 const About = ({ pokemonDetails }: GetEachPokemon) => {
-  const store = useStore((state) => state);
+  const store = usePokemonDetailStore((state) => state);
+  const state = useRecentViewStore((state) => state);
   const router = useRouter();
+  const { handleNext, handlePrev, data } = usePagination(6, {
+    pokemons: state.recents,
+  });
+
   useEffect(() => {
     store.setPokemonDetails(pokemonDetails!);
-  }, []);
+  }, [pokemonDetails]);
   const routerLink = router.asPath.split("/");
-  const href = [...routerLink];
 
   return (
     <Box mt={"1.375rem"} w={"container.lg"} mx="auto">
@@ -144,21 +150,47 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
           </Stack>
 
           <HStack align="center" spacing={"2.225rem"}>
-            <Icon as={IoIosArrowDropleft} fontSize="2.5rem"></Icon>
+            <Icon
+              onClick={() => handlePrev()}
+              as={IoIosArrowDropleft}
+              fontSize="2.5rem"
+              cursor={"pointer"}
+            ></Icon>
             <Grid
               templateRows={"repeat(2, 3.563rem)"}
               templateColumns={"repeat(3, 3.563rem)"}
               columnGap={"0.5rem"}
               rowGap={"1.125rem"}
             >
-              <Image src={profile} alt="profile" />
-              <Image src={profile} alt="profile" />
-              <Image src={profile} alt="profile" />
-              <Image src={profile} alt="profile" />
-              <Image src={profile} alt="profile" />
-              <Image src={profile} alt="profile" />
+              {data().map((data: any) => {
+                return (
+                  <Box
+                    key={data.id}
+                    border="1px solid gray"
+                    onClick={() => {
+                      state.viewRecent(
+                        data.id,
+                        `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${data.id}.png`
+                      );
+                      router.push(`${data.id}`);
+                    }}
+                  >
+                    <Image
+                      src={data.img}
+                      alt="profile"
+                      width={"100%"}
+                      height={"100%"}
+                    />
+                  </Box>
+                );
+              })}
             </Grid>
-            <Icon as={IoIosArrowDropright} fontSize="2.5rem"></Icon>
+            <Icon
+              onClick={() => handleNext()}
+              as={IoIosArrowDropright}
+              fontSize="2.5rem"
+              cursor={"pointer"}
+            ></Icon>
           </HStack>
         </VStack>
         {/** POKEMON NAME */}

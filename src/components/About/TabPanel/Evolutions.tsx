@@ -11,13 +11,13 @@ import Image from "next/image";
 import React, { useEffect } from "react";
 import loginBg from "public/backgrounds/loginBg.png";
 import { FaLongArrowAltRight } from "react-icons/fa";
-import useStore from "src/hooks/useStore";
-import { useGetPokemonNameById } from "src/hooks/useGetPokemonNameById";
+import usePokemonDetailStore from "src/hooks/usePokemonDetailStore";
+import { getPokemonNameById } from "src/helpers/getPokemonNameById";
 const Evolutions = () => {
-  const state = useStore((state) => state);
+  const state = usePokemonDetailStore((state) => state);
   const evolutions =
     state.pokemonDetails.pokemon_specy?.evolution_chain?.evolutions!;
-  const { names } = useGetPokemonNameById({ evolutions: evolutions });
+  const { names } = getPokemonNameById({ pokemonData: evolutions });
   console.log(evolutions);
   return (
     <VStack align="left" mb={"6.188rem"}>

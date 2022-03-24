@@ -7,6 +7,7 @@ import pokeball from "public/backgrounds/pokeballBg.png";
 import PokemonThemeChanger from "./PokemonThemeChanger";
 import { motion } from "framer-motion";
 import { GetAllPokemons_pokemons } from "src/types/pokemon/GetAllPokemons";
+import useRecentViewStore from "src/hooks/useRecentViewStore";
 // import { TypesDetail } from "pages/ssr/pokemon";
 
 interface EachPokemonProps {
@@ -16,12 +17,19 @@ interface EachPokemonProps {
 
 const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
   const MotionPokemonThemeChanger = motion(PokemonThemeChanger);
+  const store = useRecentViewStore((state) => state);
   return (
     <MotionPokemonThemeChanger
       whileHover={{ scale: 1.1 }}
       borderRadius="sm"
       overflow="hidden"
       pokemonType={types[0].type?.name}
+      onClick={() =>
+        store.addToRecentView(
+          id,
+          `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`
+        )
+      }
     >
       <Link
         href={{

@@ -8,7 +8,7 @@ import EachPokemon from "../EachPokemon";
 
 const GridList = ({ pokemons }: GetAllPokemons) => {
   // auto-fill, minmax(11.5rem,1fr)
-
+  console.log(pokemons);
   return (
     <Grid
       templateColumns={{

@@ -10,7 +10,7 @@ interface IStore {
   setPokemonDetails: (pokemonDetails: GetEachPokemon_pokemonDetails) => void;
 }
 
-const useStore = create<IStore>(
+const usePokemonDetailStore = create<IStore>(
   devtools((set) => ({
     pokemonDetails: {
       pokemon_specy: {
@@ -43,4 +43,4 @@ const useStore = create<IStore>(
   }))
 );
 
-export default useStore;
+export default usePokemonDetailStore;

@@ -18,6 +18,7 @@ import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { useQuery } from "@apollo/client";
 import { MY_ACCOUNT } from "src/graphql/auth/query/me";
 import apolloClient from "src/apollo/apollo-client";
+import { signOut } from "next-auth/react";
 // const NavLink = ({ children }: { children: ReactNode }) => (
 //   <Link
 //     px={2}
@@ -48,7 +49,6 @@ export default function Header() {
       const { data } = await apolloClient.query({
         query: MY_ACCOUNT,
       });
-      console.log(data);
       setUser(data);
     })();
   }, []);
@@ -103,13 +103,20 @@ export default function Header() {
                   </Center>
                   <br />
                   <Center>
-                    <p>Username</p>
+                    <p>{user?.me.firstname}</p>
                   </Center>
                   <br />
                   <MenuDivider />
-                  <MenuItem>Your Servers</MenuItem>
-                  <MenuItem>Account Settings</MenuItem>
-                  <MenuItem>Logout</MenuItem>
+
+                  <MenuItem
+                    onClick={() =>
+                      signOut({
+                        callbackUrl: "/signin",
+                      })
+                    }
+                  >
+                    Logout
+                  </MenuItem>
                 </MenuList>
               </Menu>
             </Stack>

@@ -1,6 +1,4 @@
 import {
-  Box,
-  Button,
   Flex,
   HStack,
   Progress,
@@ -11,38 +9,39 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useGetDamageByTypes } from "src/helpers/getDamageByTypes";
-import useStore from "src/hooks/useStore";
+import { getWeaknessStrengthByType } from "src/helpers/getWeaknessStrengthByType";
+
+import usePokemonDetailStore from "src/hooks/usePokemonDetailStore";
 import { statistic_data } from "src/utils/pokemonStatisticData";
 
 const Statistics = () => {
-  const state = useStore((state) => state);
-  // const { data } = useGetDamageByTypes({ types: state.pokemonDetails.types });
+  const state = usePokemonDetailStore((state) => state);
+  const router = useRouter();
+  const [data, setData] = useState<any>([]);
+
+  useEffect(() => {
+    (async function getData() {
+      const data = await getWeaknessStrengthByType({
+        types: state.pokemonDetails.types,
+      });
+
+      setData(data);
+      console.log("w");
+    })();
+  }, [state.pokemonDetails]);
+  const weaknessType = ["DOUBLE_DAMAGE_FROM", "HALF_DAMAGE_TO", "NO_DAMAGE_TO"];
+  const strengthType = [
+    "DOUBLE_DAMAGE_TO",
+    "HALF_DAMAGE_FROM",
+    "NO_DAMAGE_FROM",
+  ];
   const progressBg = useColorModeValue("gray.300", "white");
   const containerBg = useColorModeValue("white", "secondary");
-  const [data, setData] = useState<any>();
-  useEffect(() => {
-    (function getData() {
-      state.pokemonDetails.types.map(async (type) => {
-        const response = await fetch(
-          `https://pokeapi.co/api/v2/type/${type.type?.name}`
-        );
 
-        const dataFetched = await response.json();
-        setData({
-          ...data,
-          type: type.type?.name,
-          weakness: dataFetched.damage_relations.double_damage_from,
-          strength: dataFetched.damage_relations.double_damage_to,
-        });
-        console.log("data", dataFetched);
-      });
-    })();
-  }, []);
+  if (data.length <= 0) return <h2>Loading....</h2>;
   console.log(data);
-  if (data) return <h2>Loading....</h2>;
-
   return (
     <Stack spacing={"3.25rem"} mb={"6.063rem"}>
       <VStack
@@ -78,30 +77,72 @@ const Statistics = () => {
         p={"1.5rem"}
         bg={containerBg}
       >
-        <Text color={"tertiary"} mb={"1.5rem"}>
-          Weaknesses
-        </Text>
-        <Flex flexWrap={"wrap"} rowGap={"1rem"} columnGap={"2rem"}>
-          {/* {data.weakness.map((data: any) => {
+        <VStack
+          flexWrap={"wrap"}
+          spacing={"0.5rem"}
+          rowGap={"1rem"}
+          columnGap={"2rem"}
+          align={"left"}
+        >
+          <Text color={"tertiary"} mb={"0.5rem"}>
+            Weaknesses
+          </Text>
+          {data.map((data: any) => {
+            const { data: weakness, type } = data;
             return (
-              <HStack spacing={"1.5rem"} key={data.name}>
-                <Tag
-                  py={"0.438rem"}
-                  px={"1.75rem"}
-                  fontSize={"0.75rem"}
-                  color="green"
-                  // bg={useColorModeValue("gray.100", "white")}
-                >
-                  {data.name}
-                </Tag>
-                <HStack>
-                  <Text color={"green"}>160%</Text>
-                  <Text>damage</Text>
-                </HStack>
-              </HStack>
+              <VStack spacing={"1rem"} align={"left"} key={type}>
+                <Text color={"tertiary"} textTransform="capitalize">
+                  {type}
+                </Text>
+                <VStack spacing={"1rem"} align="left">
+                  {weakness.weakness.map((w: any, idx: any) => {
+                    return (
+                      <VStack key={idx} align="left">
+                        <Text>{weaknessType[idx].replace(/_/g, " ")}</Text>
+                        <Flex flexWrap={"wrap"} gap={"1rem"}>
+                          {weakness.weakness[idx][weaknessType[idx]].length >
+                          0 ? (
+                            weakness.weakness[idx][weaknessType[idx]].map(
+                              (data: any) => {
+                                return (
+                                  <HStack spacing={"1.5rem"} key={data.name}>
+                                    <Tag
+                                      py={"0.438rem"}
+                                      px={"1.75rem"}
+                                      fontSize={"0.75rem"}
+                                      color="red"
+                                      // bg={useColorModeValue("gray.100", "white")}
+                                    >
+                                      {data.name}
+                                    </Tag>
+                                    {/* <HStack>
+                            <Text color={"red"}>160%</Text>
+                            <Text>damage</Text>
+                          </HStack> */}
+                                  </HStack>
+                                );
+                              }
+                            )
+                          ) : (
+                            <Tag
+                              py={"0.438rem"}
+                              px={"1.75rem"}
+                              fontSize={"0.75rem"}
+                              color="red"
+                              // bg={useColorModeValue("gray.100", "white")}
+                            >
+                              No data
+                            </Tag>
+                          )}
+                        </Flex>
+                      </VStack>
+                    );
+                  })}
+                </VStack>
+              </VStack>
             );
-          })} */}
-        </Flex>
+          })}
+        </VStack>
       </VStack>
       <VStack
         border="1px"
@@ -110,30 +151,72 @@ const Statistics = () => {
         p={"1.5rem"}
         bg={containerBg}
       >
-        <Text color={"tertiary"} mb={"1.5rem"}>
-          Resistant
-        </Text>
-        <Flex flexWrap={"wrap"} rowGap={"1rem"} columnGap={"2rem"}>
-          {/* {data.strength.map((data: any) => {
+        <VStack
+          flexWrap={"wrap"}
+          spacing={"0.5rem"}
+          rowGap={"1rem"}
+          columnGap={"2rem"}
+          align={"left"}
+        >
+          <Text color={"tertiary"} mb={"0.5rem"}>
+            Resistance
+          </Text>
+          {data.map((data: any) => {
+            const { data: strength, type } = data;
             return (
-              <HStack spacing={"1.5rem"} key={data.name}>
-                <Tag
-                  py={"0.438rem"}
-                  px={"1.75rem"}
-                  fontSize={"0.75rem"}
-                  color="green"
-                  // bg={useColorModeValue("gray.100", "white")}
-                >
-                  {data.name}
-                </Tag>
-                <HStack>
-                  <Text color={"green"}>160%</Text>
-                  <Text>damage</Text>
-                </HStack>
-              </HStack>
+              <VStack spacing={"1rem"} align={"left"} key={type}>
+                <Text color={"tertiary"} textTransform="capitalize">
+                  {type}
+                </Text>
+                <VStack spacing={"1rem"} align="left">
+                  {strength.strength.map((w: any, idx: any) => {
+                    return (
+                      <VStack key={idx} align="left">
+                        <Text>{strengthType[idx].replace(/_/g, " ")}</Text>
+                        <Flex flexWrap={"wrap"} gap={"1rem"}>
+                          {strength.strength[idx][strengthType[idx]].length >
+                          0 ? (
+                            strength.strength[idx][strengthType[idx]].map(
+                              (data: any) => {
+                                return (
+                                  <HStack spacing={"1.5rem"} key={data.name}>
+                                    <Tag
+                                      py={"0.438rem"}
+                                      px={"1.75rem"}
+                                      fontSize={"0.75rem"}
+                                      color="green"
+                                      // bg={useColorModeValue("gray.100", "white")}
+                                    >
+                                      {data.name}
+                                    </Tag>
+                                    {/* <HStack>
+                            <Text color={"red"}>160%</Text>
+                            <Text>damage</Text>
+                          </HStack> */}
+                                  </HStack>
+                                );
+                              }
+                            )
+                          ) : (
+                            <Tag
+                              py={"0.438rem"}
+                              px={"1.75rem"}
+                              fontSize={"0.75rem"}
+                              color="red"
+                              // bg={useColorModeValue("gray.100", "white")}
+                            >
+                              No data
+                            </Tag>
+                          )}
+                        </Flex>
+                      </VStack>
+                    );
+                  })}
+                </VStack>
+              </VStack>
             );
-          })} */}
-        </Flex>
+          })}
+        </VStack>
       </VStack>
     </Stack>
   );

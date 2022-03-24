@@ -13,7 +13,6 @@ import {
   Image,
   Flex,
   Text,
-  Button,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import Layout1 from "src/components/layout/layout-1/Layout1";
@@ -22,9 +21,8 @@ import List from "src/components/Homepage/List";
 import GridList from "src/components/Homepage/GridList";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
-import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
 import { menuItems } from "src/utils/menuItems";
-import Pagination from "src/components/Pagination";
+import Pagination from "src/components/Homepage/widgets/Pagination";
 import { usePagination } from "src/hooks/usePagination";
 import { GetAllPokemons } from "src/types/pokemon/GetAllPokemons";
 import { useQuery } from "@apollo/client";
@@ -41,6 +39,13 @@ const PokedexHomePage = () => {
     });
 
   const [options, setOptions] = useState<string>("grid");
+
+  /** check if pokemons fetch is not undefined */
+  let pokemons: GetAllPokemons["pokemons"] = [];
+
+  if (data?.pokemons) {
+    pokemons = data.pokemons!;
+  }
   const {
     handleNext,
     handlePrev,
@@ -49,10 +54,10 @@ const PokedexHomePage = () => {
     pageNumbers,
     paginate,
   } = usePagination(8, {
-    pokemons: data?.pokemons!,
+    pokemons: pokemons,
   });
   if (loading) return <h2>Loading</h2>;
-  console.log(currentPage);
+
   return (
     <Box width={"container.md"} mx="auto" position="relative" zIndex={998}>
       <HStack justify="space-between" pt="2rem" mb={"3rem"}>

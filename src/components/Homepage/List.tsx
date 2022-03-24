@@ -14,10 +14,14 @@ import {
   Box,
   useColorModeValue,
 } from "@chakra-ui/react";
+import Link from "next/link";
+import { Router, useRouter } from "next/router";
 import React from "react";
 import { GetAllPokemons } from "src/types/pokemon/GetAllPokemons";
-
+import { motion } from "framer-motion";
 const List = ({ pokemons }: GetAllPokemons) => {
+  const MotionTr = motion(Tr);
+  const router = useRouter();
   return (
     <Table
       variant="simple"
@@ -35,94 +39,31 @@ const List = ({ pokemons }: GetAllPokemons) => {
         </Tr>
       </Thead>
       <Tbody>
-        <Tr h="3.25rem">
-          <Td>1</Td>
-          <Td>
-            <Avatar w="2rem" h="2rem" />
-          </Td>
-          <Td>
-            <Text>Pikachu</Text>
-          </Td>
-          <Td>Electric</Td>
-          <Td>Level 3</Td>
-        </Tr>
-        <Tr h="3.25rem">
-          <Td>1</Td>
-          <Td>
-            <Avatar w="2rem" h="2rem" />
-          </Td>
-          <Td>
-            <Text>Pikachu</Text>
-          </Td>
-          <Td>Electric</Td>
-          <Td>Level 3</Td>
-        </Tr>
-        <Tr h="3.25rem">
-          <Td>1</Td>
-          <Td>
-            <Avatar w="2rem" h="2rem" />
-          </Td>
-          <Td>
-            <Text>Pikachu</Text>
-          </Td>
-          <Td>Electric</Td>
-          <Td>Level 3</Td>
-        </Tr>
-        <Tr h="3.25rem">
-          <Td>1</Td>
-          <Td>
-            <Avatar w="2rem" h="2rem" />
-          </Td>
-          <Td whiteSpace="nowrap">
-            <Text>Pikachu</Text>
-          </Td>
-          <Td>Electric</Td>
-          <Td>Level 3</Td>
-        </Tr>
-        <Tr h="3.25rem">
-          <Td>1</Td>
-          <Td>
-            <Avatar w="2rem" h="2rem" />
-          </Td>
-          <Td>
-            <Text>Pikachu</Text>
-          </Td>
-          <Td>Electric</Td>
-          <Td>Level 3</Td>
-        </Tr>
-        <Tr h="3.25rem">
-          <Td>1</Td>
-          <Td>
-            <Avatar w="2rem" h="2rem" />
-          </Td>
-          <Td>
-            <Text>Pikachu</Text>
-          </Td>
-          <Td>Electric</Td>
-          <Td>Level 3</Td>
-        </Tr>
-        <Tr h="3.25rem">
-          <Td>1</Td>
-          <Td>
-            <Avatar w="2rem" h="2rem" />
-          </Td>
-          <Td>
-            <Text>Pikachu</Text>
-          </Td>
-          <Td>Electric</Td>
-          <Td>Level 3</Td>
-        </Tr>
-        <Tr h="3.25rem">
-          <Td>1</Td>
-          <Td>
-            <Avatar w="2rem" h="2rem" />
-          </Td>
-          <Td>
-            <Text>Pikachu</Text>
-          </Td>
-          <Td>Electric</Td>
-          <Td>Level 3</Td>
-        </Tr>
+        {pokemons.map((data) => {
+          return (
+            <MotionTr
+              h="3.25rem"
+              key={data.id}
+              onClick={() => router.push(`/home/pokemon-details/${data.id}`)}
+              _hover={{ cursor: "pointer" }}
+              whileHover={{ scale: 1.1 }}
+            >
+              <Td>{data.id}</Td>
+              <Td>
+                <Avatar
+                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${data.id}.png`}
+                  w="2rem"
+                  h="2rem"
+                />
+              </Td>
+              <Td>
+                <Text>{data.name}</Text>
+              </Td>
+              <Td>{data.types[0].type?.name}</Td>
+              <Td>Level 1</Td>
+            </MotionTr>
+          );
+        })}
       </Tbody>
     </Table>
   );

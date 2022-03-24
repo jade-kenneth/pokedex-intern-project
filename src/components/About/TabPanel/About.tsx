@@ -11,14 +11,14 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { usePokemonGenderIdentifier } from "src/hooks/usePokemonGenderIdentifier";
-import useStore from "src/hooks/useStore";
+import usePokemonDetailStore from "src/hooks/usePokemonDetailStore";
 
 const About = () => {
-  const state = useStore((state) => state);
+  const state = usePokemonDetailStore((state) => state);
   const { gender } = usePokemonGenderIdentifier({
     gender_rate: state.pokemonDetails.pokemon_specy?.gender_rate,
   });
-
+  const eggBreedBg = useColorModeValue("gray.300", "gray");
   return (
     <Stack spacing={"2rem"} mb={"5.5rem"}>
       <Text lineHeight="1.625rem">
@@ -68,7 +68,7 @@ const About = () => {
               {state.pokemonDetails.pokemon_specy?.eggroups.length! > 0 &&
                 state.pokemonDetails.pokemon_specy?.eggroups.map((data) => {
                   return (
-                    <Tag size="sm" key={data.names?.name}>
+                    <Tag size="sm" bg={eggBreedBg} key={data.names?.name}>
                       {data.names?.name}
                     </Tag>
                   );
