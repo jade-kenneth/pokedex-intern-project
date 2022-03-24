@@ -96,10 +96,13 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
   });
 
   useEffect(() => {
+    console.log("hey");
     store.setPokemonDetails(pokemonDetails!);
   }, [pokemonDetails]);
+
   const routerLink = router.asPath.split("/");
 
+  if (!pokemonDetails?.types) return <h2>Loading ...</h2>;
   return (
     <Box mt={"1.375rem"} w={"container.lg"} mx="auto">
       <Breadcrumb
@@ -172,7 +175,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
                         data.id,
                         `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${data.id}.png`
                       );
-                      router.push(`${data.id}`);
+                      router.push(`/home/pokemon-details/${data.id}`);
                     }}
                   >
                     <Image

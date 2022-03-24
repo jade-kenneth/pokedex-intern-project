@@ -14,6 +14,7 @@ const usePokemonDetailStore = create<IStore>(
   devtools((set) => ({
     pokemonDetails: {
       pokemon_specy: {
+        description: [],
         eggroups: [],
         gender_rate: 0,
         egg_cycle: 0,

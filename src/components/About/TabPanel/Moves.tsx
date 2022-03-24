@@ -11,8 +11,12 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import usePokemonDetailStore from "src/hooks/usePokemonDetailStore";
 
 const Moves = () => {
+  const state = usePokemonDetailStore((state) => state);
+  const tagBg = useColorModeValue("gray.300", "white");
+  console.log(state);
   return (
     <Stack spacing={"2rem"} mb={"8.313rem"}>
       <VStack
@@ -42,56 +46,37 @@ const Moves = () => {
               </Text>
             </HStack>
           </HStack>
-          <HStack w="100%" justify="space-between" align="center">
-            <Tag
-              py={"0.438rem"}
-              px={"1.469rem"}
-              bg={useColorModeValue("gray.300", "white")}
-              color={"tertiary"}
-            >
-              Ember
-            </Tag>
-            <HStack
-              borderBottomColor={"white"}
-              h={"3.188rem"}
-              borderBottom="1px"
-            >
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-            </HStack>
-          </HStack>
-          <HStack w="100%" justify="space-between" align="center">
-            <Tag
-              py={"0.438rem"}
-              px={"1.469rem"}
-              bg={useColorModeValue("gray.300", "white")}
-              color={"tertiary"}
-            >
-              Free Spin
-            </Tag>
-            <HStack
-              borderBottomColor={"white"}
-              h={"3.188rem"}
-              borderBottom="1px"
-            >
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-            </HStack>
-          </HStack>
+
+          {state.pokemonDetails.abilities.map((data, idx) => {
+            const { ability } = data;
+            return (
+              <HStack w="100%" key={idx} justify="space-between" align="center">
+                <Tag
+                  py={"0.438rem"}
+                  px={"1.469rem"}
+                  bg={tagBg}
+                  color={"tertiary"}
+                >
+                  {ability?.name}
+                </Tag>
+                <HStack
+                  borderBottomColor={"white"}
+                  h={"3.188rem"}
+                  borderBottom="1px"
+                >
+                  <Text w="5.688rem" textAlign={"center"}>
+                    10
+                  </Text>
+                  <Text w="5.688rem" textAlign={"center"}>
+                    10
+                  </Text>
+                  <Text w="5.688rem" textAlign={"center"}>
+                    10
+                  </Text>
+                </HStack>
+              </HStack>
+            );
+          })}
         </Flex>
       </VStack>
       <VStack
@@ -122,106 +107,37 @@ const Moves = () => {
               </Text>
             </HStack>
           </HStack>
-          <HStack w="100%" justify="space-between" align="center">
-            <Tag
-              py={"0.438rem"}
-              px={"1.469rem"}
-              bg={useColorModeValue("gray.300", "white")}
-              color={"tertiary"}
-            >
-              Fireblast
-            </Tag>
-            <HStack
-              borderBottomColor={"white"}
-              h={"3.188rem"}
-              borderBottom="1px"
-            >
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-            </HStack>
-          </HStack>
-          <HStack w="100%" justify="space-between" align="center">
-            <Tag
-              py={"0.438rem"}
-              px={"1.469rem"}
-              bg={useColorModeValue("gray.300", "white")}
-              color={"tertiary"}
-            >
-              Flame Thrower
-            </Tag>
-            <HStack
-              borderBottomColor={"white"}
-              h={"3.188rem"}
-              borderBottom="1px"
-            >
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-            </HStack>
-          </HStack>
-          <HStack w="100%" justify="space-between" align="center">
-            <Tag
-              py={"0.438rem"}
-              px={"1.469rem"}
-              bg={useColorModeValue("gray.300", "white")}
-              color={"tertiary"}
-            >
-              Heat wave
-            </Tag>
-            <HStack
-              borderBottomColor={"white"}
-              h={"3.188rem"}
-              borderBottom="1px"
-            >
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-            </HStack>
-          </HStack>
-          <HStack w="100%" justify="space-between" align="center">
-            <Tag
-              py={"0.438rem"}
-              px={"1.469rem"}
-              bg={useColorModeValue("gray.300", "white")}
-              color={"tertiary"}
-            >
-              Overheat
-            </Tag>
-            <HStack
-              borderBottomColor={"white"}
-              h={"3.188rem"}
-              borderBottom="1px"
-            >
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-              <Text w="5.688rem" textAlign={"center"}>
-                10
-              </Text>
-            </HStack>
-          </HStack>
+
+          {state.pokemonDetails.moves.map((data, idx) => {
+            const { move } = data;
+            return (
+              <HStack w="100%" key={idx} justify="space-between" align="center">
+                <Tag
+                  py={"0.438rem"}
+                  px={"1.469rem"}
+                  bg={tagBg}
+                  color={"tertiary"}
+                >
+                  {move?.name}
+                </Tag>
+                <HStack
+                  borderBottomColor={"white"}
+                  h={"3.188rem"}
+                  borderBottom="1px"
+                >
+                  <Text w="5.688rem" textAlign={"center"}>
+                    {move?.power}
+                  </Text>
+                  <Text w="5.688rem" textAlign={"center"}>
+                    {move?.pp}
+                  </Text>
+                  <Text w="5.688rem" textAlign={"center"}>
+                    {move?.pp}
+                  </Text>
+                </HStack>
+              </HStack>
+            );
+          })}
         </Flex>
       </VStack>
       <HStack justify={"flex-end"} align="center">

@@ -22,10 +22,9 @@ const About = () => {
   return (
     <Stack spacing={"2rem"} mb={"5.5rem"}>
       <Text lineHeight="1.625rem">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sollicitudin
-        mauris tempus consectetur arcu maecenas id mauris pretium. Integer
-        laoreet morbi cursus consectetur. Ipsum turpis id quisque morbi est in
-        id nibh sagittis. Ipsum ornare quam vitae praesent.
+        {state.pokemonDetails.pokemon_specy?.description.length! > 0
+          ? state.pokemonDetails.pokemon_specy?.description[0].flavor_text
+          : " No available data "}
       </Text>
 
       <HStack

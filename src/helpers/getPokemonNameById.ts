@@ -1,5 +1,3 @@
-import { GetEachPokemon_pokemonDetails_pokemon_specy_evolution_chain_evolutions } from "src/types/pokemon/GetEachPokemon";
-
 interface GetPokemonNameById<T> {
   pokemonData: T[];
 }

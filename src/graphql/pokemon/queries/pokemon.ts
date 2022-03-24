@@ -78,6 +78,13 @@ export const GET_EACH_POKEMON = gql`
             name
           }
         }
+        description: pokemon_v2_pokemonspeciesflavortexts(
+          offset: 0
+          limit: 1
+          where: { pokemon_v2_language: { name: { _eq: "en" } } }
+        ) {
+          flavor_text
+        }
         egg_cycle: hatch_counter
         gender_rate
         evolution_chain: pokemon_v2_evolutionchain {
@@ -101,11 +108,32 @@ export const GET_EACH_POKEMON = gql`
           accuracy
           name
           power
+          pp
           effects: pokemon_v2_moveeffect {
             effect: pokemon_v2_moveeffecteffecttexts {
               effect
             }
           }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_FILTERED_POKEMON = gql`
+  query GetFilteredPokemon($type: [String!]) {
+    filtered_pokemons: pokemon_v2_pokemon(
+      offset: 0
+      limit: 100
+      where: {
+        pokemon_v2_pokemontypes: { pokemon_v2_type: { name: { _in: $type } } }
+      }
+    ) {
+      name
+      id
+      types: pokemon_v2_pokemontypes {
+        type: pokemon_v2_type {
+          name
         }
       }
     }

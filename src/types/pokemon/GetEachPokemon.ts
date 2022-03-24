@@ -60,6 +60,11 @@ export interface GetEachPokemon_pokemonDetails_pokemon_specy_eggroups {
   names: GetEachPokemon_pokemonDetails_pokemon_specy_eggroups_names | null;
 }
 
+export interface GetEachPokemon_pokemonDetails_pokemon_specy_description {
+  __typename: "pokemon_v2_pokemonspeciesflavortext";
+  flavor_text: string;
+}
+
 export interface GetEachPokemon_pokemonDetails_pokemon_specy_evolution_chain_evolutions_evovleTrigger {
   __typename: "pokemon_v2_pokemonevolution";
   min_level: number | null;
@@ -91,6 +96,10 @@ export interface GetEachPokemon_pokemonDetails_pokemon_specy {
    * An array relationship
    */
   eggroups: GetEachPokemon_pokemonDetails_pokemon_specy_eggroups[];
+  /**
+   * An array relationship
+   */
+  description: GetEachPokemon_pokemonDetails_pokemon_specy_description[];
   egg_cycle: number | null;
   gender_rate: number | null;
   /**
@@ -117,6 +126,7 @@ export interface GetEachPokemon_pokemonDetails_moves_move {
   accuracy: number | null;
   name: string;
   power: number | null;
+  pp: number | null;
   /**
    * An object relationship
    */

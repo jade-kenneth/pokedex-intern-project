@@ -18,7 +18,8 @@ const Evolutions = () => {
   const evolutions =
     state.pokemonDetails.pokemon_specy?.evolution_chain?.evolutions!;
   const { names } = getPokemonNameById({ pokemonData: evolutions });
-  console.log(evolutions);
+  console.log(names);
+
   return (
     <VStack align="left" mb={"6.188rem"}>
       <Text
@@ -27,8 +28,9 @@ const Evolutions = () => {
         lineHeight={"1.313rem"}
         w={"25.188rem"}
       >
-        There are currently a total of 9 Pokémon in the Eevee family. Flareon
-        evolves from Eevee which costs 25 Candy.
+        There are currently a total of {evolutions.length} Pokémon in the{" "}
+        family. {names[`${state.pokemonDetails.id}`]} evolves from{" "}
+        {names[`${state.pokemonDetails.id - 1}`]} which costs {} Candy.
       </Text>
       <Stack
         py={"2rem"}
@@ -84,7 +86,7 @@ const Evolutions = () => {
                     ? evovleTrigger[0].min_level === null
                       ? "?"
                       : evovleTrigger[0].min_level
-                    : "1"}
+                    : "0"}
                 </Text>
               </VStack>
               <VStack align="center">

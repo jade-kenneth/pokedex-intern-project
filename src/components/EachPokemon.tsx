@@ -69,7 +69,7 @@ const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
             </Flex>
             <Flex flex="1" direction={"column"}>
               <Text
-                fontSize="2xl"
+                fontSize="1.5rem"
                 fontWeight="bolder"
                 textTransform="capitalize"
               >

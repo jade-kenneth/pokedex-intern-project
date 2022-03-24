@@ -25,8 +25,12 @@ import { menuItems } from "src/utils/menuItems";
 import Pagination from "src/components/Homepage/widgets/Pagination";
 import { usePagination } from "src/hooks/usePagination";
 import { GetAllPokemons } from "src/types/pokemon/GetAllPokemons";
-import { useQuery } from "@apollo/client";
-import { GET_ALL_POKEMON } from "src/graphql/pokemon/queries/pokemon";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import {
+  GET_ALL_POKEMON,
+  GET_FILTERED_POKEMON,
+} from "src/graphql/pokemon/queries/pokemon";
+import { GetFilteredPokemon } from "src/types/pokemon/GetFilteredPokemon";
 // export const getServerSideProps: GetServerSideProps = async(context)=> {
 
 // }
@@ -37,14 +41,20 @@ const PokedexHomePage = () => {
       variables: { offset: 0, limit: 100 },
       context: { clientName: "pokedexapi" },
     });
-
+  const [executeFiltering, { data: filtered }] =
+    useLazyQuery<GetFilteredPokemon>(GET_FILTERED_POKEMON);
   const [options, setOptions] = useState<string>("grid");
-
+  const [elements, setElements] = useState<string[]>([]);
   /** check if pokemons fetch is not undefined */
-  let pokemons: GetAllPokemons["pokemons"] = [];
+  let pokemons:
+    | GetAllPokemons["pokemons"]
+    | GetFilteredPokemon["filtered_pokemons"] = [];
 
   if (data?.pokemons) {
     pokemons = data.pokemons!;
+  }
+  if (filtered?.filtered_pokemons) {
+    pokemons = filtered.filtered_pokemons!;
   }
   const {
     handleNext,
@@ -53,13 +63,27 @@ const PokedexHomePage = () => {
     currentPage,
     pageNumbers,
     paginate,
-  } = usePagination(8, {
+  } = usePagination(10, {
     pokemons: pokemons,
   });
+  console.log(pokemons);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    !elements.some((element) => element === e.target.value)
+      ? setElements([...elements, e.target.value])
+      : setElements([
+          ...elements.filter((element) => element !== e.target.value),
+        ]);
+
+    executeFiltering({
+      variables: { type: [`${e.target.value}`] },
+      context: { clientName: "pokedexapi" },
+    });
+  };
   if (loading) return <h2>Loading</h2>;
 
+  console.log(elements);
   return (
-    <Box width={"container.md"} mx="auto" position="relative" zIndex={998}>
+    <Box width={"container.lg"} mx="auto" position="relative" zIndex={998}>
       <HStack justify="space-between" pt="2rem" mb={"3rem"}>
         <Heading fontSize="1.5rem">Choose a pokemon</Heading>
         <HStack spacing={3}>
@@ -74,10 +98,7 @@ const PokedexHomePage = () => {
             />
             <MenuList>
               <Stack spacing={[1, 3]} direction={["column", "column"]} px={2}>
-                <CheckboxGroup
-                  colorScheme="yellow"
-                  defaultValue={["rock", "dark"]}
-                >
+                <CheckboxGroup colorScheme="yellow">
                   {menuItems.map((item) => {
                     return (
                       <React.Fragment key={item}>
@@ -86,6 +107,7 @@ const PokedexHomePage = () => {
                           justifyContent="space-between"
                           value={item}
                           textTransform="capitalize"
+                          onChange={(e) => handleChange(e)}
                         >
                           <Flex align="center" gap="5px">
                             <Image
