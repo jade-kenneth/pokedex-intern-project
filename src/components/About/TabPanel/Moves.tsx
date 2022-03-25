@@ -16,7 +16,7 @@ import usePokemonDetailStore from "src/hooks/usePokemonDetailStore";
 const Moves = () => {
   const state = usePokemonDetailStore((state) => state);
   const tagBg = useColorModeValue("gray.300", "white");
-  console.log(state);
+
   return (
     <Stack spacing={"2rem"} mb={"8.313rem"}>
       <VStack

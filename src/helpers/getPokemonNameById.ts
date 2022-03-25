@@ -10,7 +10,7 @@ export const getPokemonNameById = <T extends { name: string; id: number }>({
     const { name } = data;
     names[`${data.id}`] = name;
   });
-
+  console.log(names);
   return {
     names,
   };

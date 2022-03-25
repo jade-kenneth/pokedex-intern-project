@@ -1,20 +1,18 @@
 import React, { JSXElementConstructor, ReactElement, ReactNode } from "react";
 
 import { Stack, Text, useColorModeValue, Link } from "@chakra-ui/react";
-import { useState } from "react";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { signIn } from "next-auth/react";
-import { FormProps } from "src/types/Form";
+import { FormProps } from "src/interfaces/Form";
 import signupBg from "public/backgrounds/signupBg.png";
 import { useRouter } from "next/router";
-import AccountLayout from "src/components/layout/account-layout/AccountLayout";
+import AccountLayout from "src/components/Layouts/account-layout/AccountLayout";
 import InputWithValidator from "src/components/Form/InputWithValidator";
-import { SignupInputs } from "src/types/Input";
+import { SignupInputs } from "src/interfaces/Input";
 import FormButton from "src/components/Form/FormButton";
 
 let schema = yup.object().shape({

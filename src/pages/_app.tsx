@@ -5,6 +5,7 @@ import type { NextPage } from "next";
 import { ChakraProvider, extendTheme, ThemeConfig } from "@chakra-ui/react";
 import { ApolloProvider } from "@apollo/client";
 import client from "src/apollo/apollo-client";
+
 import "@fontsource/inter";
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;

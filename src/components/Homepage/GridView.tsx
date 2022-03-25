@@ -3,12 +3,12 @@ import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import Image from "next/image";
 import loginBg from "public/backgrounds/loginBg.png";
 import { GetAllPokemons } from "src/types/pokemon/GetAllPokemons";
-import PokemonThemeChanger from "../PokemonThemeChanger";
-import EachPokemon from "../EachPokemon";
+import PokemonThemeChanger from "src/components/Pokemon/PokemonThemeChanger";
+import EachPokemon from "src/components/Pokemon/EachPokemon";
 
-const GridList = ({ pokemons }: GetAllPokemons) => {
+const GridView = ({ pokemons }: GetAllPokemons) => {
   // auto-fill, minmax(11.5rem,1fr)
-  console.log(pokemons);
+
   return (
     <Grid
       templateColumns={{
@@ -37,4 +37,4 @@ const GridList = ({ pokemons }: GetAllPokemons) => {
   );
 };
 
-export default GridList;
+export default GridView;

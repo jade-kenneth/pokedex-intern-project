@@ -18,7 +18,10 @@ import { statistic_data } from "src/utils/pokemonStatisticData";
 const Statistics = () => {
   const state = usePokemonDetailStore((state) => state);
 
-  const [data, setData] = useState<any>({ weakness: [], resistance: [] });
+  const [data, setData] = useState<{
+    weakness: string[];
+    resistance: string[];
+  }>({ weakness: [], resistance: [] });
 
   useEffect(() => {
     (async function getData() {

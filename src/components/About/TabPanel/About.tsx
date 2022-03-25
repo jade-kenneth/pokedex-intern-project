@@ -23,7 +23,10 @@ const About = () => {
     <Stack spacing={"2rem"} mb={"5.5rem"}>
       <Text lineHeight="1.625rem">
         {state.pokemonDetails.pokemon_specy?.description.length! > 0
-          ? state.pokemonDetails.pokemon_specy?.description[0].flavor_text
+          ? state.pokemonDetails.pokemon_specy?.description[0].flavor_text.replace(
+              "//g",
+              " "
+            )
           : " No available data "}
       </Text>
 

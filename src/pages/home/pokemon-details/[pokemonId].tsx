@@ -24,7 +24,7 @@ import Image from "next/image";
 import React, { useEffect } from "react";
 import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
 import { MdArrowRight } from "react-icons/md";
-import Layout1 from "src/components/layout/layout-1/Layout1";
+import Layout1 from "src/components/Layouts/layout-1/Layout1";
 import profile from "public/backgrounds/signupBg.png";
 import TabComponent from "src/components/About/TabComponent";
 import apolloClient from "src/apollo/apollo-client";
@@ -41,7 +41,7 @@ import {
   GetAllPokemons,
   GetAllPokemonsVariables,
 } from "src/types/pokemon/GetAllPokemons";
-import PokemonThemeChanger from "src/components/PokemonThemeChanger";
+import PokemonThemeChanger from "src/components/Pokemon/PokemonThemeChanger";
 import usePokemonDetailStore from "src/hooks/usePokemonDetailStore";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
@@ -54,7 +54,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   >({
     query: GET_ALL_POKEMON,
     variables: { offset: 0, limit: 100 },
-    context: { clientName: "pokedexapi" },
+    context: { clientName: "pokeapi" },
   });
 
   const paths = data.pokemons.map((pokemon) => {
@@ -77,7 +77,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   >({
     query: GET_EACH_POKEMON,
     variables: { id: parseInt(params?.pokemonId as string) },
-    context: { clientName: "pokedexapi" },
+    context: { clientName: "pokeapi" },
   });
 
   return {

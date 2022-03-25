@@ -20,7 +20,7 @@ const authLink = setContext(async (_, { headers }) => {
   };
 });
 
-const pokedexapi = new HttpLink({
+const pokeapi = new HttpLink({
   uri: "https://beta.pokeapi.co/graphql/v1beta",
 });
 
@@ -29,8 +29,8 @@ const authentication = new HttpLink({
 });
 const client = new ApolloClient({
   link: ApolloLink.split(
-    (operation) => operation.getContext().clientName === "pokedexapi",
-    pokedexapi,
+    (operation) => operation.getContext().clientName === "pokeapi",
+    pokeapi,
     authLink.concat(authentication)
   ),
   cache: new InMemoryCache(),

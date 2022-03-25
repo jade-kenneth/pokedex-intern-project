@@ -19,7 +19,7 @@ import { Router, useRouter } from "next/router";
 import React from "react";
 import { GetAllPokemons } from "src/types/pokemon/GetAllPokemons";
 import { motion } from "framer-motion";
-const List = ({ pokemons }: GetAllPokemons) => {
+const ListView = ({ pokemons }: GetAllPokemons) => {
   const MotionTr = motion(Tr);
   const router = useRouter();
   return (
@@ -69,4 +69,4 @@ const List = ({ pokemons }: GetAllPokemons) => {
   );
 };
 
-export default List;
+export default ListView;

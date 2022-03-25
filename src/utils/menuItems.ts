@@ -2,7 +2,7 @@ export const menuItems = [
   "grass",
   "fire",
   "steel",
-  "fighter",
+  "fighting",
   "dark",
   "electric",
   "ground",
@@ -10,6 +10,9 @@ export const menuItems = [
   "poison",
   "metal",
   "rock",
-
+  "bug",
+  "ghost",
   "water",
+  "dragon",
+  "ice",
 ];

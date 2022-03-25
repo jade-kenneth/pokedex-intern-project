@@ -5,8 +5,8 @@ interface getDamageByTypesProps {
 }
 
 const getWeaknessStrengthByType = async ({ types }: getDamageByTypesProps) => {
-  let weakness: any = [];
-  let resistance: any = [];
+  let weakness: Record<string, any>[] = [];
+  let resistance: Record<string, any>[] = [];
 
   for (const type of types) {
     const response = await fetch(
@@ -28,10 +28,10 @@ const getWeaknessStrengthByType = async ({ types }: getDamageByTypesProps) => {
     );
   }
   return {
-    weakness: weakness.reduce((array: any, obj: any) => {
+    weakness: weakness.reduce<string[]>((array, obj) => {
       return array.includes(obj.name) ? array : [...array, obj.name];
     }, []),
-    resistance: resistance.reduce((array: any, obj: any) => {
+    resistance: resistance.reduce<string[]>((array, obj) => {
       return array.includes(obj.name) ? array : [...array, obj.name];
     }, []),
   };

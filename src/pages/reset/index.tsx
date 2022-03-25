@@ -4,12 +4,12 @@ import React, {
   ReactNode,
   useState,
 } from "react";
-import AccountLayout from "src/components/layout/account-layout/AccountLayout";
+import AccountLayout from "src/components/Layouts/account-layout/AccountLayout";
 import resetBg from "public/backgrounds/resetBg.png";
-import { FieldError, SubmitHandler, useForm } from "react-hook-form";
-import { ResetInputs } from "src/types/Input";
-import { signIn } from "next-auth/react";
-import { FormProps } from "src/types/Form";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { ResetInputs } from "src/interfaces/Input";
+
+import { FormProps } from "src/interfaces/Form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
 import * as yup from "yup";
@@ -31,7 +31,10 @@ import {
 } from "src/types/auth/triggerResetPassword";
 import ChangePasswordForm from "src/components/Reset/ChangePasswordForm";
 let schema = yup.object().shape({
-  email: yup.string().email().required("Email is required"),
+  email: yup
+    .string()
+    .email("Email must be a valid email")
+    .required("Email is required"),
 });
 
 const Reset = ({ provider }: FormProps) => {

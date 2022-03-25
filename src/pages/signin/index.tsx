@@ -2,19 +2,22 @@ import React, { JSXElementConstructor, ReactElement, ReactNode } from "react";
 import { Link, Stack, Text } from "@chakra-ui/react";
 import { signIn } from "next-auth/react";
 import * as yup from "yup";
-import { useEffect, useState } from "react";
+
 import loginBg from "public/backgrounds/loginBg.png";
-import { SigninInputs } from "src/types/Input";
+import { SigninInputs } from "src/interfaces/Input";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FormProps } from "src/types/Form";
-import AccountLayout from "src/components/layout/account-layout/AccountLayout";
+import { FormProps } from "src/interfaces/Form";
+import AccountLayout from "src/components/Layouts/account-layout/AccountLayout";
 
 import InputWithValidator from "src/components/Form/InputWithValidator";
 import FormButton from "src/components/Form/FormButton";
 let schema = yup.object().shape({
-  email: yup.string().email().required("Email is required"),
+  email: yup
+    .string()
+    .email("Email must be a valid email")
+    .required("Email is required"),
   password: yup.string().required("Password is required"),
 });
 const SignIn = ({ provider }: FormProps) => {

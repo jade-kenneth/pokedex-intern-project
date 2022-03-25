@@ -13,7 +13,7 @@ export const addToRecentView = (
   img: string
 ): IRecent[] => {
   const found = recents.some((data) => data.id === id);
-  if (!found) return [...recents, { id, img }];
+  if (!found) return [{ id, img }, ...recents];
 
   return recents;
 };

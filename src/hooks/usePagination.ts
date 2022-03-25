@@ -7,6 +7,7 @@ interface PaginationProps {
 
 export const usePagination = (
   numberPerPage: number,
+
   { pokemons }: PaginationProps
 ) => {
   const [currentPage, setCurrentPage] = useState(1);

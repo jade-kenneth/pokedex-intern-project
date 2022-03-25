@@ -9,7 +9,7 @@ import {
 } from "next-auth/react";
 import { BuiltInProviderType } from "next-auth/providers";
 import React, { useEffect, useState } from "react";
-import { AccountLayoutProps } from "src/types/AccountLayout";
+import { AccountLayoutProps } from "src/interfaces/AccountLayout";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 

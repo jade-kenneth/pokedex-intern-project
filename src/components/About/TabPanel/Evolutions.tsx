@@ -13,12 +13,22 @@ import loginBg from "public/backgrounds/loginBg.png";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import usePokemonDetailStore from "src/hooks/usePokemonDetailStore";
 import { getPokemonNameById } from "src/helpers/getPokemonNameById";
+import { getEvolutionCosts } from "src/helpers/getEvolutionCosts";
 const Evolutions = () => {
+  /**need fixin */
   const state = usePokemonDetailStore((state) => state);
   const evolutions =
     state.pokemonDetails.pokemon_specy?.evolution_chain?.evolutions!;
   const { names } = getPokemonNameById({ pokemonData: evolutions });
+  const { levelCost } = getEvolutionCosts({
+    pokemon_specy_evolutions: evolutions,
+    id: state.pokemonDetails.id,
+  });
   console.log(names);
+  console.log(
+    state.pokemonDetails.pokemon_specy?.evolution_chain?.evolutions[0]?.id
+  );
+  console.log(names[`${evolutions[0]?.id}`]);
 
   return (
     <VStack align="left" mb={"6.188rem"}>
@@ -29,8 +39,21 @@ const Evolutions = () => {
         w={"25.188rem"}
       >
         There are currently a total of {evolutions.length} Pokémon in the{" "}
-        family. {names[`${state.pokemonDetails.id}`]} evolves from{" "}
-        {names[`${state.pokemonDetails.id - 1}`]} which costs {} Candy.
+        <Text as="span" textTransform="capitalize">
+          {/* {names[`${evolutions[0].id}`]} */}
+        </Text>{" "}
+        family.{" "}
+        <Text as="span" textTransform="capitalize">
+          {names[`${state.pokemonDetails.id}`]}{" "}
+        </Text>{" "}
+        evolves from{" "}
+        <Text as="span" textTransform="capitalize">
+          {names[`${state.pokemonDetails.id - 1}`] === undefined
+            ? names[`${state.pokemonDetails.id}`]
+            : names[`${state.pokemonDetails.id - 1}`]}
+        </Text>{" "}
+        which costs {typeof levelCost === "number" ? levelCost : "'Unknown'"}{" "}
+        min level.
       </Text>
       <Stack
         py={"2rem"}

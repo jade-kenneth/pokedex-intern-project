@@ -1,6 +1,6 @@
 // module.exports = {
 //   client: {
-//     includes: ["./src/graphql/mutations/*.ts"],
+//     includes: ["./src/graphql/auth/**/*.ts"],
 //     service: {
 //       name: "pokeapi",
 //       url: "https://frontend-engineer-onboarding-api-thxaa.ondigitalocean.app/graphql",
@@ -13,7 +13,7 @@
 
 module.exports = {
   client: {
-    includes: ["./src/graphql/queries/*.ts"],
+    includes: ["./src/graphql/pokemon/**/*.ts"],
     service: {
       name: "pokeapi",
       url: "https://beta.pokeapi.co/graphql/v1beta",

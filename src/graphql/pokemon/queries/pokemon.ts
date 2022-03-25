@@ -123,8 +123,6 @@ export const GET_EACH_POKEMON = gql`
 export const GET_FILTERED_POKEMON = gql`
   query GetFilteredPokemon($type: [String!]) {
     filtered_pokemons: pokemon_v2_pokemon(
-      offset: 0
-      limit: 100
       where: {
         pokemon_v2_pokemontypes: { pokemon_v2_type: { name: { _in: $type } } }
       }
@@ -136,6 +134,14 @@ export const GET_FILTERED_POKEMON = gql`
           name
         }
       }
+    }
+  }
+`;
+
+export const GET_ALL_TYPES = gql`
+  query GetAllTypes {
+    type: pokemon_v2_type {
+      name
     }
   }
 `;

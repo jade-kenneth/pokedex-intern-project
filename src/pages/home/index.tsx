@@ -10,51 +10,73 @@ import {
   CheckboxGroup,
   Stack,
   Checkbox,
-  Image,
+  Image as ChakraImage,
   Flex,
-  Text,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-import Layout1 from "src/components/layout/layout-1/Layout1";
+import React, { useEffect, useState, useCallback } from "react";
+import Layout1 from "src/components/Layouts/layout-1/Layout1";
 import { BiFilterAlt, BiGridAlt, BiListUl } from "react-icons/bi";
-import List from "src/components/Homepage/List";
-import GridList from "src/components/Homepage/GridList";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-
-import { menuItems } from "src/utils/menuItems";
+import ListView from "src/components/Homepage/ListView";
+import GridView from "src/components/Homepage/GridView";
+import Image from "next/image";
 import Pagination from "src/components/Homepage/widgets/Pagination";
 import { usePagination } from "src/hooks/usePagination";
 import { GetAllPokemons } from "src/types/pokemon/GetAllPokemons";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import {
   GET_ALL_POKEMON,
   GET_FILTERED_POKEMON,
 } from "src/graphql/pokemon/queries/pokemon";
 import { GetFilteredPokemon } from "src/types/pokemon/GetFilteredPokemon";
-// export const getServerSideProps: GetServerSideProps = async(context)=> {
+import useGetPokemonTypes from "src/helpers/getPokemonTypes";
+import { GetStaticProps } from "next";
+import { FcDeleteDatabase } from "react-icons/fc";
+import apolloClient from "src/apollo/apollo-client";
+import Loading from "src/components/Homepage/widgets/Loading";
 
-// }
+export const getStaticProps: GetStaticProps = async () => {
+  const { data } = await apolloClient.query({
+    query: GET_ALL_POKEMON,
+    variables: { offset: 0, limit: 100 },
+    context: { clientName: "pokeapi" },
+  });
 
-const PokedexHomePage = () => {
-  const { loading, error, data, networkStatus, fetchMore } =
-    useQuery<GetAllPokemons>(GET_ALL_POKEMON, {
-      variables: { offset: 0, limit: 100 },
-      context: { clientName: "pokedexapi" },
-    });
-  const [executeFiltering, { data: filtered }] =
+  return { props: { pokemons: data.pokemons } };
+};
+
+const PokedexHomePage = ({ pokemons }: GetAllPokemons) => {
+  const [fetchData, { data, fetchMore }] =
+    useLazyQuery<GetAllPokemons>(GET_ALL_POKEMON);
+  const [executeFiltering, { loading: filterLoading, data: filtered }] =
     useLazyQuery<GetFilteredPokemon>(GET_FILTERED_POKEMON);
-  const [options, setOptions] = useState<string>("grid");
+  const [options, setOptions] = useState<"grid" | "list">("grid");
   const [elements, setElements] = useState<string[]>([]);
+  const [isFilter, setIsFilter] = useState(false);
+
+  const { types } = useGetPokemonTypes();
+  const numberPerPage = 10;
   /** check if pokemons fetch is not undefined */
-  let pokemons:
+  let pokemonFetched:
     | GetAllPokemons["pokemons"]
     | GetFilteredPokemon["filtered_pokemons"] = [];
 
-  if (data?.pokemons) {
-    pokemons = data.pokemons!;
+  /**
+   * check if data is present so that usePagination
+   * will only get the initial empty array instead of undefined resulting to an error
+   * hooks/usePagination.tsx -> line 19
+   * the error: pokemon.length -> returns undefined cause
+   */
+  /**  */
+  if (!isFilter && pokemons) {
+    pokemonFetched = pokemons!;
   }
-  if (filtered?.filtered_pokemons) {
-    pokemons = filtered.filtered_pokemons!;
+  if (isFilter && filtered?.filtered_pokemons) {
+    console.log("filter");
+    pokemonFetched = filtered?.filtered_pokemons!;
+  }
+  if (!isFilter && data?.pokemons) {
+    console.log("nope");
+    pokemonFetched = data.pokemons;
   }
   const {
     handleNext,
@@ -63,25 +85,71 @@ const PokedexHomePage = () => {
     currentPage,
     pageNumbers,
     paginate,
-  } = usePagination(10, {
-    pokemons: pokemons,
+  } = usePagination(numberPerPage, {
+    pokemons: pokemonFetched,
   });
-  console.log(pokemons);
+
+  useEffect(() => {
+    /** after toggling filter this fires
+     * if filter then execute filter
+     * else fetch default data
+     */
+    if (isFilter) {
+      executeFiltering({
+        variables: { type: elements },
+        context: { clientName: "pokeapi" },
+      });
+    } else {
+      fetchData({
+        variables: { offset: 0, limit: 100 },
+        context: { clientName: "pokeapi" },
+      });
+    }
+  }, [elements, isFilter, fetchData, executeFiltering]);
+  // useEffect(() => {
+  //   if (fetchMoreData) {
+
+  //   }
+  // }, [fetchMoreData]);
+  const handleFetchMore = () => {
+    fetchMore({
+      variables: {
+        offset: 0,
+        limit: pokemonFetched.length + 100,
+      },
+      updateQuery: (_, { fetchMoreResult: pokemons }): GetAllPokemons => {
+        return pokemons!;
+      },
+    });
+  };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // let types: string[] = [];
+    // !types.some((type) => type === e.target.value)
+    //   ? types.push(e.target.value)
+    //   : types.filter((type) => type !== e.target.value);
+
+    /** if element is present in array then filter else add */
     !elements.some((element) => element === e.target.value)
       ? setElements([...elements, e.target.value])
       : setElements([
           ...elements.filter((element) => element !== e.target.value),
         ]);
-
-    executeFiltering({
-      variables: { type: [`${e.target.value}`] },
-      context: { clientName: "pokedexapi" },
-    });
   };
-  if (loading) return <h2>Loading</h2>;
 
-  console.log(elements);
+  /** checking if elements/types array if empty or not
+   * if not empty indicates filter is being toggle -> element array ex: ['grass']
+   * else empty indicates filter mode is off -> []
+   *
+   */
+  useEffect(() => {
+    if (elements.length > 0) {
+      setIsFilter(true);
+    } else {
+      setIsFilter(false);
+    }
+  }, [elements.length, setIsFilter]);
+  if (!pokemonFetched) return <Loading type="loading" />;
+
   return (
     <Box width={"container.lg"} mx="auto" position="relative" zIndex={998}>
       <HStack justify="space-between" pt="2rem" mb={"3rem"}>
@@ -96,31 +164,48 @@ const PokedexHomePage = () => {
               w="1.05rem"
               h="1.2rem"
             />
-            <MenuList>
+            <MenuList
+              height="250px"
+              overflow={"hidden"}
+              overflowY={"scroll"}
+              css={{
+                "&::-webkit-scrollbar": {
+                  width: "4px",
+                },
+                "&::-webkit-scrollbar-track": {
+                  width: "6px",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  background: "#555",
+                  borderRadius: "24px",
+                },
+              }}
+            >
               <Stack spacing={[1, 3]} direction={["column", "column"]} px={2}>
                 <CheckboxGroup colorScheme="yellow">
-                  {menuItems.map((item) => {
-                    return (
-                      <React.Fragment key={item}>
-                        <Checkbox
-                          flexDirection="row-reverse"
-                          justifyContent="space-between"
-                          value={item}
-                          textTransform="capitalize"
-                          onChange={(e) => handleChange(e)}
-                        >
-                          <Flex align="center" gap="5px">
-                            <Image
-                              src={`/icons/${item}.svg`}
-                              alt="element"
-                              h="1rem"
-                            />
-                            {item}
-                          </Flex>
-                        </Checkbox>
-                      </React.Fragment>
-                    );
-                  })}
+                  {types
+                    ?.filter((type) => type.name !== "unknown")
+                    .map((item) => {
+                      return (
+                        <React.Fragment key={item.name}>
+                          <Checkbox
+                            flexDirection="row-reverse"
+                            justifyContent="space-between"
+                            value={item.name}
+                            textTransform="capitalize"
+                            onChange={(e) => handleChange(e)}
+                          >
+                            <Flex
+                              align="center"
+                              gap="5px"
+                              position={"relative"}
+                            >
+                              {item.name}
+                            </Flex>
+                          </Checkbox>
+                        </React.Fragment>
+                      );
+                    })}
                 </CheckboxGroup>
               </Stack>
             </MenuList>
@@ -143,41 +228,30 @@ const PokedexHomePage = () => {
           />
         </HStack>
       </HStack>
-      <Box>
-        {options === "list" ? (
-          <List pokemons={pokemonData()} />
-        ) : (
-          <GridList pokemons={pokemonData()} />
-        )}
-        <HStack justify="flex-end" mt="1rem">
-          <Text fontSize="0.875rem">
-            Showing 1-10 of {data?.pokemons.length}{" "}
-          </Text>
-        </HStack>
-        <HStack spacing="1.85rem" justify="center" pb="3.688rem">
-          <IconButton
-            w="0.3rem"
-            h="0.5rem"
-            bg="transparent"
-            icon={<MdKeyboardArrowLeft />}
-            aria-label="prev button"
-          />
-          <Pagination
-            handleNext={handleNext}
-            handlePrev={handlePrev}
-            currentPage={currentPage}
-            pageNumbers={pageNumbers}
-            paginate={paginate}
-          />
-          <IconButton
-            w="0.3rem"
-            h="0.5rem"
-            bg="transparent"
-            icon={<MdKeyboardArrowRight />}
-            aria-label="prev button"
-          />
-        </HStack>
-      </Box>
+      {filterLoading ? (
+        <Loading type="loading" />
+      ) : (
+        <Box>
+          {options === "list" ? (
+            <ListView pokemons={pokemonData()} />
+          ) : (
+            <GridView pokemons={pokemonData()} />
+          )}
+
+          <HStack spacing="1.85rem" justify="center" pb="3.688rem">
+            <Pagination
+              handleNext={handleNext}
+              handlePrev={handlePrev}
+              currentPage={currentPage}
+              pageNumbers={pageNumbers}
+              paginate={paginate}
+              numberPerPage={numberPerPage}
+              handleFetchMore={handleFetchMore}
+              isFilter={isFilter}
+            />
+          </HStack>
+        </Box>
+      )}
     </Box>
   );
 };
