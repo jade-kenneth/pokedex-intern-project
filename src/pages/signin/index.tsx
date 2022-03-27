@@ -37,7 +37,7 @@ const SignIn = ({ provider }: FormProps) => {
       email: data.email,
       password: data.password,
 
-      callbackUrl: "http://localhost:3000/home",
+      callbackUrl: "/home",
     });
   };
 

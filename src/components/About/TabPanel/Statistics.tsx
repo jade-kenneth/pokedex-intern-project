@@ -10,17 +10,20 @@ import {
 } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
-import getWeaknessStrengthByType from "src/helpers/getWeaknessStrengthByType";
+import getWeaknessStrengthByType, {
+  IWeaknessStrength,
+} from "src/helpers/getWeaknessStrengthByType";
 
 import usePokemonDetailStore from "src/hooks/usePokemonDetailStore";
 import { statistic_data } from "src/utils/pokemonStatisticData";
 
 const Statistics = () => {
   const state = usePokemonDetailStore((state) => state);
-
+  const progressBg = useColorModeValue("gray.300", "white");
+  const containerBg = useColorModeValue("white", "secondary");
   const [data, setData] = useState<{
-    weakness: string[];
-    resistance: string[];
+    weakness: IWeaknessStrength[];
+    resistance: IWeaknessStrength[];
   }>({ weakness: [], resistance: [] });
 
   useEffect(() => {
@@ -33,10 +36,10 @@ const Statistics = () => {
         resistance: resistance,
       });
     })();
+    return () => setData({ weakness: [], resistance: [] });
   }, [state.pokemonDetails.types]);
 
-  const progressBg = useColorModeValue("gray.300", "white");
-  const containerBg = useColorModeValue("white", "secondary");
+  // console.log(data.weakness[0][`${state.pokemonDetails.types[0].type?.name!}`]);
 
   return (
     <Stack spacing={"3.25rem"} mb={"6.063rem"} w="100%">
@@ -61,7 +64,7 @@ const Statistics = () => {
                 colorScheme={statistic_data[idx].color}
               />
 
-              <Text>{stat.base_stat}</Text>
+              <Text>{stat.base_stat}%</Text>
             </HStack>
           );
         })}
@@ -75,18 +78,34 @@ const Statistics = () => {
         bg={containerBg}
       >
         <Text color="tertiary">Weakness</Text>
-
         <VStack align="left" spacing={"1rem"}>
-          <Flex gap={"1rem"} flexWrap={"wrap"}>
-            {data.weakness.map((data: any, idx: number) => {
-              const { name } = data;
-              return (
-                <Tag key={idx} py={"0.438rem"} px={"1.906rem"} color="red">
-                  {data}
-                </Tag>
-              );
-            })}
-          </Flex>
+          {state.pokemonDetails.types.map((t, rootIdx) => {
+            const { type } = t;
+            return (
+              <VStack align={"left"} spacing={"1rem"} key={type?.name}>
+                <Text textTransform={"capitalize"} color="tertiary">
+                  {type?.name}
+                </Text>
+                <Flex key={type?.name} gap={"1rem"} flexWrap={"wrap"}>
+                  {data.weakness.length > 0 &&
+                    data.weakness[rootIdx][`${type?.name}`]?.map(
+                      (type, branchIdx) => {
+                        return (
+                          <Tag
+                            key={branchIdx}
+                            py={"0.438rem"}
+                            px={"1.906rem"}
+                            color="red"
+                          >
+                            {type}
+                          </Tag>
+                        );
+                      }
+                    )}
+                </Flex>
+              </VStack>
+            );
+          })}
         </VStack>
       </VStack>
       <VStack
@@ -99,16 +118,34 @@ const Statistics = () => {
       >
         <Text color="tertiary">Resistance</Text>
 
-        <VStack spacing={"1rem"} align="left">
-          <Flex gap={"1rem"} flexWrap={"wrap"}>
-            {data.resistance.map((data: any, idx: number) => {
-              return (
-                <Tag key={idx} py={"0.438rem"} px={"1.906rem"} color="green">
-                  {data}
-                </Tag>
-              );
-            })}
-          </Flex>
+        <VStack align="left" spacing={"1rem"}>
+          {state.pokemonDetails.types.map((t, rootIdx) => {
+            const { type } = t;
+            return (
+              <VStack align={"left"} spacing={"1rem"} key={type?.name}>
+                <Text textTransform={"capitalize"} color="tertiary">
+                  {type?.name}
+                </Text>
+                <Flex key={type?.name} gap={"1rem"} flexWrap={"wrap"}>
+                  {data.resistance.length > 0 &&
+                    data.resistance[rootIdx][`${type?.name}`]?.map(
+                      (type, branchIdx) => {
+                        return (
+                          <Tag
+                            key={branchIdx}
+                            py={"0.438rem"}
+                            px={"1.906rem"}
+                            color="green"
+                          >
+                            {type}
+                          </Tag>
+                        );
+                      }
+                    )}
+                </Flex>
+              </VStack>
+            );
+          })}
         </VStack>
       </VStack>
     </Stack>

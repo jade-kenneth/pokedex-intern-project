@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import Image from "next/image";
 import React, { useEffect } from "react";
-import loginBg from "public/backgrounds/loginBg.png";
+
 import { FaLongArrowAltRight } from "react-icons/fa";
 import usePokemonDetailStore from "src/hooks/usePokemonDetailStore";
 import { getPokemonNameById } from "src/helpers/getPokemonNameById";
@@ -24,11 +24,6 @@ const Evolutions = () => {
     pokemon_specy_evolutions: evolutions,
     id: state.pokemonDetails.id,
   });
-  console.log(names);
-  console.log(
-    state.pokemonDetails.pokemon_specy?.evolution_chain?.evolutions[0]?.id
-  );
-  console.log(names[`${evolutions[0]?.id}`]);
 
   return (
     <VStack align="left" mb={"6.188rem"}>
@@ -40,7 +35,7 @@ const Evolutions = () => {
       >
         There are currently a total of {evolutions.length} Pokémon in the{" "}
         <Text as="span" textTransform="capitalize">
-          {/* {names[`${evolutions[0].id}`]} */}
+          {names[`${evolutions[0]?.id}`]}
         </Text>{" "}
         family.{" "}
         <Text as="span" textTransform="capitalize">
@@ -52,8 +47,8 @@ const Evolutions = () => {
             ? names[`${state.pokemonDetails.id}`]
             : names[`${state.pokemonDetails.id - 1}`]}
         </Text>{" "}
-        which costs {typeof levelCost === "number" ? levelCost : "'Unknown'"}{" "}
-        min level.
+        which costs {typeof levelCost === "number" ? levelCost : 0} minimum
+        level.
       </Text>
       <Stack
         py={"2rem"}
@@ -132,8 +127,3 @@ const Evolutions = () => {
 };
 
 export default Evolutions;
-function useGetPokemonForm(arg0: {
-  evolutions: import("../../../types/pokemon/GetEachPokemon").GetEachPokemon_pokemonDetails_pokemon_specy_evolution_chain_evolutions[];
-}): {} {
-  throw new Error("Function not implemented.");
-}

@@ -50,7 +50,7 @@ const Signup = ({ provider }: FormProps) => {
       firstName: data.firstName,
       lastName: data.lastName,
 
-      callbackUrl: "http://localhost:3000/homepage",
+      callbackUrl: "/homepage",
     });
   };
   const router = useRouter();

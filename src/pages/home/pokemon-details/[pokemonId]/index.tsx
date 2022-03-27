@@ -21,7 +21,7 @@ import {
   Breadcrumb,
 } from "@chakra-ui/react";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
 import { MdArrowRight } from "react-icons/md";
 import Layout1 from "src/components/Layouts/layout-1/Layout1";
@@ -47,6 +47,10 @@ import { ChevronRightIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 import useRecentViewStore from "src/hooks/useRecentViewStore";
 import { usePagination } from "src/hooks/usePagination";
+import getPokemonElementColor from "src/helpers/getPokemonElementColor";
+import PokemonList from "src/components/About/Battle/PokemonList";
+import useBattleState from "src/hooks/useBattleState";
+import Loading from "src/components/Homepage/widgets/Loading";
 export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await apolloClient.query<
     GetAllPokemons,
@@ -90,19 +94,46 @@ export const getStaticProps: GetStaticProps = async (context) => {
 const About = ({ pokemonDetails }: GetEachPokemon) => {
   const store = usePokemonDetailStore((state) => state);
   const state = useRecentViewStore((state) => state);
+  const battleState = useBattleState((state) => state);
   const router = useRouter();
   const { handleNext, handlePrev, data } = usePagination(6, {
     pokemons: state.recents,
   });
 
   useEffect(() => {
-    console.log("hey");
     store.setPokemonDetails(pokemonDetails!);
+    battleState.setOpponent(parseInt(router.query.pokemonId as string));
+    state.addToRecentView(
+      pokemonDetails?.id!,
+      `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemonDetails?.id}.png`
+    );
   }, [pokemonDetails]);
+  React.useEffect(() => {
+    const handleChangeRoute = () => {
+      return <Loading type="loading" />;
+    };
+
+    router.events.on("routeChangeStart", handleChangeRoute);
+
+    // If the component is unmounted, unsubscribe
+    // from the event with the `off` method:
+    return () => {
+      router.events.off("routeChangeStart", handleChangeRoute);
+    };
+  }, []);
+  const handleBattle = () => {
+    if (battleState.mode === "battle") {
+      battleState.setOpponent(0);
+      battleState.setMode("list");
+    } else {
+      battleState.setOpponent(parseInt(router.query.pokemonId as string));
+      battleState.setMode("battle");
+    }
+  };
 
   const routerLink = router.asPath.split("/");
 
-  if (!pokemonDetails?.types) return <h2>Loading ...</h2>;
+  if (!pokemonDetails?.types) return <Loading type="loading" />;
   return (
     <Box mt={"1.375rem"} w={"container.lg"} mx="auto">
       <Breadcrumb
@@ -116,7 +147,13 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
             idx !== routerLink.length - 1 && (
               <BreadcrumbItem key={idx}>
                 <BreadcrumbLink
-                  href={`/${routerLink.slice(1, idx + 1).join("/")}`}
+                  onClick={() =>
+                    router.push(
+                      `/${routerLink.slice(1, idx + 1).join("/")}`,
+                      undefined,
+                      { shallow: false }
+                    )
+                  }
                 >
                   {routerLink[idx].split("-").length >= 2 ? (
                     routerLink[idx].split("-").map((data, idx) => {
@@ -199,20 +236,25 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
         {/** POKEMON NAME */}
         <Stack width="100%">
           <VStack align="flex-start" spacing={"1rem"} mb={"3.25rem"}>
-            <Heading fontSize="2rem" textTransform={"capitalize"}>
-              {pokemonDetails?.name}
-            </Heading>
+            <HStack justify={"space-between"} align="center" w="100%">
+              <Heading fontSize="2rem" textTransform={"capitalize"}>
+                {pokemonDetails?.name}
+              </Heading>
+              <Button onClick={() => handleBattle()}>
+                {battleState.mode === "battle" ? "Cancel" : "Battle Mode"}
+              </Button>
+            </HStack>
             <HStack spacing={"0.5rem"}>
               {pokemonDetails?.types.map((type, idx) => {
                 return (
                   <React.Fragment key={idx}>
                     <PokemonThemeChanger
-                      pokemonType={type.type?.name}
                       w={"6.375rem"}
                       py={"0.5rem"}
                       as="text"
                       textAlign="center"
                       borderRadius={"50px"}
+                      bg={getPokemonElementColor(type.type?.name!)}
                     >
                       {type.type?.name}
                     </PokemonThemeChanger>
@@ -221,7 +263,11 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
               })}
             </HStack>
           </VStack>
-          <TabComponent />
+          {battleState.mode === "battle" ? (
+            <PokemonList pokemons={[]} />
+          ) : (
+            <TabComponent />
+          )}
         </Stack>
       </Stack>
     </Box>

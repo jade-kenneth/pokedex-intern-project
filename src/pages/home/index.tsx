@@ -33,6 +33,8 @@ import { GetStaticProps } from "next";
 import { FcDeleteDatabase } from "react-icons/fc";
 import apolloClient from "src/apollo/apollo-client";
 import Loading from "src/components/Homepage/widgets/Loading";
+import useBattleState from "src/hooks/useBattleState";
+import { useRouter } from "next/router";
 
 export const getStaticProps: GetStaticProps = async () => {
   const { data } = await apolloClient.query({
@@ -43,8 +45,12 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return { props: { pokemons: data.pokemons } };
 };
+export interface PokedexProps {
+  pokemons: GetAllPokemons["pokemons"];
 
-const PokedexHomePage = ({ pokemons }: GetAllPokemons) => {
+  header?: string;
+}
+const Pokedex = ({ header, pokemons }: PokedexProps) => {
   const [fetchData, { data, fetchMore }] =
     useLazyQuery<GetAllPokemons>(GET_ALL_POKEMON);
   const [executeFiltering, { loading: filterLoading, data: filtered }] =
@@ -52,9 +58,10 @@ const PokedexHomePage = ({ pokemons }: GetAllPokemons) => {
   const [options, setOptions] = useState<"grid" | "list">("grid");
   const [elements, setElements] = useState<string[]>([]);
   const [isFilter, setIsFilter] = useState(false);
-
+  const battleState = useBattleState((state) => state);
   const { types } = useGetPokemonTypes();
   const numberPerPage = 10;
+  const router = useRouter();
   /** check if pokemons fetch is not undefined */
   let pokemonFetched:
     | GetAllPokemons["pokemons"]
@@ -71,11 +78,9 @@ const PokedexHomePage = ({ pokemons }: GetAllPokemons) => {
     pokemonFetched = pokemons!;
   }
   if (isFilter && filtered?.filtered_pokemons) {
-    console.log("filter");
     pokemonFetched = filtered?.filtered_pokemons!;
   }
   if (!isFilter && data?.pokemons) {
-    console.log("nope");
     pokemonFetched = data.pokemons;
   }
   const {
@@ -88,7 +93,7 @@ const PokedexHomePage = ({ pokemons }: GetAllPokemons) => {
   } = usePagination(numberPerPage, {
     pokemons: pokemonFetched,
   });
-
+  console.log(battleState);
   useEffect(() => {
     /** after toggling filter this fires
      * if filter then execute filter
@@ -106,11 +111,13 @@ const PokedexHomePage = ({ pokemons }: GetAllPokemons) => {
       });
     }
   }, [elements, isFilter, fetchData, executeFiltering]);
-  // useEffect(() => {
-  //   if (fetchMoreData) {
 
-  //   }
-  // }, [fetchMoreData]);
+  useEffect(() => {
+    if (!router.query.pokemonId) {
+      battleState.setOpponent(0);
+    }
+    battleState.setMode("list");
+  }, []);
   const handleFetchMore = () => {
     fetchMore({
       variables: {
@@ -153,7 +160,9 @@ const PokedexHomePage = ({ pokemons }: GetAllPokemons) => {
   return (
     <Box width={"container.lg"} mx="auto" position="relative" zIndex={998}>
       <HStack justify="space-between" pt="2rem" mb={"3rem"}>
-        <Heading fontSize="1.5rem">Choose a pokemon</Heading>
+        <Heading fontSize="1.5rem">
+          {header ? header : "Choose a pokemon"}
+        </Heading>
         <HStack spacing={3}>
           <Menu closeOnSelect={false}>
             <MenuButton
@@ -176,7 +185,7 @@ const PokedexHomePage = ({ pokemons }: GetAllPokemons) => {
                   width: "6px",
                 },
                 "&::-webkit-scrollbar-thumb": {
-                  background: "#555",
+                  background: "primary",
                   borderRadius: "24px",
                 },
               }}
@@ -210,32 +219,36 @@ const PokedexHomePage = ({ pokemons }: GetAllPokemons) => {
               </Stack>
             </MenuList>
           </Menu>
-          <Icon
-            as={BiListUl}
-            w="1.05rem"
-            h="1.2rem"
-            onClick={() => setOptions("list")}
-            zIndex={1}
-            cursor="pointer"
-          />
-          <Icon
-            as={BiGridAlt}
-            w="1.05rem"
-            h="1.2rem"
-            onClick={() => setOptions("grid")}
-            zIndex={1}
-            cursor="pointer"
-          />
+          {battleState.mode !== "battle" && (
+            <Icon
+              as={BiListUl}
+              w="1.05rem"
+              h="1.2rem"
+              onClick={() => setOptions("list")}
+              zIndex={1}
+              cursor="pointer"
+            />
+          )}
+          {battleState.mode !== "battle" && (
+            <Icon
+              as={BiGridAlt}
+              w="1.05rem"
+              h="1.2rem"
+              onClick={() => setOptions("grid")}
+              zIndex={1}
+              cursor="pointer"
+            />
+          )}
         </HStack>
       </HStack>
       {filterLoading ? (
         <Loading type="loading" />
       ) : (
         <Box>
-          {options === "list" ? (
-            <ListView pokemons={pokemonData()} />
-          ) : (
+          {options === "grid" ? (
             <GridView pokemons={pokemonData()} />
+          ) : (
+            <ListView pokemons={pokemonData()} />
           )}
 
           <HStack spacing="1.85rem" justify="center" pb="3.688rem">
@@ -256,8 +269,8 @@ const PokedexHomePage = ({ pokemons }: GetAllPokemons) => {
   );
 };
 
-export default PokedexHomePage;
+export default Pokedex;
 
-PokedexHomePage.getLayout = (page: React.ComponentType<{}> | JSX.Element) => {
+Pokedex.getLayout = (page: React.ComponentType<{}> | JSX.Element) => {
   return <Layout1>{page}</Layout1>;
 };

@@ -145,3 +145,18 @@ export const GET_ALL_TYPES = gql`
     }
   }
 `;
+
+export const GET_ALL_POKEMON_NO_LIMIT = gql`
+  query GetAllPokemonNoLimit {
+    pokemonDetails: pokemon_v2_pokemon {
+      id
+      name
+
+      types: pokemon_v2_pokemontypes {
+        type: pokemon_v2_type {
+          name
+        }
+      }
+    }
+  }
+`;

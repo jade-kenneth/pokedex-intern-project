@@ -8,6 +8,9 @@ import PokemonThemeChanger from "./PokemonThemeChanger";
 import { motion } from "framer-motion";
 import { GetAllPokemons_pokemons } from "src/types/pokemon/GetAllPokemons";
 import useRecentViewStore from "src/hooks/useRecentViewStore";
+import getPokemonElementColor from "src/helpers/getPokemonElementColor";
+import useBattleState from "src/hooks/useBattleState";
+import { useRouter } from "next/router";
 // import { TypesDetail } from "pages/ssr/pokemon";
 
 interface EachPokemonProps {
@@ -17,23 +20,32 @@ interface EachPokemonProps {
 
 const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
   const MotionPokemonThemeChanger = motion(PokemonThemeChanger);
+  const battleState = useBattleState((state) => state);
   const store = useRecentViewStore((state) => state);
+  const router = useRouter();
   return (
     <MotionPokemonThemeChanger
       whileHover={{ scale: 1.1 }}
       borderRadius="sm"
       overflow="hidden"
-      pokemonType={types[0].type?.name}
-      onClick={() =>
+      bg={getPokemonElementColor(types[0].type?.name!)}
+      onClick={() => {
         store.addToRecentView(
           id,
           `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`
-        )
-      }
+        );
+      }}
     >
-      <Link
-        href={{
-          pathname: `/home/pokemon-details/${id}`,
+      <Flex
+        onClick={() => {
+          battleState.mode === "battle" && battleState.setPlayer(id);
+          router.push(
+            `/home/pokemon-details/${id}/${
+              battleState.mode === "battle"
+                ? `vs/${battleState.opponentId}/fight`
+                : ""
+            }`
+          );
         }}
       >
         <a>
@@ -69,34 +81,36 @@ const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
             </Flex>
             <Flex flex="1" direction={"column"}>
               <Text
-                fontSize="1.5rem"
+                fontSize={battleState.mode === "battle" ? "0.5rem" : "1.5rem"}
                 fontWeight="bolder"
                 textTransform="capitalize"
               >
                 {children}
               </Text>
 
-              <Flex direction="column" gap="5px" width={"50%"}>
-                {types.map((s) => {
-                  const { type } = s;
-                  return (
-                    <>
-                      <Text
-                        p={1}
-                        textAlign="center"
-                        bg="whiteAlpha.500"
-                        borderRadius="50px"
-                      >
-                        {type?.name}
-                      </Text>
-                    </>
-                  );
-                })}
-              </Flex>
+              {battleState.mode !== "battle" && (
+                <Flex direction="column" gap="5px" width={"50%"}>
+                  {types.map((s) => {
+                    const { type } = s;
+                    return (
+                      <>
+                        <Text
+                          p={1}
+                          textAlign="center"
+                          bg="whiteAlpha.500"
+                          borderRadius="50px"
+                        >
+                          {type?.name}
+                        </Text>
+                      </>
+                    );
+                  })}
+                </Flex>
+              )}
             </Flex>
           </Flex>
         </a>
-      </Link>
+      </Flex>
     </MotionPokemonThemeChanger>
   );
 };

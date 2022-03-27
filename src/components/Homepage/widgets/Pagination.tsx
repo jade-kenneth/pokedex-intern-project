@@ -56,7 +56,7 @@ const Pagination: React.FC<PaginationProps> = ({
       setFinal((prev) => prev + numberPerPage);
 
       /** if current page  */
-    } else if (currentPage + numberPerPage < pageNumbers.length) {
+    } else if (final < pageNumbers.length) {
       setToggle((prev) => !prev);
       setInitial((prev) => prev + numberPerPage);
       setFinal((prev) => prev + numberPerPage);
