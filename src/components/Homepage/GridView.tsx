@@ -11,13 +11,14 @@ import useBattleState from "src/hooks/useBattleState";
 const GridView = ({ pokemons }: PokedexProps) => {
   // auto-fill, minmax(11.5rem,1fr)
   const battleState = useBattleState((state) => state);
+
   return (
     <Grid
       templateColumns={{
         base: "repeat(1,1fr)",
         sm: "repeat(2,1fr)",
         md: "repeat(2,1fr)",
-        lg: battleState.mode === "battle" ? "repeat(5,1fr)" : "repeat( 5, 1fr)",
+        lg: battleState.mode === "battle" ? "repeat(5,1fr)" : "repeat(5, 1fr)",
       }}
       templateRows={{
         base: "repeat(6,16.188rem)",

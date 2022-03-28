@@ -37,6 +37,7 @@ const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
       }}
     >
       <Flex
+        height={"100%"}
         onClick={() => {
           battleState.mode === "battle" && battleState.setPlayer(id);
           router.push(
@@ -48,68 +49,67 @@ const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
           );
         }}
       >
-        <a>
+        <Flex
+          flexDirection="column-reverse"
+          h="100%"
+          w="100%"
+          overflow={"hidden"}
+          fontFamily="sans-serif"
+          color="white"
+          p={2}
+        >
           <Flex
-            flexDirection="column-reverse"
-            p={2}
+            flex="2"
             h="100%"
-            fontFamily="sans-serif"
-            overflow="hidden"
-            color="white"
+            align="center"
+            justify="end"
+            position="relative"
+            direction={"row-reverse"}
           >
-            <Flex
-              flex="2"
-              h="100%"
-              w="100%"
-              align="center"
-              direction="row-reverse"
-              justify="center"
-              position="relative"
-            >
-              <Box position="absolute" right="-15px" bottom="-20px">
-                <Image src={pokeball} alt="ball" width={100} height={100} />
-              </Box>
+            <Flex position="absolute" right="-15px" bottom="-20px">
+              <Image src={pokeball} alt="ball" width={100} height={100} />
+            </Flex>
+            <Flex justify={"end"} w="100%" h="100%">
               <Image
                 src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`}
                 alt={`${children}`}
                 placeholder="blur"
                 blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mO8/fR2PQAIWgMc+QDkCgAAAABJRU5ErkJggg=="
                 width={130}
-                height={130}
+                height={"100%"}
               />
-              <Spacer />
-            </Flex>
-            <Flex flex="1" direction={"column"}>
-              <Text
-                fontSize={battleState.mode === "battle" ? "0.5rem" : "1.5rem"}
-                fontWeight="bolder"
-                textTransform="capitalize"
-              >
-                {children}
-              </Text>
-
-              {battleState.mode !== "battle" && (
-                <Flex direction="column" gap="5px" width={"50%"}>
-                  {types.map((s) => {
-                    const { type } = s;
-                    return (
-                      <>
-                        <Text
-                          p={1}
-                          textAlign="center"
-                          bg="whiteAlpha.500"
-                          borderRadius="50px"
-                        >
-                          {type?.name}
-                        </Text>
-                      </>
-                    );
-                  })}
-                </Flex>
-              )}
             </Flex>
           </Flex>
-        </a>
+          <Flex flex="2.5" direction={"column"}>
+            <Text
+              fontSize={battleState.mode === "battle" ? "0.5rem" : "1.5rem"}
+              fontWeight="bolder"
+              textTransform="capitalize"
+            >
+              {children}
+            </Text>
+
+            {battleState.mode !== "battle" && (
+              <Flex direction="column" gap="5px" width={"50%"}>
+                {types.map((s) => {
+                  const { type } = s;
+                  return (
+                    <>
+                      <Text
+                        p={1}
+                        textAlign="center"
+                        bg="whiteAlpha.500"
+                        borderRadius="50px"
+                      >
+                        {type?.name}
+                      </Text>
+                    </>
+                  );
+                })}
+              </Flex>
+            )}
+          </Flex>
+        </Flex>
       </Flex>
     </MotionPokemonThemeChanger>
   );

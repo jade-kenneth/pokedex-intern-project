@@ -126,7 +126,7 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
       battleState.setOpponent(0);
     }
     battleState.setMode("list");
-  }, []);
+  }, [router.query.pokemonId]);
   const handleFetchMore = () => {
     fetchMore({
       variables: {
@@ -165,7 +165,7 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
     }
   }, [elements.length, setIsFilter]);
   if (!pokemonFetched) return <Loading type="loading" />;
-  console.log(pokemonFetched);
+
   return (
     <Box width={"container.lg"} mx="auto" position="relative" zIndex={998}>
       <HStack justify="space-between" pt="2rem" mb={"3rem"}>

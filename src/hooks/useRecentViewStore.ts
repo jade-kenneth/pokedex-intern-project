@@ -14,7 +14,7 @@ export const addToRecentView = (
 ): IRecent[] => {
   const found = recents.some((data) => data.id === id);
   if (!found) return [{ id, img }, ...recents];
-
+  if (found) return [{ id, img }, ...recents.filter((data) => data.id !== id)];
   return recents;
 };
 
