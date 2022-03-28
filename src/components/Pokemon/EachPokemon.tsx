@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Box, Text } from "@chakra-ui/react";
 import { Flex, Spacer } from "@chakra-ui/react";
 import pokeball from "public/backgrounds/pokeballBg.png";
-import PokemonThemeChanger from "./PokemonThemeChanger";
+
 import { motion } from "framer-motion";
 import { GetAllPokemons_pokemons } from "src/types/pokemon/GetAllPokemons";
 import useRecentViewStore from "src/hooks/useRecentViewStore";
@@ -19,12 +19,13 @@ interface EachPokemonProps {
 }
 
 const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
-  const MotionPokemonThemeChanger = motion(PokemonThemeChanger);
+  const MotionBox = motion(Box);
   const battleState = useBattleState((state) => state);
   const store = useRecentViewStore((state) => state);
   const router = useRouter();
   return (
-    <MotionPokemonThemeChanger
+    <MotionBox
+      cursor={"pointer"}
       whileHover={{ scale: 1.1 }}
       borderRadius="sm"
       overflow="hidden"
@@ -111,7 +112,7 @@ const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
           </Flex>
         </Flex>
       </Flex>
-    </MotionPokemonThemeChanger>
+    </MotionBox>
   );
 };
 

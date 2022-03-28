@@ -10,13 +10,14 @@ import {
   useColorModeValue,
   VStack,
   Tag,
+  Box,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { Router, useRouter } from "next/router";
 import React from "react";
 import { GetAllPokemons } from "src/types/pokemon/GetAllPokemons";
 import { motion } from "framer-motion";
-import PokemonThemeChanger from "../Pokemon/PokemonThemeChanger";
+
 import getPokemonElementColor from "src/helpers/getPokemonElementColor";
 const ListView = ({ pokemons }: GetAllPokemons) => {
   const MotionTr = motion(Tr);
@@ -67,12 +68,12 @@ const ListView = ({ pokemons }: GetAllPokemons) => {
                 <VStack align="left">
                   {data.types.map((type) => {
                     return (
-                      <PokemonThemeChanger
+                      <Box
                         key={type.type?.name}
                         color={getPokemonElementColor(type.type?.name!)}
                       >
                         {type.type?.name!}
-                      </PokemonThemeChanger>
+                      </Box>
                     );
                   })}
                 </VStack>

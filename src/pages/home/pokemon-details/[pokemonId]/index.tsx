@@ -33,7 +33,7 @@ import {
   GetAllPokemons,
   GetAllPokemonsVariables,
 } from "src/types/pokemon/GetAllPokemons";
-import PokemonThemeChanger from "src/components/Pokemon/PokemonThemeChanger";
+
 import usePokemonDetailStore from "src/hooks/usePokemonDetailStore";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
@@ -240,7 +240,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
               {pokemonDetails?.types.map((type, idx) => {
                 return (
                   <React.Fragment key={idx}>
-                    <PokemonThemeChanger
+                    <Box
                       w={"6.375rem"}
                       py={"0.5rem"}
                       as="text"
@@ -249,7 +249,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
                       bg={getPokemonElementColor(type.type?.name!)}
                     >
                       {type.type?.name}
-                    </PokemonThemeChanger>
+                    </Box>
                   </React.Fragment>
                 );
               })}

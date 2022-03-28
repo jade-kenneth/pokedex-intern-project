@@ -3,7 +3,7 @@ import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import Image from "next/image";
 import loginBg from "public/backgrounds/loginBg.png";
 import { GetAllPokemons } from "src/types/pokemon/GetAllPokemons";
-import PokemonThemeChanger from "src/components/Pokemon/PokemonThemeChanger";
+
 import EachPokemon from "src/components/Pokemon/EachPokemon";
 import { PokedexProps } from "src/pages/home";
 import useBattleState from "src/hooks/useBattleState";
