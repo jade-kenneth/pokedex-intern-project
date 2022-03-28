@@ -9,7 +9,7 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { InputWithValidatorProps } from "src/types/InputWithValidator";
+import { InputWithValidatorProps } from "src/interfaces/InputWithValidator";
 
 {
   /**Refactored: Using forwardRef to pass a ref through a component to one of its children */

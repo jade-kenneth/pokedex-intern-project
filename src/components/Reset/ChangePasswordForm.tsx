@@ -8,12 +8,12 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import InputWithValidator from "../Form/InputWithValidator";
-import { FormProps } from "src/types/Form";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
 import * as yup from "yup";
 import FormButton from "../Form/FormButton";
-import { ChangePasswordInput } from "src/types/Input";
+
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
 
@@ -27,6 +27,7 @@ import {
   resetPassword_resetPassword,
 } from "src/types/auth/resetPassword";
 import { signIn } from "next-auth/react";
+import { ChangePasswordInput } from "src/interfaces/Input";
 let schema = yup.object().shape({
   password: yup
     .string()
