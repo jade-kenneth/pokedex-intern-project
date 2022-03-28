@@ -1,6 +1,6 @@
 import { Button, Stack } from "@chakra-ui/react";
 import React from "react";
-import { FormButtonProps } from "src/types/FormButton";
+import { FormButtonProps } from "src/interfaces/FormButton";
 
 const FormButton: React.FC<FormButtonProps> = ({ children, ...props }) => {
   return (
