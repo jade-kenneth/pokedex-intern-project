@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import PokemonThemeChanger from "src/components/Pokemon/PokemonThemeChanger";
+
 // import {
 //   getPokemonDetailById,
 //   IGetPokemonDetailById,
@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 const PokemonList = ({ pokemons }: GetAllPokemons) => {
   const [fight, setFight] = React.useState<number | null>(null);
-  const MotionPokemonThemeChanger = motion(PokemonThemeChanger);
+
   const battleState = useBattleState((state) => state);
   const router = useRouter();
   React.useEffect(() => {
