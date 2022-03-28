@@ -53,5 +53,6 @@ export const usePagination = (
     handlePrev,
     paginate,
     currentPage,
+    setCurrentPage,
   };
 };

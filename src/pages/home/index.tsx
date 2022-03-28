@@ -90,6 +90,7 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
     currentPage,
     pageNumbers,
     paginate,
+    setCurrentPage,
   } = usePagination(numberPerPage, {
     pokemons: pokemonFetched,
   });
@@ -104,13 +105,15 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
         variables: { type: elements },
         context: { clientName: "pokeapi" },
       });
+      setCurrentPage(1);
     } else {
       fetchData({
         variables: { offset: 0, limit: 100 },
         context: { clientName: "pokeapi" },
       });
+      setCurrentPage(1);
     }
-  }, [elements, isFilter, fetchData, executeFiltering]);
+  }, [elements, isFilter, setCurrentPage, fetchData, executeFiltering]);
 
   useEffect(() => {
     if (!router.query.pokemonId) {
