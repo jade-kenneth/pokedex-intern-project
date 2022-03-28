@@ -51,10 +51,14 @@ export interface PokedexProps {
   header?: string;
 }
 const Pokedex = ({ header, pokemons }: PokedexProps) => {
-  const [fetchData, { data, fetchMore }] =
-    useLazyQuery<GetAllPokemons>(GET_ALL_POKEMON);
+  const [fetchData, { data, fetchMore }] = useLazyQuery<GetAllPokemons>(
+    GET_ALL_POKEMON,
+    { context: { clientName: "pokeapi" } }
+  );
   const [executeFiltering, { loading: filterLoading, data: filtered }] =
-    useLazyQuery<GetFilteredPokemon>(GET_FILTERED_POKEMON);
+    useLazyQuery<GetFilteredPokemon>(GET_FILTERED_POKEMON, {
+      context: { clientName: "pokeapi" },
+    });
   const [options, setOptions] = useState<"grid" | "list">("grid");
   const [elements, setElements] = useState<string[]>([]);
   const [isFilter, setIsFilter] = useState(false);
@@ -101,17 +105,19 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
      * else fetch default data
      */
     if (isFilter) {
-      executeFiltering({
-        variables: { type: elements },
-        context: { clientName: "pokeapi" },
-      });
-      setCurrentPage(1);
+      (async function getFilteredData() {
+        await executeFiltering({
+          variables: { type: elements },
+        });
+        setCurrentPage(1);
+      })();
     } else {
-      fetchData({
-        variables: { offset: 0, limit: 100 },
-        context: { clientName: "pokeapi" },
-      });
-      setCurrentPage(1);
+      (async function getData() {
+        await fetchData({
+          variables: { offset: 0, limit: 100 },
+        });
+        setCurrentPage(1);
+      })();
     }
   }, [elements, isFilter, setCurrentPage, fetchData, executeFiltering]);
 
@@ -159,7 +165,7 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
     }
   }, [elements.length, setIsFilter]);
   if (!pokemonFetched) return <Loading type="loading" />;
-
+  console.log(pokemonFetched);
   return (
     <Box width={"container.lg"} mx="auto" position="relative" zIndex={998}>
       <HStack justify="space-between" pt="2rem" mb={"3rem"}>
