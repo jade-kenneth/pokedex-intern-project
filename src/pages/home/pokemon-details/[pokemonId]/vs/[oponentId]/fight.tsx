@@ -31,11 +31,9 @@ import getBattleDataByIds, {
 import getPokemonElementColor from "src/helpers/getPokemonElementColor";
 import Loading from "src/components/Homepage/widgets/Loading";
 import useBattleState from "src/hooks/useBattleState";
-import getWeaknessStrengthByType, {
-  IUnfilteredWeaknessStrength,
-  IWeaknessStrength,
-} from "src/helpers/getWeaknessStrengthByType";
+import getWeaknessStrengthByType from "src/helpers/getWeaknessStrengthByType";
 import getPlayerBuff from "src/helpers/getPlayerBuff";
+import { GetEachPokemon_pokemonDetails_moves } from "src/types/pokemon/GetEachPokemon";
 
 interface CombineStats {
   opponentUnFilteredResistance: string[];
@@ -63,15 +61,22 @@ const Fight = () => {
   const btnRef = React.useRef<HTMLButtonElement | null>(null);
   const [battleData, setBattleData] = useState<IBattleData["battleData"]>();
   const battleState = useBattleState((state) => state);
-  const [cap, setCap] = useState<CombineStats>();
-  let opponentUnFilteredResistance: string[] = [];
-  let opponentUnFilteredWeakness: string[] = [];
-  let playerUnFilteredResistance: string[] = [];
-  let playerUnFilteredWeakness: string[] = [];
+  const [attacking, setAttacking] = useState(true);
+  const [beforeAttack, setBeforeAttack] = useState(10);
+  const [popUp, setPopUp] = useState({ damage: 0, attackName: "" });
+  const [attackIdx, setAttackIdx] = useState(0);
+  const [moves, setMoves] = useState<{
+    opponent: GetEachPokemon_pokemonDetails_moves[];
+    player: GetEachPokemon_pokemonDetails_moves[];
+  }>({ opponent: [], player: [] });
   const [playerBuffs, setPlayerBuffs] = useState<IBuffs>({
     opponent: [],
     player: [],
   });
+  const [turn, setTurn] = useState<(keyof typeof moves)[]>([
+    "opponent",
+    "player",
+  ]);
   /** Note: Opponent = me or you
    * Player = Chosen player/pokemon to fight
    */
@@ -93,6 +98,27 @@ const Fight = () => {
     }
     return () => clearInterval(timer);
   }, [running, time]);
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (attacking) {
+      timer = setInterval(() => {
+        setBeforeAttack((prev) => prev - 1);
+
+        if (beforeAttack <= 0) {
+          setPopUp({
+            ...popUp,
+            attackName: moves[`${turn[0]}`][attackIdx].move?.name!,
+          });
+          setAttacking(false);
+          setTurn([(turn[0] = `${turn[1]}`), (turn[1] = `${turn[0]}`)]);
+        } else if (beforeAttack >= 0) {
+          setAttackIdx(Math.floor(Math.random() * moves.opponent.length));
+        }
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [attacking, beforeAttack, moves.opponent.length]);
+
   useEffect(() => {
     (async function getBattleData() {
       const { battleData } = await getBattleDataByIds(ids);
@@ -127,13 +153,15 @@ const Fight = () => {
         opponent: opponentBuff,
         player: playerBuff,
       });
+      setMoves({
+        opponent: battleData[0]?.moves!,
+        player: battleData[1]?.moves!,
+      });
 
       setBattleData(battleData);
     })();
   }, []);
-
-  console.log(playerBuffs);
-
+  console.log(attackIdx);
   return (
     <Stack>
       <Drawer isOpen={true} placement="top" onClose={onClose}>
@@ -303,7 +331,7 @@ const Fight = () => {
                           fontWeight={"bold"}
                           fontStyle={"italic"}
                         >
-                          -15
+                          {beforeAttack > 0 ? beforeAttack : popUp.attackName}
                         </Text>
                         <Box
                           position={"relative"}
@@ -370,11 +398,14 @@ const Fight = () => {
                         gap="0.5rem"
                         key={idx}
                       >
-                        {data?.moves.map((move) => {
+                        {data?.moves.map((move, mvIdx) => {
                           return (
                             <Button
                               borderRadius={"0px"}
                               key={move.move?.name}
+                              border={
+                                mvIdx === attackIdx ? "3px solid red" : "none"
+                              }
                               colorScheme={
                                 battleData.length - 1 === idx ? "red" : "green"
                               }
