@@ -25,7 +25,7 @@ const GridView = ({ pokemons }: PokedexProps) => {
         md: "repeat(4,16.188rem)",
         lg:
           battleState.mode === "battle"
-            ? "repeat(2,100px)"
+            ? "repeat(2,110px)"
             : "repeat(2, 16.188rem)",
       }}
       gap={battleState.mode === "battle" ? "1rem" : "2rem"}
