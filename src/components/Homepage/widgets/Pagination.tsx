@@ -12,6 +12,7 @@ import {
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import useBattleState from "src/hooks/useBattleState";
 
 interface PaginationProps {
   totalPokemon?: number | undefined;
@@ -44,7 +45,7 @@ const Pagination: React.FC<PaginationProps> = ({
   useEffect(() => {
     paginate(initial + 1);
   }, [toggle]);
-
+  const battleState = useBattleState((state) => state);
   const handleNextPagination = () => {
     /** trigger only if it is end of the page and
      * filter feature is disabled
@@ -76,7 +77,7 @@ const Pagination: React.FC<PaginationProps> = ({
           {pageNumbers.length}{" "}
         </Text>
       </HStack>
-      <HStack w="auto" spacing="10px" height="2rem">
+      <HStack w="auto" align={"center"} spacing="10px" height="2rem">
         <IconButton
           w="0.3rem"
           h="0.5rem"

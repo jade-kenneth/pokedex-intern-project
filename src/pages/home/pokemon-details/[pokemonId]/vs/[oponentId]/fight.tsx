@@ -125,15 +125,15 @@ const Fight = () => {
   }, [store.attacking, store.beforeAttack]);
 
   useEffect(() => {
-    if (
-      store.playerHp.opponent - store.popUp.damage < 0 ||
-      store.playerHp.player - store.popUp.damage < 0
-    ) {
-      store.setPlayerHP({
-        ...store.playerHp,
-        [`${store.turn[0]}`]: 0,
-      });
+    if (store.playerHp.opponent <= 0 || store.playerHp.player <= 0) {
       store.setAttacking(false);
+      store.setPopUp({
+        ...store.popUp,
+        attackName:
+          store.playerHp.opponent > 0
+            ? `${store.battleData[0]?.name} wins`
+            : `${store.battleData[1]?.name} wins`,
+      });
     } else {
       store.setAttacking(true);
       store.setBeforeAttack(10);

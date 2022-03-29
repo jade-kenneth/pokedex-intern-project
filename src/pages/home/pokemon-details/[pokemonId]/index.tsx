@@ -171,7 +171,11 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
         })}
       </Breadcrumb>
 
-      <Stack align="flex-start" direction={"row"} spacing={"4.313rem"}>
+      <Stack
+        align={{ base: "center", lg: "flex-start" }}
+        direction={{ base: "column", lg: "row" }}
+        spacing={"4.313rem"}
+      >
         {/** Profile*/}
         <VStack spacing="2.188rem">
           <Stack w={"20.313rem"} h={"24.313rem"} position="relative">

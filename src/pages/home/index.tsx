@@ -12,6 +12,7 @@ import {
   Checkbox,
   Image as ChakraImage,
   Flex,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import React, { useEffect, useState, useCallback } from "react";
 import Layout1 from "src/components/Layouts/layout-1/Layout1";
@@ -66,6 +67,7 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
   const [isFilter, setIsFilter] = useState(false);
   const battleState = useBattleState((state) => state);
   const { types } = useGetPokemonTypes();
+
   const numberPerPage = 10;
   const router = useRouter();
 
@@ -184,9 +186,18 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
   if (!pokemonFetched) return <Loading type="loading" />;
 
   return (
-    <Box width={"container.lg"} mx="auto" position="relative" zIndex={998}>
+    <Flex
+      direction={"column"}
+      w={{
+        base: "95%",
+        lg: battleState.mode === "battle" ? "100%" : "container.lg",
+      }}
+      mx="auto"
+      position="relative"
+      zIndex={998}
+    >
       <HStack justify="space-between" pt="2rem" mb={"3rem"}>
-        <Heading fontSize="1.5rem">
+        <Heading fontSize={"1.5rem"}>
           {header ? header : "Choose a pokemon"}
         </Heading>
         <HStack spacing={3}>
@@ -291,7 +302,7 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
           </HStack>
         </Box>
       )}
-    </Box>
+    </Flex>
   );
 };
 

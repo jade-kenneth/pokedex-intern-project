@@ -13,7 +13,7 @@ const Layout1: React.FC<{}> = ({ children }) => {
     <Grid templateRows="7rem">
       <Header />
 
-      <Box minH={"100vh"} position="relative">
+      <Box position="relative">
         <Flex
           position="absolute"
           top="-50px"

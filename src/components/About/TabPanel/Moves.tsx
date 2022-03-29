@@ -18,7 +18,7 @@ const Moves = () => {
   const tagBg = useColorModeValue("gray.300", "white");
 
   return (
-    <Stack spacing={"2rem"} mb={"8.313rem"}>
+    <Stack spacing={"2rem"} mb={"8.313rem"} minW="28rem">
       <VStack
         border="1px"
         borderColor={"gray.300"}
@@ -34,6 +34,7 @@ const Moves = () => {
               borderBottomColor={"white"}
               borderBottom="1px"
               pb="0.625rem"
+              w={{ base: "200px", lg: "none" }}
             >
               <Text w="5.688rem" fontSize={"0.875rem"} textAlign={"center"}>
                 Damage
@@ -50,7 +51,7 @@ const Moves = () => {
           {state.pokemonDetails.abilities.map((data, idx) => {
             const { ability } = data;
             return (
-              <HStack w="100%" key={idx} justify="space-between" align="center">
+              <HStack key={idx} justify="space-between" align="center">
                 <Tag
                   py={"0.438rem"}
                   px={"1.469rem"}
@@ -63,6 +64,7 @@ const Moves = () => {
                   borderBottomColor={"white"}
                   h={"3.188rem"}
                   borderBottom="1px"
+                  w={{ base: "200px", lg: "none" }}
                 >
                   <Text w="5.688rem" textAlign={"center"}>
                     10
@@ -89,12 +91,13 @@ const Moves = () => {
         mb={"1.5rem"}
       >
         <Flex direction={"column"}>
-          <HStack align="start" w="100%" justify="space-between">
+          <HStack align="start" justify="space-between">
             <Text color={"tertiary"}>Main Moves</Text>
             <HStack
               borderBottomColor={"white"}
               borderBottom="1px"
               pb="0.625rem"
+              w={{ base: "200px", lg: "none" }}
             >
               <Text w="5.688rem" fontSize={"0.875rem"} textAlign={"center"}>
                 Damage
@@ -124,6 +127,7 @@ const Moves = () => {
                   borderBottomColor={"white"}
                   h={"3.188rem"}
                   borderBottom="1px"
+                  w={{ base: "200px", lg: "none" }}
                 >
                   <Text w="5.688rem" textAlign={"center"}>
                     {move?.power}

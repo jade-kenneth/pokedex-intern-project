@@ -44,7 +44,7 @@ const PokemonList = ({ pokemons }: GetAllPokemons) => {
     };
   }, []);
 
-  return <Pokedex header="Choose an opponent" pokemons={pokemons}></Pokedex>;
+  return <Pokedex header="Choose opponent" pokemons={pokemons}></Pokedex>;
 };
 
 export default PokemonList;

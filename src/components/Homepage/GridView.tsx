@@ -16,17 +16,14 @@ const GridView = ({ pokemons }: PokedexProps) => {
     <Grid
       templateColumns={{
         base: "repeat(1,1fr)",
-        sm: "repeat(2,1fr)",
+
         md: "repeat(2,1fr)",
         lg: battleState.mode === "battle" ? "repeat(5,1fr)" : "repeat(5, 1fr)",
       }}
       templateRows={{
-        base: "repeat(6,16.188rem)",
+        base: "repeat(auto,16.188rem)",
         md: "repeat(4,16.188rem)",
-        lg:
-          battleState.mode === "battle"
-            ? "repeat(2,110px)"
-            : "repeat(2, 16.188rem)",
+        lg: "repeat(2, 16.188rem)",
       }}
       gap={battleState.mode === "battle" ? "1rem" : "2rem"}
     >
