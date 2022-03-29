@@ -8,7 +8,7 @@ interface IStore {
   mode: "list" | "battle";
   opponentId: number;
   playerId: number;
-  force?: boolean;
+
   setMode: (mode: "list" | "battle") => void;
   setOpponent: (opponentId: number) => void;
   setPlayer: (playerId: number) => void;
@@ -20,7 +20,9 @@ const useBattleState = create<IStore>(
       mode: "list",
       opponentId: 0,
       playerId: 0,
-      force: false,
+
+      //set mode to battle if there is opponent (clicked a pokemon)
+      //
       setMode: (mode: "list" | "battle") => {
         set((state) => ({
           ...state,

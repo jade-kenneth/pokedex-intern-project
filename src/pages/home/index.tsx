@@ -35,6 +35,8 @@ import apolloClient from "src/apollo/apollo-client";
 import Loading from "src/components/Homepage/widgets/Loading";
 import useBattleState from "src/hooks/useBattleState";
 import { useRouter } from "next/router";
+import withAuth from "src/middleware/withAuth";
+import { useSession } from "next-auth/react";
 
 export const getStaticProps: GetStaticProps = async () => {
   const { data } = await apolloClient.query({
@@ -66,6 +68,7 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
   const { types } = useGetPokemonTypes();
   const numberPerPage = 10;
   const router = useRouter();
+
   /** check if pokemons fetch is not undefined */
   let pokemonFetched:
     | GetAllPokemons["pokemons"]
@@ -98,7 +101,7 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
   } = usePagination(numberPerPage, {
     pokemons: pokemonFetched,
   });
-  console.log(battleState);
+
   useEffect(() => {
     /** after toggling filter this fires
      * if filter then execute filter
@@ -164,6 +167,20 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
       setIsFilter(false);
     }
   }, [elements.length, setIsFilter]);
+  React.useEffect(() => {
+    const handleChangeRoute = () => {
+      console.log("yow");
+      return <Loading type="loading" />;
+    };
+
+    router.events.on("routeChangeStart", handleChangeRoute);
+
+    // If the component is unmounted, unsubscribe
+    // from the event with the `off` method:
+    return () => {
+      router.events.off("routeChangeStart", handleChangeRoute);
+    };
+  }, []);
   if (!pokemonFetched) return <Loading type="loading" />;
 
   return (

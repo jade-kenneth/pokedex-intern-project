@@ -16,7 +16,7 @@ import getWeaknessStrengthByType, {
 
 import usePokemonDetailStore from "src/hooks/usePokemonDetailStore";
 import { statistic_data } from "src/utils/pokemonStatisticData";
-
+import Loading from "src/components/Homepage/widgets/Loading";
 const Statistics = () => {
   const state = usePokemonDetailStore((state) => state);
   const progressBg = useColorModeValue("gray.300", "white");
@@ -53,19 +53,28 @@ const Statistics = () => {
       >
         {state.pokemonDetails.stats.map((stat, idx) => {
           return (
-            <HStack key={idx} h={"1.625rem"} spacing={"2.125rem"} width="100%">
-              <Text w={"2.184rem"}>{statistic_data[idx].name}</Text>
+            <Flex
+              key={idx}
+              h={"1.625rem"}
+              gap={"2.125rem"}
+              width="100%"
+              align="center"
+            >
+              <Text flex="0.2" w={"3rem"}>
+                {statistic_data[idx].name}
+              </Text>
 
               <Progress
                 value={stat.base_stat}
                 width="100%"
+                flex="3"
                 bg={progressBg}
                 size="xs"
                 colorScheme={statistic_data[idx].color}
               />
 
-              <Text>{stat.base_stat}%</Text>
-            </HStack>
+              <Text flex="0.3">{stat.base_stat}%</Text>
+            </Flex>
           );
         })}
       </VStack>

@@ -43,6 +43,7 @@ import getPokemonElementColor from "src/helpers/getPokemonElementColor";
 import PokemonList from "src/components/About/Battle/PokemonList";
 import useBattleState from "src/hooks/useBattleState";
 import Loading from "src/components/Homepage/widgets/Loading";
+import { useSession } from "next-auth/react";
 export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await apolloClient.query<
     GetAllPokemons,
@@ -88,7 +89,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
   const state = useRecentViewStore((state) => state);
   const battleState = useBattleState((state) => state);
   const router = useRouter();
-  const { handleNext, handlePrev, data } = usePagination(6, {
+  const { handleNext, data, handlePrev, setCurrentPage } = usePagination(6, {
     pokemons: state.recents,
   });
 
@@ -102,7 +103,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
   }, [pokemonDetails]);
   React.useEffect(() => {
     const handleChangeRoute = () => {
-      return <Loading type="loading" />;
+      <Loading type="loading" />;
     };
 
     router.events.on("routeChangeStart", handleChangeRoute);
@@ -125,7 +126,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
 
   const routerLink = router.asPath.split("/");
 
-  if (!pokemonDetails?.types) return <Loading type="loading" />;
+  if (!pokemonDetails) return <Loading type="loading" />;
   return (
     <Box mt={"1.375rem"} w={"container.lg"} mx="auto">
       <Breadcrumb
@@ -200,6 +201,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
                     key={data.id}
                     border="1px solid gray"
                     onClick={() => {
+                      setCurrentPage(1);
                       state.viewRecent(
                         data.id,
                         `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${data.id}.png`

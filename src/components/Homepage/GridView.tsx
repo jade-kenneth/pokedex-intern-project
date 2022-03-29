@@ -11,7 +11,7 @@ import useBattleState from "src/hooks/useBattleState";
 const GridView = ({ pokemons }: PokedexProps) => {
   // auto-fill, minmax(11.5rem,1fr)
   const battleState = useBattleState((state) => state);
-
+  console.log(battleState);
   return (
     <Grid
       templateColumns={{
@@ -25,11 +25,10 @@ const GridView = ({ pokemons }: PokedexProps) => {
         md: "repeat(4,16.188rem)",
         lg:
           battleState.mode === "battle"
-            ? "repeat(5,100px)"
+            ? "repeat(2,100px)"
             : "repeat(2, 16.188rem)",
       }}
       gap={battleState.mode === "battle" ? "1rem" : "2rem"}
-      height={battleState.mode === "battle" ? "12.625rem" : "auto"}
     >
       {/**grid*/}
       {pokemons.map((pokemon) => {

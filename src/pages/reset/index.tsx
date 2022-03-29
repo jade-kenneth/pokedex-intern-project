@@ -14,7 +14,15 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
 import * as yup from "yup";
 import InputWithValidator from "src/components/Form/InputWithValidator";
-import { Stack, Text, Link, Heading, Box } from "@chakra-ui/react";
+import {
+  Stack,
+  Text,
+  Link,
+  Heading,
+  Box,
+  toast,
+  useToast,
+} from "@chakra-ui/react";
 import FormButton from "src/components/Form/FormButton";
 import { useMutation } from "@apollo/client";
 import {
@@ -39,6 +47,7 @@ let schema = yup.object().shape({
 
 const Reset = ({ provider }: FormProps) => {
   const [access, setAccess] = useState<boolean | undefined>(false);
+  const toast = useToast();
   const {
     register,
     handleSubmit,
@@ -74,7 +83,20 @@ const Reset = ({ provider }: FormProps) => {
 
       setAccess(trigger?.triggerPasswordReset);
       router.push(`${resetLink?.generatePasswordResetLink}`);
-    } catch (error) {}
+    } catch (error: any) {
+      toast({
+        position: "top",
+
+        description: `${error.message}`,
+        status: "error",
+        // render: () => `${error.message}`,
+        // render: () => (
+        //   <Box color="black" p={3} bg="white">
+        //     {`😵‍💫 ${error?.message!}`}
+        //   </Box>
+        // ),
+      });
+    }
   };
 
   return (

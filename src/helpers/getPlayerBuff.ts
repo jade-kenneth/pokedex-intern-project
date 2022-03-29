@@ -36,6 +36,10 @@ const getPlayerBuff = async ({
 }: getPlayerBuffProps) => {
   let buff: Array<{ attack: number; fromPlayerWeakness: string }> = [];
 
+  {
+    /**check if player type is weakness of opponent then
+ init attack +5 and name of weakness: ex 'poison' */
+  }
   for (const eachType of playerType) {
     for (const type of playerWeaknesses) {
       if (eachType.type?.name === type) {

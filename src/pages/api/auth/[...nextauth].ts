@@ -9,9 +9,11 @@ import { LOGIN } from "src/graphql/auth/mutations/authenticate";
 import { REGISTER_USER } from "src/graphql/auth/mutations/register";
 import { DgraphAdapter } from "@next-auth/dgraph-adapter";
 import apolloClient from "src/apollo/apollo-client";
+import { Router } from "next/router";
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   // Do whatever you want here, before the request is passed down to `NextAuth`
+
   return await NextAuth(req, res, {
     secret: process.env.NEXTAUTH_SECRET,
     session: { strategy: "jwt", maxAge: 1 * 1 * 1 * 100000 },
@@ -21,17 +23,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     }),
     providers: [
       // OAuth authentication providers
-      EmailProvider({
-        server: {
-          host: process.env.EMAIL_SERVER_HOST,
-          port: process.env.EMAIL_SERVER_PORT,
-          auth: {
-            user: process.env.EMAIL_SERVER_USER,
-            pass: process.env.EMAIL_SERVER_PASSWORD,
-          },
-        },
-        from: process.env.EMAIL_FROM,
-      }),
+
       CredentialProvider({
         name: "NEXT AUTH",
         credentials: {
@@ -90,6 +82,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     pages: {
       signIn: "/signin",
       newUser: "/newUser",
+      signOut: "/home",
       error: "/signin",
     },
     callbacks: {

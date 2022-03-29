@@ -1,6 +1,6 @@
 import { Center, CircularProgress, Flex, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import pokeball from "public/backgrounds/pokeball.png";
+import pokeball from "public/backgrounds/pokeballBg.png";
 import Image from "next/image";
 
 interface Loading {
@@ -14,7 +14,7 @@ interface Error {
 type LoadingProps = Loading | Error;
 const Loading: React.FC<LoadingProps> = ({ type, message }) => {
   return (
-    <Center height="100%">
+    <Center height="85vh">
       {type === "loading" ? (
         <CircularProgress
           size="150px"

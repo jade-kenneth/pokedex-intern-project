@@ -14,7 +14,10 @@ type NextPageWithLayout = NextPage & {
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
-
+const config: ThemeConfig = {
+  initialColorMode: "light",
+  useSystemColorMode: false,
+};
 const theme = extendTheme({
   colors: {
     brand: {
@@ -36,6 +39,7 @@ const theme = extendTheme({
       md: "65%",
     },
   },
+  config,
 });
 function MyApp({
   Component,

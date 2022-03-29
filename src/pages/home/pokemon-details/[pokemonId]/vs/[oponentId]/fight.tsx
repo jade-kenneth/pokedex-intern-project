@@ -34,6 +34,12 @@ import useBattleState from "src/hooks/useBattleState";
 import getWeaknessStrengthByType from "src/helpers/getWeaknessStrengthByType";
 import getPlayerBuff from "src/helpers/getPlayerBuff";
 import { GetEachPokemon_pokemonDetails_moves } from "src/types/pokemon/GetEachPokemon";
+import NameType from "src/components/About/Battle/widgets/NameType";
+import HPBar from "src/components/About/Battle/widgets/HPBar";
+import Skills from "src/components/About/Battle/widgets/Skills";
+import Players from "src/components/About/Battle/widgets/Players";
+import useBattleStateStore from "src/hooks/useBattleStageStore";
+import { useSession } from "next-auth/react";
 
 interface CombineStats {
   opponentUnFilteredResistance: string[];
@@ -58,25 +64,11 @@ const Fight = () => {
   const [time, setTime] = useState(3);
   const [running, setRunning] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = React.useRef<HTMLButtonElement | null>(null);
-  const [battleData, setBattleData] = useState<IBattleData["battleData"]>();
+
+  const store = useBattleStateStore((state) => state);
+
   const battleState = useBattleState((state) => state);
-  const [attacking, setAttacking] = useState(true);
-  const [beforeAttack, setBeforeAttack] = useState(10);
-  const [popUp, setPopUp] = useState({ damage: 0, attackName: "" });
-  const [attackIdx, setAttackIdx] = useState(0);
-  const [moves, setMoves] = useState<{
-    opponent: GetEachPokemon_pokemonDetails_moves[];
-    player: GetEachPokemon_pokemonDetails_moves[];
-  }>({ opponent: [], player: [] });
-  const [playerBuffs, setPlayerBuffs] = useState<IBuffs>({
-    opponent: [],
-    player: [],
-  });
-  const [turn, setTurn] = useState<(keyof typeof moves)[]>([
-    "opponent",
-    "player",
-  ]);
+
   /** Note: Opponent = me or you
    * Player = Chosen player/pokemon to fight
    */
@@ -96,28 +88,62 @@ const Fight = () => {
         }
       }, 1000);
     }
+
     return () => clearInterval(timer);
   }, [running, time]);
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (attacking) {
-      timer = setInterval(() => {
-        setBeforeAttack((prev) => prev - 1);
 
-        if (beforeAttack <= 0) {
-          setPopUp({
-            ...popUp,
-            attackName: moves[`${turn[0]}`][attackIdx].move?.name!,
+    if (store.attacking) {
+      timer = setInterval(() => {
+        store.setBeforeAttack(store.beforeAttack - 1);
+
+        if (store.beforeAttack <= 0) {
+          /** */
+
+          store.setPopUp({
+            damage: store.moves[`${store.turn[0]}`][store.attackIdx].move?.pp!,
+            attackName:
+              store.moves[`${store.turn[0]}`][store.attackIdx].move?.name!,
           });
-          setAttacking(false);
-          setTurn([(turn[0] = `${turn[1]}`), (turn[1] = `${turn[0]}`)]);
-        } else if (beforeAttack >= 0) {
-          setAttackIdx(Math.floor(Math.random() * moves.opponent.length));
+          //trigger to ['opponent', 'player']
+          // ['player', 'opponent']
+          store.setTurn(
+            ([store.turn[0], store.turn[1]] = [store.turn[1], store.turn[0]])
+          );
+          store.setAttacking(false);
+          // console.log(store.moves[`${turn[0]}`][store.attackIdx].move?.name!);
+          // console.log(store.moves[`${turn[1]}`][store.attackIdx].move?.name!);
+        } else if (store.beforeAttack >= 0) {
+          store.setAttackIdx(
+            Math.floor(Math.random() * store.moves[`${store.turn[0]}`].length)
+          );
         }
       }, 1000);
     }
     return () => clearInterval(timer);
-  }, [attacking, beforeAttack, moves.opponent.length]);
+  }, [store.attacking, store.beforeAttack]);
+
+  useEffect(() => {
+    if (
+      store.playerHp.opponent - store.popUp.damage < 0 ||
+      store.playerHp.player - store.popUp.damage < 0
+    ) {
+      store.setPlayerHP({
+        ...store.playerHp,
+        [`${store.turn[0]}`]: 0,
+      });
+      store.setAttacking(false);
+    } else {
+      store.setAttacking(true);
+      store.setBeforeAttack(10);
+      store.setPlayerHP({
+        ...store.playerHp,
+        [`${store.turn[0]}`]:
+          store.playerHp[`${store.turn[0]}`] - store.popUp.damage,
+      });
+    }
+  }, [store.turn]);
 
   useEffect(() => {
     (async function getBattleData() {
@@ -149,19 +175,30 @@ const Fight = () => {
         playerWeaknesses: opponentUnFilteredWeakness,
       });
 
-      setPlayerBuffs({
-        opponent: opponentBuff,
-        player: playerBuff,
-      });
-      setMoves({
+      // setPlayerBuffs({
+      //   opponent: opponentBuff,
+      //   player: playerBuff,
+      // });
+      store.setPlayerBuffs({ opponent: opponentBuff, player: playerBuff });
+      // setMoves({
+      //   opponent: battleData[0]?.moves!,
+      //   player: battleData[1]?.moves!,
+      // });
+      store.setMoves({
         opponent: battleData[0]?.moves!,
         player: battleData[1]?.moves!,
       });
+      store.setBattleData(battleData);
 
-      setBattleData(battleData);
+      store.setPlayerHP({
+        opponent: battleData[0]?.stats[0].base_stat!,
+        player: battleData[1]?.stats[0].base_stat!,
+      });
+      // setBattleData(battleData);
     })();
   }, []);
-  console.log(attackIdx);
+  // console.log(attackIdx);
+  // console.log(turn);
   return (
     <Stack>
       <Drawer isOpen={true} placement="top" onClose={onClose}>
@@ -185,103 +222,25 @@ const Fight = () => {
               zIndex={"10000"}
             >
               <Flex justify={"space-around"} gap="1rem">
-                {battleData &&
-                  battleData?.map((data, idx) => {
+                {store.battleData &&
+                  store.battleData?.map((data, idx) => {
                     return (
                       <Flex key={idx} flex="1">
                         <VStack
                           align={
-                            idx === battleData.length - 1 ? "end" : "start"
+                            idx === store.battleData.length - 1
+                              ? "end"
+                              : "start"
                           }
                           width={"100%"}
                         >
-                          <Flex
-                            direction={
-                              idx === battleData.length - 1
-                                ? "row-reverse"
-                                : "row"
-                            }
-                            gap="0.5rem"
-                          >
-                            <Text
-                              fontSize={"2xl"}
-                              textTransform="uppercase"
-                              letterSpacing={"0.1rem"}
-                              fontStyle={"italic"}
-                              color={getPokemonElementColor(
-                                data?.types[0].type?.name!
-                              )}
-                            >
-                              {" "}
-                              {data?.name!}{" "}
-                            </Text>
-                            <HStack>
-                              {battleData[idx]?.types.map((t, root) => {
-                                return (
-                                  <>
-                                    <Tag
-                                      key={t.type?.name}
-                                      bg={getPokemonElementColor(t.type?.name!)}
-                                    >
-                                      {t.type?.name}
-                                    </Tag>
-                                  </>
-                                );
-                              })}
-                            </HStack>
-                          </Flex>
+                          {/** NAME AND TYPE */}
+                          <NameType data={data!} idx={idx} />
 
-                          <Flex
-                            w="100%"
-                            align={"center"}
-                            direction={
-                              idx === battleData.length - 1
-                                ? "row-reverse"
-                                : "row"
-                            }
-                            gap="0.3rem"
-                          >
-                            <Text>HP</Text>
-                            <Flex
-                              position={"relative"}
-                              width="100%"
-                              direction={
-                                idx === battleData.length - 1
-                                  ? "row-reverse"
-                                  : "row"
-                              }
-                            >
-                              <Text
-                                position={"absolute"}
-                                left="50%"
-                                top="50%"
-                                transform={"translate(-50%,-50%)"}
-                                color="black"
-                                zIndex={1}
-                              >
-                                {data?.stats[0].base_stat}
-                              </Text>
-                              <Progress
-                                height="20px"
-                                bg="gray"
-                                borderRadius={"20px"}
-                                colorScheme={
-                                  idx === battleData.length - 1
-                                    ? "red"
-                                    : "green"
-                                }
-                                width={"100%"}
-                                transform={
-                                  idx === battleData.length - 1
-                                    ? "scaleX(-1)"
-                                    : "none"
-                                }
-                                value={data?.stats[0].base_stat}
-                              />
-                            </Flex>
-                          </Flex>
-                          {idx === battleData.length - 1
-                            ? playerBuffs.player.map((data, idx) => {
+                          {/**HP BAR  */}
+                          <HPBar data={data!} idx={idx} />
+                          {idx === store.battleData.length - 1
+                            ? store.playerBuffs.player.map((data, idx) => {
                                 return (
                                   <HStack key={idx}>
                                     <Tag
@@ -295,7 +254,7 @@ const Fight = () => {
                                   </HStack>
                                 );
                               })
-                            : playerBuffs.opponent.map((data, idx) => {
+                            : store.playerBuffs.opponent.map((data, idx) => {
                                 return (
                                   <HStack key={idx}>
                                     <Tag
@@ -314,45 +273,7 @@ const Fight = () => {
                     );
                   })}
               </Flex>
-              <Flex
-                flex="2"
-                direction={"row"}
-                w="100%"
-                align={"center"}
-                justify="space-between"
-              >
-                {battleData &&
-                  battleData?.map((data, idx) => {
-                    return (
-                      <VStack key={idx}>
-                        <Text
-                          fontSize={"5xl"}
-                          color="red"
-                          fontWeight={"bold"}
-                          fontStyle={"italic"}
-                        >
-                          {beforeAttack > 0 ? beforeAttack : popUp.attackName}
-                        </Text>
-                        <Box
-                          position={"relative"}
-                          height="15.625rem"
-                          width={"15.625rem"}
-                          transform={
-                            idx === battleData.length - 1
-                              ? "none"
-                              : "scaleX(-1)"
-                          }
-                        >
-                          <Image
-                            alt="myPokemon"
-                            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/shiny/${data?.id}.gif`}
-                            layout="fill"
-                          />
-                        </Box>
-                      </VStack>
-                    );
-                  })}
-              </Flex>
+              <Players />
               <Flex
                 direction={"column"}
                 position="absolute"
@@ -384,41 +305,7 @@ const Fight = () => {
                 )}
               </Flex>
 
-              <Flex
-                justify={"space-around"}
-                flex="1"
-                align={"center"}
-                gap="1rem"
-              >
-                {battleData &&
-                  battleData?.map((data, idx) => {
-                    return (
-                      <Grid
-                        templateColumns={"repeat(5,1fr)"}
-                        gap="0.5rem"
-                        key={idx}
-                      >
-                        {data?.moves.map((move, mvIdx) => {
-                          return (
-                            <Button
-                              borderRadius={"0px"}
-                              key={move.move?.name}
-                              border={
-                                mvIdx === attackIdx ? "3px solid red" : "none"
-                              }
-                              colorScheme={
-                                battleData.length - 1 === idx ? "red" : "green"
-                              }
-                              fontSize={"0.8rem"}
-                            >
-                              {move.move?.name} {move.move?.pp}
-                            </Button>
-                          );
-                        })}
-                      </Grid>
-                    );
-                  })}
-              </Flex>
+              <Skills />
             </Flex>
           </DrawerBody>
         </DrawerContent>
@@ -429,24 +316,6 @@ const Fight = () => {
 
 export default Fight;
 
-// {idx === battleData.length - 1
-//   ? cap?.playerWeakness[root][
-//       `${t.type?.name}`
-//     ].map((s) => {
-//       console.log(s.name);
-//       return (
-//         <Tag key={s} color="red">
-//           {s}
-//         </Tag>
-//       );
-//     })
-//   : cap?.opponentWeakness[root][
-//       `${t.type?.name}`
-//     ].map((s) => {
-//       console.log(s);
-//       return (
-//         <Tag key={s} color="red">
-//           {s}
-//         </Tag>
-//       );
-//     })}
+Fight.getLayout = (page: React.ComponentType<{}> | JSX.Element) => {
+  return <Box>{page}</Box>;
+};

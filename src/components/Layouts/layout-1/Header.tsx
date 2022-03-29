@@ -18,7 +18,7 @@ import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { useQuery } from "@apollo/client";
 import { MY_ACCOUNT } from "src/graphql/auth/query/me";
 import apolloClient from "src/apollo/apollo-client";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 // const NavLink = ({ children }: { children: ReactNode }) => (
 //   <Link
 //     px={2}
@@ -44,6 +44,7 @@ type UserState = {
 export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
   const [user, setUser] = useState<UserState | null>(null);
+  const session = useSession({ required: true });
   useEffect(() => {
     (async function getUser() {
       const { data } = await apolloClient.query({

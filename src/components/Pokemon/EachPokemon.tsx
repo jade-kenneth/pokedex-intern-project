@@ -11,6 +11,7 @@ import useRecentViewStore from "src/hooks/useRecentViewStore";
 import getPokemonElementColor from "src/helpers/getPokemonElementColor";
 import useBattleState from "src/hooks/useBattleState";
 import { useRouter } from "next/router";
+import Loading from "../Homepage/widgets/Loading";
 // import { TypesDetail } from "pages/ssr/pokemon";
 
 interface EachPokemonProps {
@@ -23,6 +24,7 @@ const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
   const battleState = useBattleState((state) => state);
   const store = useRecentViewStore((state) => state);
   const router = useRouter();
+
   return (
     <MotionBox
       cursor={"pointer"}

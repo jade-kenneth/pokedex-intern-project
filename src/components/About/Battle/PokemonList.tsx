@@ -28,13 +28,10 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 const PokemonList = ({ pokemons }: GetAllPokemons) => {
-  const [fight, setFight] = React.useState<number | null>(null);
-
   const battleState = useBattleState((state) => state);
   const router = useRouter();
   React.useEffect(() => {
     const handleRouteChange = () => {
-      console.log("heyasa");
       battleState.setMode("list");
     };
 

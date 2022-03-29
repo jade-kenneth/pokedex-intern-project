@@ -1,4 +1,9 @@
-import React, { JSXElementConstructor, ReactElement, ReactNode } from "react";
+import React, {
+  FunctionComponent,
+  JSXElementConstructor,
+  ReactElement,
+  ReactNode,
+} from "react";
 
 import { Stack, Text, useColorModeValue, Link } from "@chakra-ui/react";
 
@@ -14,6 +19,7 @@ import AccountLayout from "src/components/Layouts/account-layout/AccountLayout";
 import InputWithValidator from "src/components/Form/InputWithValidator";
 import { SignupInputs } from "src/interfaces/Input";
 import FormButton from "src/components/Form/FormButton";
+import withAuth from "src/middleware/withAuth";
 
 let schema = yup.object().shape({
   email: yup
@@ -50,7 +56,7 @@ const Signup = ({ provider }: FormProps) => {
       firstName: data.firstName,
       lastName: data.lastName,
 
-      callbackUrl: "/homepage",
+      callbackUrl: "/home",
     });
   };
   const router = useRouter();
