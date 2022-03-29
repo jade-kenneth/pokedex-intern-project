@@ -92,7 +92,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       // },
       // async redirect({ url, baseUrl }) {
       //   return baseUrl;
-      // },
+      //
 
       async session({ session, user, token }) {
         if (token) {
