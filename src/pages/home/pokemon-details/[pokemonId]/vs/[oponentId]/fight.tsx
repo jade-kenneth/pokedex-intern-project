@@ -222,26 +222,11 @@ const Fight = () => {
   return (
     <Stack>
       <Drawer isOpen={true} placement="top" onClose={onClose}>
-        <DrawerContent
-          minH="100vh"
-          backgroundColor="white"
-          position={"relative"}
-        >
-          <Image
-            src={beginBattleBg}
-            alt="bg"
-            width={"100%"}
-            height="250px"
-            layout="fill"
-          />
+        <DrawerContent backgroundColor="white" position={"relative"}>
+          <Image src={beginBattleBg} alt="bg" layout="fill" />
           <DrawerBody>
-            <Flex
-              minH="100vh"
-              direction={"column"}
-              position="relative"
-              zIndex={"10000"}
-            >
-              <Flex justify={"space-around"} gap="1rem">
+            <Flex direction={"column"} position="relative" zIndex={"10000"}>
+              <Flex justify={"space-around"} flex="1" gap="1rem">
                 {store.battleData &&
                   store.battleData?.map((data, idx) => {
                     return (
@@ -339,7 +324,3 @@ const Fight = () => {
 };
 
 export default Fight;
-
-Fight.getLayout = (page: React.ComponentType<{}> | JSX.Element) => {
-  return <Box>{page}</Box>;
-};

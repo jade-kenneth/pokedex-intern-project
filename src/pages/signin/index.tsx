@@ -1,4 +1,9 @@
-import React, { JSXElementConstructor, ReactElement, ReactNode } from "react";
+import React, {
+  JSXElementConstructor,
+  ReactElement,
+  ReactNode,
+  useState,
+} from "react";
 import { Link, Stack, Text } from "@chakra-ui/react";
 import { signIn } from "next-auth/react";
 import * as yup from "yup";
@@ -32,8 +37,9 @@ const SignIn = ({ provider }: FormProps) => {
     resolver: yupResolver(schema),
   });
   const router = useRouter();
-  console.log(router);
+  const [loading, setLoading] = useState(false);
   const onSubmit: SubmitHandler<SigninInputs> = (data) => {
+    setLoading(true);
     signIn(provider?.credentials.id, {
       email: data.email,
       password: data.password,
@@ -65,7 +71,9 @@ const SignIn = ({ provider }: FormProps) => {
           Password
         </InputWithValidator>
 
-        <FormButton>Sign in</FormButton>
+        <FormButton isLoading={loading} loadingText="Signing in...">
+          Sign in
+        </FormButton>
 
         <Stack
           direction={{ base: "column", sm: "row" }}

@@ -47,6 +47,7 @@ let schema = yup.object().shape({
 
 const Reset = ({ provider }: FormProps) => {
   const [access, setAccess] = useState<boolean | undefined>(false);
+  const [loading, setLoading] = useState(false);
   const toast = useToast();
   const {
     register,
@@ -69,6 +70,7 @@ const Reset = ({ provider }: FormProps) => {
   const router = useRouter();
 
   const onSubmit: SubmitHandler<ResetInputs> = async (data) => {
+    setLoading(true);
     try {
       const { data: trigger } = await triggerResetPassword({
         variables: { emailAddress: data.email },
@@ -97,6 +99,7 @@ const Reset = ({ provider }: FormProps) => {
         // ),
       });
     }
+    setLoading(false);
   };
 
   return (
@@ -120,7 +123,9 @@ const Reset = ({ provider }: FormProps) => {
                 Email
               </InputWithValidator>
 
-              <FormButton>Send password reset link</FormButton>
+              <FormButton isLoading={loading} loadingText="Searching email...">
+                Send password reset link
+              </FormButton>
 
               <Stack>
                 <Text align={"center"}>

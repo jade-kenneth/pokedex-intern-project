@@ -50,6 +50,7 @@ const AccountLayout = ({
       });
     }
   }, [router.query]);
+
   return (
     <>
       {" "}
@@ -57,7 +58,7 @@ const AccountLayout = ({
         minH={"100vh"}
         bg={"bg"}
         color="white"
-        direction={{ base: "column", md: "row-reverse" }}
+        direction={{ lg: "row-reverse" }}
       >
         {/** flex 1.5 to dominate login page than background  */}
         <Flex flex={1.5}>
@@ -83,7 +84,7 @@ const AccountLayout = ({
           </Flex>
         </Flex>
         {/** flex 1.5 to dominate login page than background  */}
-        <Flex flex={1}>
+        <Flex flex={1} display={{ base: "none", lg: "flex" }}>
           <Image alt={"Login Image"} objectFit={"cover"} src={thumbnail} />
         </Flex>
       </Stack>

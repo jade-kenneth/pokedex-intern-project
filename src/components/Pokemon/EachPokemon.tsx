@@ -33,10 +33,11 @@ const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
       overflow="hidden"
       bg={getPokemonElementColor(types[0].type?.name!)}
       onClick={() => {
-        store.addToRecentView(
-          id,
-          `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`
-        );
+        battleState.mode !== "battle" &&
+          store.addToRecentView(
+            id,
+            `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`
+          );
       }}
     >
       <Flex
@@ -48,7 +49,9 @@ const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
               battleState.mode === "battle"
                 ? `vs/${battleState.opponentId}/fight`
                 : ""
-            }`
+            }`,
+            undefined,
+            { shallow: true }
           );
         }}
       >

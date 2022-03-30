@@ -44,6 +44,7 @@ import PokemonList from "src/components/About/Battle/PokemonList";
 import useBattleState from "src/hooks/useBattleState";
 import Loading from "src/components/Homepage/widgets/Loading";
 import { useSession } from "next-auth/react";
+import useBattleStateStore from "src/hooks/useBattleStageStore";
 export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await apolloClient.query<
     GetAllPokemons,
@@ -88,7 +89,9 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
   const store = usePokemonDetailStore((state) => state);
   const state = useRecentViewStore((state) => state);
   const battleState = useBattleState((state) => state);
+
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const { handleNext, data, handlePrev, setCurrentPage } = usePagination(6, {
     pokemons: state.recents,
   });
@@ -102,16 +105,21 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
     );
   }, [pokemonDetails]);
   React.useEffect(() => {
-    const handleChangeRoute = () => {
-      <Loading type="loading" />;
+    const handleRouteChange = () => {
+      // console.log(
+      //   `App is changing to ${url} ${
+      //     shallow ? "with" : "without"
+      //   } shallow routing ${state}`
+      // );
+      setLoading(true);
     };
 
-    router.events.on("routeChangeStart", handleChangeRoute);
+    router.events.on("routeChangeStart", handleRouteChange);
 
     // If the component is unmounted, unsubscribe
     // from the event with the `off` method:
     return () => {
-      router.events.off("routeChangeStart", handleChangeRoute);
+      router.events.off("routeChangeStart", handleRouteChange);
     };
   }, []);
   const handleBattle = () => {
@@ -123,10 +131,15 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
       battleState.setMode("battle");
     }
   };
-
+  useEffect(() => {
+    if (pokemonDetails) {
+      setLoading(false);
+    }
+  }, [pokemonDetails]);
   const routerLink = router.asPath.split("/");
 
-  if (!pokemonDetails) return <Loading type="loading" />;
+  if (!pokemonDetails || loading) return <Loading type="loading" />;
+
   return (
     <Box mt={"1.375rem"} w={"container.lg"} mx="auto">
       <Breadcrumb

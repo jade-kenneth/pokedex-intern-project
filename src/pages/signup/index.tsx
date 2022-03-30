@@ -3,6 +3,8 @@ import React, {
   JSXElementConstructor,
   ReactElement,
   ReactNode,
+  useEffect,
+  useState,
 } from "react";
 
 import { Stack, Text, useColorModeValue, Link } from "@chakra-ui/react";
@@ -48,8 +50,11 @@ const Signup = ({ provider }: FormProps) => {
     mode: "onChange",
     resolver: yupResolver(schema),
   });
-  const onSubmit: SubmitHandler<SignupInputs> = (data) => {
-    signIn(provider?.credentials.id, {
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
+    setLoading(true);
+    await signIn(provider?.credentials.id, {
       email: data.email,
       password: data.password,
       firstName: data.firstName,
@@ -57,6 +62,7 @@ const Signup = ({ provider }: FormProps) => {
 
       callbackUrl: "/home",
     });
+    setLoading(false);
   };
   const router = useRouter();
   return (
@@ -101,7 +107,9 @@ const Signup = ({ provider }: FormProps) => {
           Password
         </InputWithValidator>
 
-        <FormButton>Create account</FormButton>
+        <FormButton isLoading={loading} loadingText="Creating account...">
+          Create account
+        </FormButton>
 
         <Stack>
           <Text align={"center"}>

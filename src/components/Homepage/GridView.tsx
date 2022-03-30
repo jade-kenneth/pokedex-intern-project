@@ -7,11 +7,18 @@ import { GetAllPokemons } from "src/types/pokemon/GetAllPokemons";
 import EachPokemon from "src/components/Pokemon/EachPokemon";
 import { PokedexProps } from "src/pages/home";
 import useBattleState from "src/hooks/useBattleState";
+import Loading from "./widgets/Loading";
 
-const GridView = ({ pokemons }: PokedexProps) => {
+interface GridViewProps {
+  pokemons: PokedexProps["pokemons"];
+  loading: boolean;
+}
+
+const GridView = ({ loading, pokemons }: GridViewProps) => {
   // auto-fill, minmax(11.5rem,1fr)
   const battleState = useBattleState((state) => state);
   console.log(battleState);
+  if (loading) return <Loading type="loading" />;
   return (
     <Grid
       templateColumns={{

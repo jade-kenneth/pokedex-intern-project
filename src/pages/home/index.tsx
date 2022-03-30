@@ -103,7 +103,25 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
   } = usePagination(numberPerPage, {
     pokemons: pokemonFetched,
   });
+  const [loading, setLoading] = useState(false);
+  React.useEffect(() => {
+    const handleRouteChange = () => {
+      // console.log(
+      //   `App is changing to ${url} ${
+      //     shallow ? "with" : "without"
+      //   } shallow routing ${state}`
+      // );
+      setLoading(true);
+    };
 
+    router.events.on("routeChangeStart", handleRouteChange);
+
+    // If the component is unmounted, unsubscribe
+    // from the event with the `off` method:
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChange);
+    };
+  }, []);
   useEffect(() => {
     /** after toggling filter this fires
      * if filter then execute filter
@@ -133,12 +151,14 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
     battleState.setMode("list");
   }, [router.query.pokemonId]);
   const handleFetchMore = () => {
+    setLoading(true);
     fetchMore({
       variables: {
         offset: 0,
         limit: pokemonFetched.length + 100,
       },
       updateQuery: (_, { fetchMoreResult: pokemons }): GetAllPokemons => {
+        setLoading(false);
         return pokemons!;
       },
     });
@@ -169,21 +189,8 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
       setIsFilter(false);
     }
   }, [elements.length, setIsFilter]);
-  React.useEffect(() => {
-    const handleChangeRoute = () => {
-      console.log("yow");
-      return <Loading type="loading" />;
-    };
 
-    router.events.on("routeChangeStart", handleChangeRoute);
-
-    // If the component is unmounted, unsubscribe
-    // from the event with the `off` method:
-    return () => {
-      router.events.off("routeChangeStart", handleChangeRoute);
-    };
-  }, []);
-  if (!pokemonFetched) return <Loading type="loading" />;
+  if (!pokemonFetched || loading) return <Loading type="loading" />;
 
   return (
     <Flex
@@ -283,7 +290,7 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
       ) : (
         <Box>
           {options === "grid" ? (
-            <GridView pokemons={pokemonData()} />
+            <GridView loading={loading} pokemons={pokemonData()} />
           ) : (
             <ListView pokemons={pokemonData()} />
           )}
