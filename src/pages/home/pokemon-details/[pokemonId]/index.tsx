@@ -122,7 +122,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
   const routerLink = router.asPath.split("/");
 
   if (!pokemonDetails) return <Loading type="loading" />;
-
+  if (router.isFallback) return <Loading type="loading" />;
   return (
     <Box mt={"1.375rem"} w={"container.lg"} mx="auto">
       <Breadcrumb
