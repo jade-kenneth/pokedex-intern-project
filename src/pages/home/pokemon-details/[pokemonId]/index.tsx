@@ -243,7 +243,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
           {battleState.mode === "battle" ? (
             <PokemonList pokemons={[]} />
           ) : (
-            <TabComponent />
+            <TabComponent pokemonDetails={pokemonDetails} />
           )}
         </Stack>
       </Stack>

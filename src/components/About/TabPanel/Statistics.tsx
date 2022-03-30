@@ -17,7 +17,8 @@ import getWeaknessStrengthByType, {
 import usePokemonDetailStore from "src/hooks/usePokemonDetailStore";
 import { statistic_data } from "src/utils/pokemonStatisticData";
 import Loading from "src/components/Homepage/widgets/Loading";
-const Statistics = () => {
+import { GetEachPokemon } from "src/types/pokemon/GetEachPokemon";
+const Statistics = ({ pokemonDetails }: GetEachPokemon) => {
   const state = usePokemonDetailStore((state) => state);
   const progressBg = useColorModeValue("gray.300", "white");
   const containerBg = useColorModeValue("white", "secondary");
@@ -29,20 +30,17 @@ const Statistics = () => {
 
   useEffect(() => {
     (async function getData() {
-      console.log(state.pokemonDetails.name, state.pokemonDetails.types);
       const { resistance, weakness } = await getWeaknessStrengthByType({
-        types: state.pokemonDetails.types,
+        types: pokemonDetails?.types!,
       });
 
-      console.log(resistance);
-      console.log(weakness);
       setData({
         weakness: weakness,
         resistance: resistance,
       });
     })();
     return () => setData({ weakness: [], resistance: [] });
-  }, [state.pokemonDetails.types]);
+  }, [pokemonDetails?.types]);
   console.log(state.pokemonDetails.name, data);
   // console.log(data.weakness[0][`${state.pokemonDetails.types[0].type?.name!}`]);
 

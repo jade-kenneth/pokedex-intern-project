@@ -18,7 +18,11 @@ import Evolutions from "./TabPanel/Evolutions";
 import Moves from "./TabPanel/Moves";
 import Statistics from "./TabPanel/Statistics";
 
-const TabComponent = () => {
+interface TabProps {
+  pokemonDetails: GetEachPokemon["pokemonDetails"];
+}
+
+const TabComponent = ({ pokemonDetails }: TabProps) => {
   const [tabIndex, setTabIndex] = useState(0);
   const handleTabsChange = (index: number) => {
     setTabIndex(index);
@@ -70,7 +74,7 @@ const TabComponent = () => {
           <About />
         </TabPanel>
         <TabPanel p={0}>
-          <Statistics />
+          <Statistics pokemonDetails={pokemonDetails} />
         </TabPanel>
         <TabPanel p={0}>
           <Evolutions />
