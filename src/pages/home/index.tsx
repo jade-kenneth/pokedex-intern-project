@@ -189,7 +189,10 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
       setIsFilter(false);
     }
   }, [elements.length, setIsFilter]);
-
+  useEffect(() => {
+    if (pokemonFetched) {
+    }
+  }, [pokemonFetched]);
   if (!pokemonFetched || loading) return <Loading type="loading" />;
 
   return (
