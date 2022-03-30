@@ -104,24 +104,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
       `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemonDetails?.id}.png`
     );
   }, [pokemonDetails]);
-  React.useEffect(() => {
-    const handleRouteChange = () => {
-      // console.log(
-      //   `App is changing to ${url} ${
-      //     shallow ? "with" : "without"
-      //   } shallow routing ${state}`
-      // );
-      setLoading(true);
-    };
 
-    router.events.on("routeChangeStart", handleRouteChange);
-
-    // If the component is unmounted, unsubscribe
-    // from the event with the `off` method:
-    return () => {
-      router.events.off("routeChangeStart", handleRouteChange);
-    };
-  }, []);
   const handleBattle = () => {
     if (battleState.mode === "battle") {
       battleState.setOpponent(0);
@@ -138,7 +121,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
   }, [pokemonDetails]);
   const routerLink = router.asPath.split("/");
 
-  if (!pokemonDetails || loading) return <Loading type="loading" />;
+  if (!pokemonDetails) return <Loading type="loading" />;
 
   return (
     <Box mt={"1.375rem"} w={"container.lg"} mx="auto">

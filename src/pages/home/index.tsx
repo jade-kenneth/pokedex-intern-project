@@ -104,24 +104,7 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
     pokemons: pokemonFetched,
   });
   const [loading, setLoading] = useState(false);
-  React.useEffect(() => {
-    const handleRouteChange = () => {
-      // console.log(
-      //   `App is changing to ${url} ${
-      //     shallow ? "with" : "without"
-      //   } shallow routing ${state}`
-      // );
-      setLoading(true);
-    };
 
-    router.events.on("routeChangeStart", handleRouteChange);
-
-    // If the component is unmounted, unsubscribe
-    // from the event with the `off` method:
-    return () => {
-      router.events.off("routeChangeStart", handleRouteChange);
-    };
-  }, []);
   useEffect(() => {
     /** after toggling filter this fires
      * if filter then execute filter
@@ -144,11 +127,13 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
     }
   }, [elements, isFilter, setCurrentPage, fetchData, executeFiltering]);
 
+  /** set battle state to list if going to home */
   useEffect(() => {
     if (!router.query.pokemonId) {
       battleState.setOpponent(0);
     }
     battleState.setMode("list");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query.pokemonId]);
   const handleFetchMore = () => {
     setLoading(true);
@@ -189,12 +174,8 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
       setIsFilter(false);
     }
   }, [elements.length, setIsFilter]);
-  useEffect(() => {
-    if (pokemonFetched) {
-      setLoading(false);
-    }
-  }, [pokemonFetched]);
-  if (!pokemonFetched || loading) return <Loading type="loading" />;
+
+  if (!pokemonFetched) return <Loading type="loading" />;
 
   return (
     <Flex

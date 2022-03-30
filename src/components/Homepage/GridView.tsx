@@ -17,7 +17,7 @@ interface GridViewProps {
 const GridView = ({ loading, pokemons }: GridViewProps) => {
   // auto-fill, minmax(11.5rem,1fr)
   const battleState = useBattleState((state) => state);
-  console.log(battleState);
+
   if (loading) return <Loading type="loading" />;
   return (
     <Grid
