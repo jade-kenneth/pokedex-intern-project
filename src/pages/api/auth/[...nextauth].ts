@@ -17,10 +17,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   return await NextAuth(req, res, {
     secret: process.env.NEXTAUTH_SECRET,
     session: { strategy: "jwt", maxAge: 1 * 1 * 1 * 100000 },
-    adapter: DgraphAdapter({
-      endpoint: process.env.DGRAPH_GRAPHQL_ENDPOINT!,
-      authToken: process.env.DGRAPH_GRAPHQL_KEY!,
-    }),
+
     providers: [
       // OAuth authentication providers
 
