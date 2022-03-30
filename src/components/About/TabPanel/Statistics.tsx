@@ -9,7 +9,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import getWeaknessStrengthByType, {
   IWeaknessStrength,
 } from "src/helpers/getWeaknessStrengthByType";
@@ -25,16 +25,26 @@ const Statistics = () => {
     weakness: IWeaknessStrength[];
     resistance: IWeaknessStrength[];
   }>({ weakness: [], resistance: [] });
+  console.log(state.pokemonDetails);
 
-  const handleGetWeaknessAndStrength = useCallback(async () => {
-    const { resistance, weakness } = await getWeaknessStrengthByType({
-      types: state.pokemonDetails.types,
-    });
-    setData({
-      weakness: weakness,
-      resistance: resistance,
-    });
-  }, [state.pokemonDetails]);
+  useEffect(() => {
+    (async function getData() {
+      console.log(state.pokemonDetails.name, state.pokemonDetails.types);
+      const { resistance, weakness } = await getWeaknessStrengthByType({
+        types: state.pokemonDetails.types,
+      });
+
+      console.log(resistance);
+      console.log(weakness);
+      setData({
+        weakness: weakness,
+        resistance: resistance,
+      });
+    })();
+    return () => setData({ weakness: [], resistance: [] });
+  }, [state.pokemonDetails.types]);
+  console.log(state.pokemonDetails.name, data);
+  // console.log(data.weakness[0][`${state.pokemonDetails.types[0].type?.name!}`]);
 
   return (
     <Stack spacing={"3.25rem"} mb={"6.063rem"} w="100%">

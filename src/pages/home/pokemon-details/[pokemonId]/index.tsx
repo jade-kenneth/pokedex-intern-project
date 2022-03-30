@@ -24,7 +24,7 @@ import {
   GET_ALL_POKEMON,
   GET_EACH_POKEMON,
 } from "src/graphql/pokemon/queries/pokemon";
-import { GetStaticProps, GetStaticPaths } from "next";
+import { GetStaticProps, GetStaticPaths, GetServerSideProps } from "next";
 import {
   GetEachPokemon,
   GetEachPokemonVariables,
@@ -45,28 +45,8 @@ import useBattleState from "src/hooks/useBattleState";
 import Loading from "src/components/Homepage/widgets/Loading";
 import { useSession } from "next-auth/react";
 import useBattleStateStore from "src/hooks/useBattleStageStore";
-export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await apolloClient.query<
-    GetAllPokemons,
-    GetAllPokemonsVariables
-  >({
-    query: GET_ALL_POKEMON,
-    variables: { offset: 0, limit: 100 },
-    context: { clientName: "pokeapi" },
-  });
 
-  const paths = data.pokemons.map((pokemon) => {
-    return {
-      params: { pokemonId: `${pokemon.id}` },
-    };
-  });
-
-  return {
-    paths,
-    fallback: true,
-  };
-};
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
 
   const { data } = await apolloClient.query<
@@ -103,6 +83,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
       pokemonDetails?.id!,
       `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemonDetails?.id}.png`
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pokemonDetails, router.query.pokemonId]);
 
   const handleBattle = () => {
@@ -178,7 +159,9 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
             <Image
               src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemonDetails?.id}.png`}
               alt="profile"
-              layout="fill"
+              width={10}
+              height={10}
+              layout="responsive"
             />
           </Stack>
 
