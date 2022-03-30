@@ -50,7 +50,7 @@ interface IStore {
   attackIdx: number;
   beforeAttack: number;
   playerHp: IPlayerHP;
-  wins: string;
+  wins: boolean;
   turn: (keyof typeof turnMoves)[];
   setPlayerBuffs: (data: IBuffs) => void;
   setAttacking: (attacking: boolean) => void;
@@ -61,14 +61,14 @@ interface IStore {
   setBeforeAttack: (beforeAttack: number) => void;
   setTurn: (data: (keyof typeof turnMoves)[]) => void;
   setPlayerHP: (playerHp: IPlayerHP) => void;
-  setWins: (wins: string) => void;
+  setWins: (wins: boolean) => void;
 }
 
 const useBattleStateStore = create<IStore>(
   devtools((set) => ({
     turn: ["opponent", "player"],
     playerHp: { opponent: 10, player: 10 },
-    wins: "",
+    wins: false,
     attacking: false,
     attackIdx: 0,
     popUp: { attackName: "", damage: 0 },
@@ -80,7 +80,7 @@ const useBattleStateStore = create<IStore>(
 
     battleData: [],
     moves: { opponent: [], player: [] },
-    setWins: (wins: string) => {
+    setWins: (wins: boolean) => {
       set((state) => ({
         ...state,
         wins,

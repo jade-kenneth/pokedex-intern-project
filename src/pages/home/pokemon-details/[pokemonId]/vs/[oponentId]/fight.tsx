@@ -85,6 +85,9 @@ const Fight = () => {
           /** checking first if someone wins already */
         }
         if (store.playerHp.opponent <= 0 || store.playerHp.player <= 0) {
+          store.setTurn(
+            ([store.turn[0], store.turn[1]] = [store.turn[1], store.turn[0]])
+          );
           store.setPopUp({
             ...store.popUp,
             attackName:
@@ -92,12 +95,10 @@ const Fight = () => {
                 ? `${store.battleData[0]?.name} wins`
                 : `${store.battleData[1]?.name} wins`,
           });
-
+          store.setWins(true);
           //someone win set back the turn
           //so pop display to those who wins
-          store.setTurn(
-            ([store.turn[0], store.turn[1]] = [store.turn[1], store.turn[0]])
-          );
+
           store.setAttacking(false);
         }
 
@@ -129,7 +130,7 @@ const Fight = () => {
            * else set to random number
            * ranging 0 to moves length of players turn
            */
-        } else if (store.beforeAttack >= 0) {
+        } else if (store.beforeAttack >= 2) {
           store.setAttackIdx(
             Math.floor(Math.random() * store.moves[`${store.turn[0]}`].length)
           );
@@ -152,6 +153,7 @@ const Fight = () => {
     } else {
       store.setAttacking(true);
       store.setBeforeAttack(10);
+      store.setPopUp({ attackName: "", damage: 0 });
       store.setPlayerHP({
         ...store.playerHp,
         [`${store.turn[0]}`]:
@@ -216,6 +218,7 @@ const Fight = () => {
   }, []);
   // console.log(attackIdx);
   // console.log(turn);
+
   return (
     <Stack>
       <Drawer isOpen={true} placement="top" onClose={onClose}>
@@ -306,7 +309,7 @@ const Fight = () => {
                     fontWeight={"bold"}
                     fontStyle={"italic"}
                   >
-                    {time}
+                    {store.wins ? "" : time}
                   </Text>
                 )}
 
@@ -317,7 +320,11 @@ const Fight = () => {
                     fontWeight={"bold"}
                     fontStyle={"italic"}
                   >
-                    {store.playerHp.opponent > 0 ? " Victory" : " Defeat "}
+                    {store.wins
+                      ? store.playerHp.opponent > 0
+                        ? " Victory"
+                        : " Defeat "
+                      : "FIGHT!!!"}
                   </Text>
                 )}
               </Flex>

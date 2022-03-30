@@ -22,7 +22,9 @@ const Players = () => {
           fontStyle={"italic"}
           height="5rem"
         >
-          {store.beforeAttack > 0 && store.turn[0] === "opponent"
+          {store.wins
+            ? ""
+            : store.beforeAttack > 0 && store.turn[0] === "opponent"
             ? store.beforeAttack
             : ""}
         </Text>
@@ -58,7 +60,9 @@ const Players = () => {
           fontStyle={"italic"}
           height="5rem"
         >
-          {store.beforeAttack > 0 && store.turn[0] === "player"
+          {store.wins
+            ? ""
+            : store.beforeAttack > 0 && store.turn[0] === "player"
             ? store.beforeAttack
             : ""}
         </Text>
