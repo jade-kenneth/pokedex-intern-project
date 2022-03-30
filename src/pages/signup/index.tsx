@@ -19,7 +19,6 @@ import AccountLayout from "src/components/Layouts/account-layout/AccountLayout";
 import InputWithValidator from "src/components/Form/InputWithValidator";
 import { SignupInputs } from "src/interfaces/Input";
 import FormButton from "src/components/Form/FormButton";
-import withAuth from "src/middleware/withAuth";
 
 let schema = yup.object().shape({
   email: yup

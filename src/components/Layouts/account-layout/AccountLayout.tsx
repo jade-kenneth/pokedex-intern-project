@@ -19,7 +19,6 @@ import React, {
 import { AccountLayoutProps } from "src/interfaces/AccountLayout";
 import { useRouter } from "next/router";
 
-import withAuth from "src/middleware/withAuth";
 import Layout1 from "../layout-1/Layout1";
 
 const AccountLayout = ({
