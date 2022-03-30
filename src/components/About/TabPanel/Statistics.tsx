@@ -36,7 +36,6 @@ const Statistics = () => {
         resistance: resistance,
       });
     })();
-    return () => setData({ weakness: [], resistance: [] });
   }, [state.pokemonDetails]);
   console.log(data);
   // console.log(data.weakness[0][`${state.pokemonDetails.types[0].type?.name!}`]);
