@@ -63,7 +63,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths,
-    fallback: "blocking",
+    fallback: true,
   };
 };
 export const getStaticProps: GetStaticProps = async (context) => {
@@ -95,7 +95,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
   const { handleNext, data, handlePrev, setCurrentPage } = usePagination(6, {
     pokemons: state.recents,
   });
-
+  console.log(pokemonDetails);
   useEffect(() => {
     store.setPokemonDetails(pokemonDetails!);
     battleState.setOpponent(parseInt(router.query.pokemonId as string));
@@ -103,7 +103,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
       pokemonDetails?.id!,
       `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemonDetails?.id}.png`
     );
-  }, [pokemonDetails]);
+  }, [pokemonDetails, router.query.pokemonId]);
 
   const handleBattle = () => {
     if (battleState.mode === "battle") {
@@ -122,7 +122,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
   const routerLink = router.asPath.split("/");
 
   if (!pokemonDetails) return <Loading type="loading" />;
-  if (router.isFallback) return <Loading type="loading" />;
+
   return (
     <Box mt={"1.375rem"} w={"container.lg"} mx="auto">
       <Breadcrumb

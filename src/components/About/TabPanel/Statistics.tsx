@@ -9,7 +9,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import getWeaknessStrengthByType, {
   IWeaknessStrength,
 } from "src/helpers/getWeaknessStrengthByType";
@@ -26,19 +26,15 @@ const Statistics = () => {
     resistance: IWeaknessStrength[];
   }>({ weakness: [], resistance: [] });
 
-  useEffect(() => {
-    (async function getData() {
-      const { resistance, weakness } = await getWeaknessStrengthByType({
-        types: state.pokemonDetails.types,
-      });
-      setData({
-        weakness: weakness,
-        resistance: resistance,
-      });
-    })();
-  }, [state.pokemonDetails, setData]);
-  console.log(data);
-  // console.log(data.weakness[0][`${state.pokemonDetails.types[0].type?.name!}`]);
+  const handleGetWeaknessAndStrength = useCallback(async () => {
+    const { resistance, weakness } = await getWeaknessStrengthByType({
+      types: state.pokemonDetails.types,
+    });
+    setData({
+      weakness: weakness,
+      resistance: resistance,
+    });
+  }, [state.pokemonDetails]);
 
   return (
     <Stack spacing={"3.25rem"} mb={"6.063rem"} w="100%">
