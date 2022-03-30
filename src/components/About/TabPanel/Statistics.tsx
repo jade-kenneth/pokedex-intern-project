@@ -26,7 +26,6 @@ const Statistics = ({ pokemonDetails }: GetEachPokemon) => {
     weakness: IWeaknessStrength[];
     resistance: IWeaknessStrength[];
   }>({ weakness: [], resistance: [] });
-  console.log(state.pokemonDetails);
 
   useEffect(() => {
     (async function getData() {
@@ -41,8 +40,6 @@ const Statistics = ({ pokemonDetails }: GetEachPokemon) => {
     })();
     return () => setData({ weakness: [], resistance: [] });
   }, [pokemonDetails?.types]);
-  console.log(state.pokemonDetails.name, data);
-  // console.log(data.weakness[0][`${state.pokemonDetails.types[0].type?.name!}`]);
 
   return (
     <Stack spacing={"3.25rem"} mb={"6.063rem"} w="100%">

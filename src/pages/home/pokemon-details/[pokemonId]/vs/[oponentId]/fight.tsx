@@ -222,8 +222,10 @@ const Fight = () => {
   return (
     <Stack>
       <Drawer isOpen={true} placement="top" onClose={onClose}>
-        <DrawerContent backgroundColor="white" position={"relative"}>
-          <Image src={beginBattleBg} alt="bg" layout="fill" />
+        <Box position={"relative"} zIndex={1000}>
+          <Image src={beginBattleBg} alt="bg" layout="responsive" />
+        </Box>
+        <DrawerContent backgroundColor="transparent">
           <DrawerBody>
             <Flex direction={"column"} position="relative" zIndex={"10000"}>
               <Flex justify={"space-around"} flex="1" gap="1rem">
