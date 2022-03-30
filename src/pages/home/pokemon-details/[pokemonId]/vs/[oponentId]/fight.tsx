@@ -41,23 +41,6 @@ import Players from "src/components/About/Battle/widgets/Players";
 import useBattleStateStore from "src/hooks/useBattleStageStore";
 import { useSession } from "next-auth/react";
 
-interface CombineStats {
-  opponentUnFilteredResistance: string[];
-  opponentUnFilteredWeakness: string[];
-  playerUnFilteredResistance: string[];
-  playerUnFilteredWeakness: string[];
-}
-
-interface IBuffs {
-  opponent: Array<{
-    attack: number;
-    fromPlayerWeakness: string;
-  }>;
-  player: Array<{
-    attack: number;
-    fromPlayerWeakness: string;
-  }>;
-}
 const Fight = () => {
   const router = useRouter();
 
@@ -91,29 +74,61 @@ const Fight = () => {
 
     return () => clearInterval(timer);
   }, [running, time]);
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
 
     if (store.attacking) {
       timer = setInterval(() => {
         store.setBeforeAttack(store.beforeAttack - 1);
+        {
+          /** checking first if someone wins already */
+        }
+        if (store.playerHp.opponent <= 0 || store.playerHp.player <= 0) {
+          store.setPopUp({
+            ...store.popUp,
+            attackName:
+              store.playerHp.opponent > 0
+                ? `${store.battleData[0]?.name} wins`
+                : `${store.battleData[1]?.name} wins`,
+          });
 
-        if (store.beforeAttack <= 0) {
+          //someone win set back the turn
+          //so pop display to those who wins
+          store.setTurn(
+            ([store.turn[0], store.turn[1]] = [store.turn[1], store.turn[0]])
+          );
+          store.setAttacking(false);
+        }
+
+        //if countdown is equal to zero then
+        //set pop up
+        if (store.beforeAttack === 0) {
           /** */
-
           store.setPopUp({
             damage: store.moves[`${store.turn[0]}`][store.attackIdx].move?.pp!,
             attackName:
               store.moves[`${store.turn[0]}`][store.attackIdx].move?.name!,
           });
+
           //trigger to ['opponent', 'player']
           // ['player', 'opponent']
-          store.setTurn(
-            ([store.turn[0], store.turn[1]] = [store.turn[1], store.turn[0]])
-          );
-          store.setAttacking(false);
-          // console.log(store.moves[`${turn[0]}`][store.attackIdx].move?.name!);
-          // console.log(store.moves[`${turn[1]}`][store.attackIdx].move?.name!);
+
+          {
+            /** add a delay to give time displaying
+          so that pop up dont interchange */
+          }
+          setTimeout(() => {
+            store.setTurn(
+              ([store.turn[0], store.turn[1]] = [store.turn[1], store.turn[0]])
+            );
+            store.setAttacking(false);
+          }, 3000);
+
+          /**
+           * else set to random number
+           * ranging 0 to moves length of players turn
+           */
         } else if (store.beforeAttack >= 0) {
           store.setAttackIdx(
             Math.floor(Math.random() * store.moves[`${store.turn[0]}`].length)
@@ -126,7 +141,6 @@ const Fight = () => {
 
   useEffect(() => {
     if (store.playerHp.opponent <= 0 || store.playerHp.player <= 0) {
-      store.setAttacking(false);
       store.setPopUp({
         ...store.popUp,
         attackName:
@@ -134,13 +148,16 @@ const Fight = () => {
             ? `${store.battleData[0]?.name} wins`
             : `${store.battleData[1]?.name} wins`,
       });
+      store.setAttacking(false);
     } else {
       store.setAttacking(true);
       store.setBeforeAttack(10);
       store.setPlayerHP({
         ...store.playerHp,
         [`${store.turn[0]}`]:
-          store.playerHp[`${store.turn[0]}`] - store.popUp.damage,
+          store.playerHp[`${store.turn[0]}`] - store.popUp.damage < 0
+            ? 0
+            : store.playerHp[`${store.turn[0]}`] - store.popUp.damage,
       });
     }
   }, [store.turn]);
@@ -300,7 +317,7 @@ const Fight = () => {
                     fontWeight={"bold"}
                     fontStyle={"italic"}
                   >
-                    {"FIGHT!!!"}
+                    {store.playerHp.opponent > 0 ? " Victory" : " Defeat "}
                   </Text>
                 )}
               </Flex>

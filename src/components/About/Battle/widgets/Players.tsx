@@ -1,10 +1,11 @@
 import { Box, Flex, VStack, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import useBattleStateStore from "src/hooks/useBattleStageStore";
 import Image from "next/image";
 const Players = () => {
   const store = useBattleStateStore((state) => state);
   // console.log(store.turn);
+
   return (
     <Flex
       flex="2"
@@ -21,10 +22,19 @@ const Players = () => {
           fontStyle={"italic"}
           height="5rem"
         >
-          {store.beforeAttack > 0
+          {store.beforeAttack > 0 && store.turn[0] === "opponent"
             ? store.beforeAttack
-            : store.turn[0] === "player"
-            ? `-${store.popUp.damage}`
+            : ""}
+        </Text>
+        <Text
+          fontSize={"5xl"}
+          color="red"
+          fontWeight={"bold"}
+          fontStyle={"italic"}
+          height="5rem"
+        >
+          {store.turn[0] === "player"
+            ? store.popUp.damage > 0 && `-${store.popUp.damage}`
             : store.popUp.attackName}
         </Text>
         <Box
@@ -48,12 +58,21 @@ const Players = () => {
           fontStyle={"italic"}
           height="5rem"
         >
-          {/**if last opponent */}
-          {store.beforeAttack > 0
+          {store.beforeAttack > 0 && store.turn[0] === "player"
             ? store.beforeAttack
-            : store.turn[0] === "player"
+            : ""}
+        </Text>
+        <Text
+          fontSize={"5xl"}
+          color="red"
+          fontWeight={"bold"}
+          fontStyle={"italic"}
+          height="5rem"
+        >
+          {/**if last opponent */}
+          {store.turn[0] === "player"
             ? store.popUp.attackName
-            : `-${store.popUp.damage}`}
+            : store.popUp.damage > 0 && `-${store.popUp.damage}`}
         </Text>
         <Box position={"relative"} height="15.625rem" width={"15.625rem"}>
           <Image
