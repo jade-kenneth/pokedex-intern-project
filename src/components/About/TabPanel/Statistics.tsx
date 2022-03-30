@@ -96,21 +96,22 @@ const Statistics = () => {
                   {type?.name}
                 </Text>
                 <Flex key={type?.name} gap={"1rem"} flexWrap={"wrap"}>
-                  {data.weakness.length > 0 &&
-                    data.weakness[rootIdx][`${type?.name}`]?.map(
-                      (type, branchIdx) => {
-                        return (
-                          <Tag
-                            key={branchIdx}
-                            py={"0.438rem"}
-                            px={"1.906rem"}
-                            color="red"
-                          >
-                            {type}
-                          </Tag>
-                        );
-                      }
-                    )}
+                  {data.weakness.length > 0
+                    ? data.weakness[rootIdx][`${type?.name!}`]?.map(
+                        (type, branchIdx) => {
+                          return (
+                            <Tag
+                              key={branchIdx}
+                              py={"0.438rem"}
+                              px={"1.906rem"}
+                              color="red"
+                            >
+                              {type}
+                            </Tag>
+                          );
+                        }
+                      )
+                    : null}
                 </Flex>
               </VStack>
             );
@@ -136,21 +137,22 @@ const Statistics = () => {
                   {type?.name}
                 </Text>
                 <Flex key={type?.name} gap={"1rem"} flexWrap={"wrap"}>
-                  {data.resistance.length > 0 &&
-                    data.resistance[rootIdx][`${type?.name}`]?.map(
-                      (type, branchIdx) => {
-                        return (
-                          <Tag
-                            key={branchIdx}
-                            py={"0.438rem"}
-                            px={"1.906rem"}
-                            color="green"
-                          >
-                            {type}
-                          </Tag>
-                        );
-                      }
-                    )}
+                  {data.resistance.length > 0
+                    ? data.resistance[rootIdx][`${type?.name}`]?.map(
+                        (type, branchIdx) => {
+                          return (
+                            <Tag
+                              key={branchIdx}
+                              py={"0.438rem"}
+                              px={"1.906rem"}
+                              color="green"
+                            >
+                              {type}
+                            </Tag>
+                          );
+                        }
+                      )
+                    : null}
                 </Flex>
               </VStack>
             );

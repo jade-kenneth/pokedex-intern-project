@@ -57,10 +57,7 @@ function MyApp({
       //     shallow ? "with" : "without"
       //   } shallow routing ${state}`
       // );
-
       setLoading(true);
-
-      console.log("first");
     };
     const handleRouteChangeComplete = () => {
       setLoading(false);
