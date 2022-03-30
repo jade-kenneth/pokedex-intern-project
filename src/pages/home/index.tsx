@@ -36,7 +36,7 @@ import apolloClient from "src/apollo/apollo-client";
 import Loading from "src/components/Homepage/widgets/Loading";
 import useBattleState from "src/hooks/useBattleState";
 import { useRouter } from "next/router";
-import withAuth from "src/middleware/withAuth";
+
 import { useSession } from "next-auth/react";
 
 export const getStaticProps: GetStaticProps = async () => {
