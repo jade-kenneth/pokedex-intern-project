@@ -15,7 +15,7 @@ import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import useBattleState from "src/hooks/useBattleState";
 
 interface PaginationProps {
-  totalPokemon?: number | undefined;
+  totalPokemon: number;
 
   paginate: (number: number) => void;
   currentPage: number;
@@ -25,7 +25,7 @@ interface PaginationProps {
   numberPerPage: number;
   handleFetchMore: () => void;
   isFilter: boolean;
-  data: any[];
+  currentShownData: any[];
 }
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -35,7 +35,7 @@ const Pagination: React.FC<PaginationProps> = ({
   pageNumbers,
   numberPerPage,
   paginate,
-  data,
+  currentShownData,
   handleFetchMore,
   isFilter,
   totalPokemon,
@@ -73,9 +73,11 @@ const Pagination: React.FC<PaginationProps> = ({
           Showing{" "}
           {currentPage
             ? currentPage * numberPerPage - (numberPerPage - 1)
-            : initial + 1 * data.length - (numberPerPage - 1)}
-          -{currentPage * numberPerPage - (numberPerPage - data.length)} of{" "}
-          {totalPokemon}{" "}
+            : initial + 1 * currentShownData.length - (numberPerPage - 1)}
+          -
+          {currentPage * numberPerPage -
+            (numberPerPage - currentShownData.length)}{" "}
+          of {totalPokemon}{" "}
         </Text>
       </HStack>
       <HStack w="auto" align={"center"} spacing="10px" height="2rem">
