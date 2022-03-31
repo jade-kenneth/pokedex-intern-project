@@ -290,6 +290,8 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
               numberPerPage={numberPerPage}
               handleFetchMore={handleFetchMore}
               isFilter={isFilter}
+              data={pokemonData()}
+              totalPokemon={pokemonFetched.length}
             />
           </HStack>
         </Box>

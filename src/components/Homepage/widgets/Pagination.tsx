@@ -25,6 +25,7 @@ interface PaginationProps {
   numberPerPage: number;
   handleFetchMore: () => void;
   isFilter: boolean;
+  data: any[];
 }
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -34,9 +35,10 @@ const Pagination: React.FC<PaginationProps> = ({
   pageNumbers,
   numberPerPage,
   paginate,
-
+  data,
   handleFetchMore,
   isFilter,
+  totalPokemon,
 }) => {
   const [initial, setInitial] = useState(0);
   const [final, setFinal] = useState(numberPerPage);
@@ -68,13 +70,12 @@ const Pagination: React.FC<PaginationProps> = ({
     <VStack justify={"space-between"} width={"100%"}>
       <HStack justify="flex-end" mt="1rem" width={"100%"}>
         <Text fontSize="0.875rem">
-          Showing {currentPage ? currentPage : initial + 1}-
-          {/** if page less than final (idx)
-           *   set the page length as final page indicator
-           *
-           */}
-          {pageNumbers.length < final ? pageNumbers.length : final} of{" "}
-          {pageNumbers.length}{" "}
+          Showing{" "}
+          {currentPage
+            ? currentPage * numberPerPage - (numberPerPage - 1)
+            : initial + 1 * data.length - (numberPerPage - 1)}
+          -{currentPage * numberPerPage - (numberPerPage - data.length)} of{" "}
+          {totalPokemon}{" "}
         </Text>
       </HStack>
       <HStack w="auto" align={"center"} spacing="10px" height="2rem">
