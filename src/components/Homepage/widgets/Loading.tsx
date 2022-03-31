@@ -1,4 +1,11 @@
-import { Center, CircularProgress, Flex, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  CircularProgress,
+  Flex,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import pokeball from "public/backgrounds/pokeballBg.png";
 import Image from "next/image";
@@ -32,22 +39,25 @@ const Loading: React.FC<LoadingProps> = ({ type, message }) => {
           </Flex>
         </CircularProgress>
       ) : (
-        <Text fontSize="xl">
-          Something went wrong!{" "}
-          <Text
-            as="span"
-            height="3rem"
-            width="auto"
-            textAlign="center"
-            bg="black"
-            color="white"
-            borderRadius="lg"
-            px={1}
-          >
-            {" "}
-            {message}
+        <VStack>
+          <Text fontSize="xl">
+            Something went wrong!{" "}
+            <Text
+              as="span"
+              height="3rem"
+              width="auto"
+              textAlign="center"
+              bg="black"
+              color="white"
+              borderRadius="lg"
+              px={1}
+            >
+              {" "}
+              {message}
+            </Text>
           </Text>
-        </Text>
+          <Button colorScheme={"facebook"}>See pokemons</Button>
+        </VStack>
       )}
     </Center>
   );

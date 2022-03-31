@@ -58,6 +58,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     variables: { id: parseInt(params?.pokemonId as string) },
     context: { clientName: "pokeapi" },
   });
+  if (Number.isNaN(params?.pokemonId)) {
+    return { notFound: true };
+  }
   if (!data.pokemonDetails) {
     return { notFound: true };
   }
