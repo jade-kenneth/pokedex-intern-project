@@ -4,7 +4,7 @@ interface PokemonGenderIdentifierProps {
 interface PokemonGenderIdentifierReturn {
   gender: string;
 }
-export const usePokemonGenderIdentifier = ({
+const getGender = ({
   gender_rate,
 }: PokemonGenderIdentifierProps): PokemonGenderIdentifierReturn => {
   let gender = "";
@@ -18,3 +18,4 @@ export const usePokemonGenderIdentifier = ({
     gender,
   };
 };
+export default getGender;

@@ -1,15 +1,10 @@
 import {
   Box,
-  Button,
-  Center,
   Drawer,
   DrawerBody,
   DrawerContent,
   Flex,
-  Grid,
   HStack,
-  Icon,
-  Progress,
   Stack,
   Tag,
   Text,
@@ -39,7 +34,6 @@ import HPBar from "src/components/About/Battle/widgets/HPBar";
 import Skills from "src/components/About/Battle/widgets/Skills";
 import Players from "src/components/About/Battle/widgets/Players";
 import useBattleStateStore from "src/hooks/useBattleStageStore";
-import { useSession } from "next-auth/react";
 
 const Fight = () => {
   const router = useRouter();
@@ -51,7 +45,7 @@ const Fight = () => {
   const store = useBattleStateStore((state) => state);
 
   const battleState = useBattleState((state) => state);
-
+  const [error, setError] = useState(false);
   /** Note: Opponent = me or you
    * Player = Chosen player/pokemon to fight
    */
@@ -60,6 +54,7 @@ const Fight = () => {
     { id: `${battleState.opponentId}` },
     { id: `${battleState.playerId}` },
   ];
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (running) {
@@ -193,11 +188,6 @@ const Fight = () => {
         playerType: battleData[1]?.types!,
         playerWeaknesses: opponentUnFilteredWeakness,
       });
-
-      // setPlayerBuffs({
-      //   opponent: opponentBuff,
-      //   player: playerBuff,
-      // });
       store.setPlayerBuffs({ opponent: opponentBuff, player: playerBuff });
       // setMoves({
       //   opponent: battleData[0]?.moves!,
@@ -213,11 +203,15 @@ const Fight = () => {
         opponent: battleData[0]?.stats[0].base_stat!,
         player: battleData[1]?.stats[0].base_stat!,
       });
+
+      // setPlayerBuffs({
+      //   opponent: opponentBuff,
+      //   player: playerBuff,
+      // });
+
       // setBattleData(battleData);
     })();
   }, []);
-  // console.log(attackIdx);
-  // console.log(turn);
 
   return (
     <Stack>

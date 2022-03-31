@@ -140,9 +140,6 @@ const useBattleStateStore = create<IStore>(
         battleData: battleData,
       }));
     },
-    clearStore: () => {
-      return set({}, true);
-    },
   }))
 );
 

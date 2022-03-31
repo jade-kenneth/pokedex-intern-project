@@ -12,6 +12,7 @@ interface IStore {
   setMode: (mode: "list" | "battle") => void;
   setOpponent: (opponentId: number) => void;
   setPlayer: (playerId: number) => void;
+  clearStore: () => void;
 }
 
 const useBattleState = create<IStore>(
@@ -41,7 +42,11 @@ const useBattleState = create<IStore>(
           playerId,
         }));
       },
+      clearStore: () => {
+        return set({}, true);
+      },
     })),
+
     { name: "battleState" }
   )
 );

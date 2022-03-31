@@ -19,6 +19,8 @@ import { useQuery } from "@apollo/client";
 import { MY_ACCOUNT } from "src/graphql/auth/query/me";
 import apolloClient from "src/apollo/apollo-client";
 import { signOut, useSession } from "next-auth/react";
+import useBattleState from "src/hooks/useBattleState";
+import useRecentViewStore from "src/hooks/useRecentViewStore";
 // const NavLink = ({ children }: { children: ReactNode }) => (
 //   <Link
 //     px={2}
@@ -44,6 +46,8 @@ type UserState = {
 export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
   const [user, setUser] = useState<UserState | null>(null);
+  const state = useBattleState((state) => state);
+  const state1 = useRecentViewStore((state) => state);
   const session = useSession({ required: true });
   useEffect(() => {
     (async function getUser() {
@@ -53,6 +57,13 @@ export default function Header() {
       setUser(data);
     })();
   }, []);
+  const handleSignout = () => {
+    state1.clearStore();
+    state.clearStore();
+    signOut({
+      callbackUrl: "/signin",
+    });
+  };
   return (
     <>
       <Flex
@@ -109,15 +120,7 @@ export default function Header() {
                   <br />
                   <MenuDivider />
 
-                  <MenuItem
-                    onClick={() =>
-                      signOut({
-                        callbackUrl: "/signin",
-                      })
-                    }
-                  >
-                    Logout
-                  </MenuItem>
+                  <MenuItem onClick={() => handleSignout()}>Logout</MenuItem>
                 </MenuList>
               </Menu>
             </Stack>

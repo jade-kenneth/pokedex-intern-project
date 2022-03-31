@@ -19,15 +19,8 @@ import FormButton from "../Form/FormButton";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
 
-import {
-  GENERATE_PASSWORD_RESET_LINK,
-  RESET_PASSWORD,
-} from "src/graphql/auth/mutations/passwordReset";
-import {
-  resetPasswordVariables,
-  resetPassword,
-  resetPassword_resetPassword,
-} from "src/types/auth/resetPassword";
+import { RESET_PASSWORD } from "src/graphql/auth/mutations/passwordReset";
+import { resetPassword } from "src/types/auth/resetPassword";
 import { signIn } from "next-auth/react";
 import { ChangePasswordInput } from "src/interfaces/Input";
 let schema = yup.object().shape({

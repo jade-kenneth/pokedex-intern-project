@@ -31,6 +31,7 @@ interface IStore {
   recents: IRecent[];
   addToRecentView: (id: number, img: string) => void;
   viewRecent: (id: number, img: string) => void;
+  clearStore: () => void;
 }
 
 const useRecentViewStore = create<IStore>(
@@ -48,7 +49,11 @@ const useRecentViewStore = create<IStore>(
           ...state,
           recents: viewRecent(state.recents, id, img),
         })),
+      clearStore: () => {
+        return set({}, true);
+      },
     })),
+
     { name: "recentView" }
   )
 );

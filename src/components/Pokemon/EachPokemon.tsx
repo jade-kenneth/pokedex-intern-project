@@ -49,13 +49,9 @@ const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
         onClick={() => {
           battleState.mode === "battle" && battleState.setPlayer(id);
           router.push(
-            `/home/pokemon-details/${id}/${
-              battleState.mode === "battle"
-                ? `vs/${battleState.opponentId}/fight`
-                : ""
-            }`,
-            undefined,
-            { shallow: true }
+            `/home/pokemon-details/${
+              battleState.mode === "battle" ? "fight" : id
+            }`
           );
         }}
       >

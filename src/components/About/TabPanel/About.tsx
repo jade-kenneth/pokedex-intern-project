@@ -10,12 +10,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
-import { usePokemonGenderIdentifier } from "src/hooks/usePokemonGenderIdentifier";
+import getGender from "src/helpers/getGender";
 import usePokemonDetailStore from "src/hooks/usePokemonDetailStore";
 
 const About = () => {
   const state = usePokemonDetailStore((state) => state);
-  const { gender } = usePokemonGenderIdentifier({
+  const { gender } = getGender({
     gender_rate: state.pokemonDetails.pokemon_specy?.gender_rate,
   });
   const eggBreedBg = useColorModeValue("gray.300", "gray");
