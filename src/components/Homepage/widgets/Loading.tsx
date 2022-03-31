@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import pokeball from "public/backgrounds/pokeballBg.png";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 interface Loading {
   type: "loading";
@@ -20,6 +21,7 @@ interface Error {
 }
 type LoadingProps = Loading | Error;
 const Loading: React.FC<LoadingProps> = ({ type, message }) => {
+  const router = useRouter();
   return (
     <Center height="85vh">
       {type === "loading" ? (
@@ -39,7 +41,7 @@ const Loading: React.FC<LoadingProps> = ({ type, message }) => {
           </Flex>
         </CircularProgress>
       ) : (
-        <VStack>
+        <VStack spacing={"1rem"}>
           <Text fontSize="xl">
             Something went wrong!{" "}
             <Text
@@ -56,7 +58,9 @@ const Loading: React.FC<LoadingProps> = ({ type, message }) => {
               {message}
             </Text>
           </Text>
-          <Button colorScheme={"facebook"}>See pokemons</Button>
+          <Button bg={"blue.600"} onClick={() => router.push("/home")}>
+            See pokemons
+          </Button>
         </VStack>
       )}
     </Center>

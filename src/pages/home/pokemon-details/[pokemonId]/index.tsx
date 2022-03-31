@@ -49,7 +49,9 @@ import NextImageWithFallback from "src/components/widgets/NextImageWithFallback"
 import fallBackImage from "public/backgrounds/unknownPokemon.png";
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
-
+  if (Number.isNaN(parseInt(params?.pokemonId as string))) {
+    return { notFound: true };
+  }
   const { data, errors } = await apolloClient.query<
     GetEachPokemon,
     GetEachPokemonVariables
@@ -58,9 +60,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     variables: { id: parseInt(params?.pokemonId as string) },
     context: { clientName: "pokeapi" },
   });
-  if (Number.isNaN(params?.pokemonId)) {
-    return { notFound: true };
-  }
+
   if (!data.pokemonDetails) {
     return { notFound: true };
   }
