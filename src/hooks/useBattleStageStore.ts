@@ -62,6 +62,7 @@ interface IStore {
   setTurn: (data: (keyof typeof turnMoves)[]) => void;
   setPlayerHP: (playerHp: IPlayerHP) => void;
   setWins: (wins: boolean) => void;
+  clearStore: () => void;
 }
 
 const useBattleStateStore = create<IStore>(
@@ -76,7 +77,7 @@ const useBattleStateStore = create<IStore>(
       opponent: [],
       player: [],
     },
-    beforeAttack: 10,
+    beforeAttack: 5,
 
     battleData: [],
     moves: { opponent: [], player: [] },
@@ -139,6 +140,9 @@ const useBattleStateStore = create<IStore>(
         ...state,
         battleData: battleData,
       }));
+    },
+    clearStore: () => {
+      return set({}, true);
     },
   }))
 );

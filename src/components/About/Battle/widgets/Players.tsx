@@ -17,10 +17,11 @@ const Players = () => {
       w="100%"
       align={"center"}
       justify="space-between"
+      position={"relative"}
     >
       <VStack>
         <Text
-          fontSize={"5xl"}
+          fontSize={"2xl"}
           color="red"
           fontWeight={"bold"}
           fontStyle={"italic"}
@@ -29,11 +30,11 @@ const Players = () => {
           {store.wins
             ? ""
             : store.beforeAttack > 0 && store.turn[0] === "opponent"
-            ? store.beforeAttack
+            ? `Attacking in ${store.beforeAttack}`
             : ""}
         </Text>
         <Text
-          fontSize={"5xl"}
+          fontSize={"2xl"}
           color="red"
           fontWeight={"bold"}
           fontStyle={"italic"}
@@ -43,17 +44,11 @@ const Players = () => {
             ? store.popUp.damage > 0 && `-${store.popUp.damage}`
             : store.popUp.attackName}
         </Text>
-        <Box
-          position={"relative"}
-          height="15.625rem"
-          width={"15.625rem"}
-          transform={"scaleX(-1)"}
-        >
+        <Box width={"12rem"} transform={"scaleX(-1)"}>
           <ImageWithFallback
             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/shiny/${store.battleData[0]?.id}.gif`}
             fallbackImage="/backgrounds/unknownPokemon.png"
             width="100%"
-            height="100%"
             loader={<LoadingState />}
           />
           {/* <NextImageWithFallback
@@ -68,7 +63,7 @@ const Players = () => {
       </VStack>
       <VStack>
         <Text
-          fontSize={"5xl"}
+          fontSize={"2xl"}
           color="red"
           fontWeight={"bold"}
           fontStyle={"italic"}
@@ -77,11 +72,11 @@ const Players = () => {
           {store.wins
             ? ""
             : store.beforeAttack > 0 && store.turn[0] === "player"
-            ? store.beforeAttack
+            ? `Attacking in ${store.beforeAttack}`
             : ""}
         </Text>
         <Text
-          fontSize={"5xl"}
+          fontSize={"2xl"}
           color="red"
           fontWeight={"bold"}
           fontStyle={"italic"}
@@ -92,7 +87,7 @@ const Players = () => {
             ? store.popUp.attackName
             : store.popUp.damage > 0 && `-${store.popUp.damage}`}
         </Text>
-        <Box position={"relative"} height="15.625rem" width={"15.625rem"}>
+        <Box position={"relative"} width={"12rem"}>
           {/** next image dont support gif */}
           {/* <NextImageWithFallback
             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/shiny/${store.battleData[1]?.id}.gif`}
@@ -106,7 +101,6 @@ const Players = () => {
             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/shiny/${store.battleData[1]?.id}.gif`}
             fallbackImage="/backgrounds/unknownPokemon.png"
             width="100%"
-            height="100%"
             loader={<LoadingState />}
           />
         </Box>

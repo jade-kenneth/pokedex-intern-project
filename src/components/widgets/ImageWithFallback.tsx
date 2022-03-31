@@ -64,7 +64,6 @@ const ImageWithFallback = ({
           position={"absolute"}
           top={"50%"}
           left={"50%"}
-          border="3px solid green"
           transform={"translate(-50%, -50%)"}
         >
           {loader}
@@ -73,6 +72,8 @@ const ImageWithFallback = ({
       {!loading && (
         <CustomImage
           src={!error ? src : fallbackImage}
+          height={!error ? "200px" : "50px"}
+          width={!error ? "100px" : "50px"}
           top={error ? "50%" : ""}
           left={error ? "50%" : ""}
           loading="lazy"

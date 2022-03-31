@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -46,6 +47,10 @@ const Fight = () => {
 
   const battleState = useBattleState((state) => state);
   const [error, setError] = useState(false);
+  const [rematchPlayerHp, setRematchPlayerHp] = useState({
+    opponent: 0,
+    player: 0,
+  });
   /** Note: Opponent = me or you
    * Player = Chosen player/pokemon to fight
    */
@@ -63,12 +68,25 @@ const Fight = () => {
         if (time <= 0) {
           setTime(0);
           setRunning(false);
+          store.setAttacking(true);
         }
       }, 1000);
     }
 
     return () => clearInterval(timer);
   }, [running, time]);
+  const handleRematch = () => {
+    store.setPlayerHP({
+      opponent: rematchPlayerHp.opponent,
+      player: rematchPlayerHp.player,
+    });
+    store.setPopUp({ attackName: "", damage: 0 });
+    store.setTurn(["opponent", "player"]);
+    setTime(3);
+    store.setBeforeAttack(5);
+    setRunning(true);
+    store.setWins(false);
+  };
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -145,9 +163,9 @@ const Fight = () => {
             : `${store.battleData[1]?.name} wins`,
       });
       store.setAttacking(false);
-    } else {
+    } else if (!running) {
       store.setAttacking(true);
-      store.setBeforeAttack(10);
+      store.setBeforeAttack(5);
       store.setPopUp({ attackName: "", damage: 0 });
       store.setPlayerHP({
         ...store.playerHp,
@@ -198,7 +216,10 @@ const Fight = () => {
         player: battleData[1]?.moves!,
       });
       store.setBattleData(battleData);
-
+      setRematchPlayerHp({
+        opponent: battleData[0]?.stats[0].base_stat!,
+        player: battleData[1]?.stats[0].base_stat!,
+      });
       store.setPlayerHP({
         opponent: battleData[0]?.stats[0].base_stat!,
         player: battleData[1]?.stats[0].base_stat!,
@@ -295,7 +316,7 @@ const Fight = () => {
                     fontWeight={"bold"}
                     fontStyle={"italic"}
                   >
-                    {store.wins ? "" : time}
+                    {store.wins ? "" : `Battle starts in ${time}`}
                   </Text>
                 )}
 
@@ -312,6 +333,18 @@ const Fight = () => {
                         : " Defeat "
                       : "FIGHT!!!"}
                   </Text>
+                )}
+                {store.wins && (
+                  <VStack>
+                    <Button onClick={() => handleRematch()}>Rematch</Button>
+                    <Button>
+                      <a
+                        href={`/home/pokemon-details/${battleState.opponentId}`}
+                      >
+                        Go home
+                      </a>
+                    </Button>
+                  </VStack>
                 )}
               </Flex>
 
