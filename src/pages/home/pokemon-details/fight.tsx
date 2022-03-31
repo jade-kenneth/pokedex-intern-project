@@ -59,7 +59,14 @@ const Fight = () => {
     { id: `${battleState.opponentId}` },
     { id: `${battleState.playerId}` },
   ];
-
+  const effect1 =
+    store.playerBuffs[`${store.turn[0]}`][0]?.attack !== undefined
+      ? store.playerBuffs[`${store.turn[0]}`][0].attack
+      : 0;
+  const effect2 =
+    store.playerBuffs[`${store.turn[0]}`][1]?.attack !== undefined
+      ? store.playerBuffs[`${store.turn[0]}`][1].attack
+      : 0;
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (running) {
@@ -170,9 +177,16 @@ const Fight = () => {
       store.setPlayerHP({
         ...store.playerHp,
         [`${store.turn[0]}`]:
-          store.playerHp[`${store.turn[0]}`] - store.popUp.damage < 0
+          store.playerHp[`${store.turn[0]}`] -
+            store.popUp.damage -
+            effect1 -
+            effect2 <
+          0
             ? 0
-            : store.playerHp[`${store.turn[0]}`] - store.popUp.damage,
+            : store.playerHp[`${store.turn[0]}`] -
+              store.popUp.damage -
+              effect1 -
+              effect2,
       });
     }
   }, [store.turn]);

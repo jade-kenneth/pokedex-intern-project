@@ -1,7 +1,9 @@
 import { IBattleData } from "src/helpers/getBattleDataByIds";
 import {
   GetEachPokemon_pokemonDetails,
+  GetEachPokemon_pokemonDetails_abilities,
   GetEachPokemon_pokemonDetails_moves,
+  GetEachPokemon_pokemonDetails_moves_move,
 } from "src/types/pokemon/GetEachPokemon";
 import create from "zustand";
 import { persist, devtools } from "zustand/middleware";
@@ -74,8 +76,14 @@ const useBattleStateStore = create<IStore>(
     attackIdx: 0,
     popUp: { attackName: "", damage: 0 },
     playerBuffs: {
-      opponent: [],
-      player: [],
+      opponent: [
+        { attack: 0, fromPlayerWeakness: "" },
+        { attack: 0, fromPlayerWeakness: "" },
+      ],
+      player: [
+        { attack: 0, fromPlayerWeakness: "" },
+        { attack: 0, fromPlayerWeakness: "" },
+      ],
     },
     beforeAttack: 5,
 

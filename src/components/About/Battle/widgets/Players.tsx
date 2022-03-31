@@ -9,7 +9,18 @@ import NextImageWithFallback from "src/components/widgets/NextImageWithFallback"
 const Players = () => {
   const store = useBattleStateStore((state) => state);
   // console.log(store.turn);
-
+  const damageEffect1 =
+    store.playerBuffs[`${store.turn[0]}`][0]?.attack !== undefined
+      ? store.playerBuffs[`${store.turn[0]}`][0].attack
+      : 0;
+  const damageEffect2 =
+    store.playerBuffs[`${store.turn[0]}`][1]?.attack !== undefined
+      ? store.playerBuffs[`${store.turn[0]}`][1].attack
+      : 0;
+  const elementEffect1 =
+    store.playerBuffs[`${store.turn[0]}`][0]?.fromPlayerWeakness;
+  const elementEffect2 =
+    store.playerBuffs[`${store.turn[0]}`][1]?.fromPlayerWeakness;
   return (
     <Flex
       flex="2"
@@ -41,7 +52,8 @@ const Players = () => {
           height="5rem"
         >
           {store.turn[0] === "player"
-            ? store.popUp.damage > 0 && `-${store.popUp.damage}`
+            ? store.popUp.damage > 0 &&
+              `-${store.popUp.damage + +damageEffect1 + damageEffect2}`
             : store.popUp.attackName}
         </Text>
         <Box width={"12rem"} transform={"scaleX(-1)"}>
@@ -85,7 +97,8 @@ const Players = () => {
           {/**if last opponent */}
           {store.turn[0] === "player"
             ? store.popUp.attackName
-            : store.popUp.damage > 0 && `-${store.popUp.damage}`}
+            : store.popUp.damage > 0 &&
+              `-${store.popUp.damage + damageEffect1 + damageEffect2}`}
         </Text>
         <Box position={"relative"} width={"12rem"}>
           {/** next image dont support gif */}

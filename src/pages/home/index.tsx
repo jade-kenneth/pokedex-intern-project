@@ -72,9 +72,7 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
   const router = useRouter();
 
   /** check if pokemons fetch is not undefined */
-  let pokemonFetched:
-    | GetAllPokemons["pokemons"]
-    | GetFilteredPokemon["filtered_pokemons"] = [];
+  let pokemonFetched: GetAllPokemons["pokemons"] = [];
 
   /**
    * check if data is present so that usePagination

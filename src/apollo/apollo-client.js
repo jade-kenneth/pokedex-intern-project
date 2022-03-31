@@ -6,7 +6,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { getSession } from "next-auth/react";
-
+import { concatPagination } from "@apollo/client/utilities";
 const authLink = setContext(async (_, { headers }) => {
   // get the authentication token if it exists
   const session = await getSession();
@@ -24,6 +24,21 @@ const pokeapi = new HttpLink({
   uri: "https://beta.pokeapi.co/graphql/v1beta",
 });
 
+// const cache = new InMemoryCache({
+//   typePolicies: {
+//     Query: {
+//       fields: {
+//         pokemon_v2_pokemon: {
+//           ...concatPagination(),
+//           keyArgs: false,
+//           merge(existing = [], incoming) {
+//             return [...existing, ...incoming];
+//           },
+//         },
+//       },
+//     },
+//   },
+// });
 const authentication = new HttpLink({
   uri: "https://frontend-engineer-onboarding-api-thxaa.ondigitalocean.app/graphql",
 });
