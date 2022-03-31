@@ -93,8 +93,6 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
     pokemonFetched = data.pokemons;
   }
   const {
-    handleNext,
-    handlePrev,
     data: pokemonData,
     currentPage,
     pageNumbers,
@@ -282,8 +280,6 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
 
           <HStack spacing="1.85rem" justify="center" pb="3.688rem">
             <Pagination
-              handleNext={handleNext}
-              handlePrev={handlePrev}
               currentPage={currentPage}
               pageNumbers={pageNumbers}
               paginate={paginate}

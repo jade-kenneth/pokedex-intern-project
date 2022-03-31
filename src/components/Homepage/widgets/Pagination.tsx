@@ -19,8 +19,8 @@ interface PaginationProps {
 
   paginate: (number: number) => void;
   currentPage: number;
-  handlePrev: () => void;
-  handleNext: () => void;
+  handlePrev?: () => void;
+  handleNext?: () => void;
   pageNumbers: number[];
   numberPerPage: number;
   handleFetchMore: () => void;
@@ -29,9 +29,8 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({
-  handlePrev,
   currentPage,
-  handleNext,
+
   pageNumbers,
   numberPerPage,
   paginate,
@@ -47,7 +46,7 @@ const Pagination: React.FC<PaginationProps> = ({
   useEffect(() => {
     paginate(initial + 1);
   }, [toggle]);
-  const battleState = useBattleState((state) => state);
+
   const handleNextPagination = () => {
     /** trigger only if it is end of the page and
      * filter feature is disabled

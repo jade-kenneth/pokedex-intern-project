@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, Image as ChakraImage } from "@chakra-ui/react";
 import { Flex, Spacer } from "@chakra-ui/react";
 import pokeball from "public/backgrounds/pokeballBg.png";
 
@@ -12,6 +12,7 @@ import getPokemonElementColor from "src/helpers/getPokemonElementColor";
 import useBattleState from "src/hooks/useBattleState";
 import { useRouter } from "next/router";
 import Loading from "../Homepage/widgets/Loading";
+import ImageWithFallback from "../widgets/ImageWithFallback";
 // import { TypesDetail } from "pages/ssr/pokemon";
 
 interface EachPokemonProps {
@@ -76,11 +77,9 @@ const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
               <Image src={pokeball} alt="ball" width={100} height={100} />
             </Flex>
             <Flex justify={"end"} w="100%" h="100%">
-              <Image
+              <ImageWithFallback
                 src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`}
-                alt={`${children}`}
-                placeholder="blur"
-                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mO8/fR2PQAIWgMc+QDkCgAAAABJRU5ErkJggg=="
+                fallbackImage="/backgrounds/unknownPokemon.png"
                 width={130}
                 height={"100%"}
               />

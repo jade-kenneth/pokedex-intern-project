@@ -27,7 +27,10 @@ export const usePagination = (
   const paginate = (number: number) => {
     setCurrentPage(number);
   };
-
+  /**
+   * used only if not range page pagination
+   * ex: prev [1] next
+   */
   const handleNext = () => {
     if (currentPage < pageNumbers[totalNumberOfPage - 1]) {
       setCurrentPage((prev) => prev + 1);
@@ -38,6 +41,10 @@ export const usePagination = (
       // }
     }
   };
+  /**
+   * used only if not range page pagination
+   * prev [1] next
+   */
   const handlePrev = () => {
     if (currentPage > pageNumbers[0]) {
       setCurrentPage((prev) => prev - 1);
