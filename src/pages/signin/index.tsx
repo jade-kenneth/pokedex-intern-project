@@ -4,7 +4,7 @@ import React, {
   ReactNode,
   useState,
 } from "react";
-import { Link, Stack, Text } from "@chakra-ui/react";
+import { Box, Link, Stack, Text, useToast } from "@chakra-ui/react";
 import { signIn } from "next-auth/react";
 import * as yup from "yup";
 
@@ -38,14 +38,38 @@ const SignIn = ({ provider }: FormProps) => {
   });
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const onSubmit: SubmitHandler<SigninInputs> = (data) => {
+  const toast = useToast();
+  const onSubmit: SubmitHandler<SigninInputs> = async (data) => {
     setLoading(true);
-    signIn(provider?.credentials.id, {
+    const response = await signIn<"credentials">(provider?.credentials.id, {
       email: data.email,
       password: data.password,
 
       callbackUrl: "/home",
+      redirect: false,
     });
+    if (response?.error) {
+      toast({
+        position: "top",
+
+        render: () => (
+          <Box borderRadius={"10px"} color="white" p={3} bg="red">
+            {`🧐 Invalid email or password`}
+          </Box>
+        ),
+      });
+    } else {
+      toast({
+        position: "top",
+
+        render: () => (
+          <Box borderRadius={"10px"} color="white" p={3} bg="green">
+            {`🤗 Okaerinasai ${data.email}!`}
+          </Box>
+        ),
+      });
+    }
+    setLoading(false);
   };
 
   return (

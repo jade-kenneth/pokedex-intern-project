@@ -91,7 +91,7 @@ const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
           </Flex>
           <Flex flex="2.5" direction={"column"}>
             <Text
-              fontSize={battleState.mode === "battle" ? "0.7rem" : "1.5rem"}
+              fontSize={battleState.mode === "battle" ? "0.7rem" : "1rem"}
               fontWeight="bolder"
               textTransform="capitalize"
             >

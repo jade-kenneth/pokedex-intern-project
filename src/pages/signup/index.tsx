@@ -7,7 +7,14 @@ import React, {
   useState,
 } from "react";
 
-import { Stack, Text, useColorModeValue, Link } from "@chakra-ui/react";
+import {
+  Stack,
+  Text,
+  useColorModeValue,
+  Link,
+  useToast,
+  Box,
+} from "@chakra-ui/react";
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -51,19 +58,43 @@ const Signup = ({ provider }: FormProps) => {
     resolver: yupResolver(schema),
   });
   const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
     setLoading(true);
-    await signIn(provider?.credentials.id, {
+    const response = await signIn<"credentials">(provider?.credentials.id, {
       email: data.email,
       password: data.password,
       firstName: data.firstName,
       lastName: data.lastName,
 
       callbackUrl: "/home",
+      redirect: false,
     });
+    if (response?.error) {
+      toast({
+        position: "top",
+
+        render: () => (
+          <Box borderRadius={"10px"} color="white" p={3} bg="red">
+            {`🧐 ${response.error}`}
+          </Box>
+        ),
+      });
+    } else {
+      toast({
+        position: "top",
+
+        render: () => (
+          <Box borderRadius={"10px"} color="white" p={3} bg="green">
+            {`🤗 Okaerinasai ${data.firstName}!`}
+          </Box>
+        ),
+      });
+    }
     setLoading(false);
   };
+
   const router = useRouter();
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>

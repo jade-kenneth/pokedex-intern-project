@@ -32,24 +32,28 @@ const AccountLayout = ({
   > | null>(null);
   const router = useRouter();
   const toaster = useToast();
+  const { status } = useSession();
   useEffect(() => {
     (async function getProvider() {
       const provider = await getProviders();
       setProviders(provider);
     })();
   }, []);
-  useEffect(() => {
-    if (router.query.error) {
-      toaster({
-        position: "top",
-        render: () => (
-          <Box color="black" p={3} bg="white">
-            {`😵‍💫 ${router.query.error}`}
-          </Box>
-        ),
-      });
-    }
-  }, [router.query]);
+  if (status === "authenticated") {
+    router.push("/home");
+  }
+  // useEffect(() => {
+  //   if (router.query.error) {
+  //     toaster({
+  //       position: "top",
+  //       render: () => (
+  //         <Box color="black" p={3} bg="white">
+  //           {`😵‍💫 ${router.query.error}`}
+  //         </Box>
+  //       ),
+  //     });
+  //   }
+  // }, [router.query]);
 
   return (
     <>

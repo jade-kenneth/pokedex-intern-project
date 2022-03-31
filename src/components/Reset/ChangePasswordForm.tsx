@@ -1,10 +1,12 @@
 import {
+  Box,
   FormControl,
   FormLabel,
   Input,
   Link,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import React from "react";
 import InputWithValidator from "../Form/InputWithValidator";
@@ -53,6 +55,7 @@ const ChangePasswordForm = () => {
     mode: "onChange",
     resolver: yupResolver(schema),
   });
+  const toast = useToast();
 
   const onSubmit: SubmitHandler<ChangePasswordInput> = async (data) => {
     try {
@@ -68,11 +71,28 @@ const ChangePasswordForm = () => {
         await signIn("credentials", {
           email: router.query.email,
           password: data.confirmPassword,
-          callbackUrl: "/homepage",
+          redirect: false,
         });
       }
-    } catch (error) {
-      console.log(error);
+      toast({
+        position: "top",
+
+        render: () => (
+          <Box borderRadius={"10px"} color="white" p={3} bg="green">
+            {`Successfully resets password!`}
+          </Box>
+        ),
+      });
+    } catch (error: any) {
+      toast({
+        position: "top",
+
+        render: () => (
+          <Box borderRadius={"10px"} color="white" p={3} bg="red">
+            {`🧐 ${error.message} or code expired`}
+          </Box>
+        ),
+      });
     }
   };
   return (

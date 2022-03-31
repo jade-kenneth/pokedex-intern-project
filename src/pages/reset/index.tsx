@@ -82,15 +82,16 @@ const Reset = ({ provider }: FormProps) => {
           baseURL: router.pathname,
         },
       });
-
-      setAccess(trigger?.triggerPasswordReset);
       router.push(`${resetLink?.generatePasswordResetLink}`);
     } catch (error: any) {
       toast({
         position: "top",
 
-        description: `${error.message}`,
-        status: "error",
+        render: () => (
+          <Box borderRadius={"10px"} color="white" p={3} bg="red">
+            {`🧐 User not found!`}
+          </Box>
+        ),
         // render: () => `${error.message}`,
         // render: () => (
         //   <Box color="black" p={3} bg="white">
@@ -106,10 +107,10 @@ const Reset = ({ provider }: FormProps) => {
     <>
       <Stack align={"flex-start"}>
         <Heading fontSize={"3rem"} textAlign={"center"}>
-          {access ? "Change Password" : "Forgot Password"}
+          {router.query.code ? "Change Password" : "Forgot Password"}
         </Heading>
       </Stack>
-      {!access ? (
+      {!router.query.code ? (
         <Box>
           <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <Stack spacing={4}>
