@@ -206,13 +206,13 @@ const Pokedex = ({ header, pokemons }: PokedexProps) => {
               overflowY={"scroll"}
               css={{
                 "&::-webkit-scrollbar": {
-                  width: "4px",
+                  width: "5px",
                 },
                 "&::-webkit-scrollbar-track": {
-                  width: "6px",
+                  width: "5px",
                 },
                 "&::-webkit-scrollbar-thumb": {
-                  background: "primary",
+                  background: "#555",
                   borderRadius: "24px",
                 },
               }}

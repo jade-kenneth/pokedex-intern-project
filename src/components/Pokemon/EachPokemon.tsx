@@ -13,6 +13,9 @@ import useBattleState from "src/hooks/useBattleState";
 import { useRouter } from "next/router";
 import Loading from "../Homepage/widgets/Loading";
 import ImageWithFallback from "../widgets/ImageWithFallback";
+import LoadingState from "../widgets/LoadingState";
+import NextImageWithFallback from "../widgets/NextImageWithFallback";
+import fallBackImage from "public/backgrounds/unknownPokemon.png";
 // import { TypesDetail } from "pages/ssr/pokemon";
 
 interface EachPokemonProps {
@@ -77,11 +80,12 @@ const EachPokemon: React.FC<EachPokemonProps> = ({ children, types, id }) => {
               <Image src={pokeball} alt="ball" width={100} height={100} />
             </Flex>
             <Flex justify={"end"} w="100%" h="100%">
-              <ImageWithFallback
+              <NextImageWithFallback
                 src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${id}.png`}
-                fallbackImage="/backgrounds/unknownPokemon.png"
-                width={130}
+                alt="profile"
+                width={"100%"}
                 height={"100%"}
+                fallbackSrc={fallBackImage}
               />
             </Flex>
           </Flex>

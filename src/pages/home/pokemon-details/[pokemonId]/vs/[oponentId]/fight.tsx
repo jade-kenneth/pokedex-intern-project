@@ -227,7 +227,12 @@ const Fight = () => {
         </Box>
         <DrawerContent backgroundColor="transparent">
           <DrawerBody>
-            <Flex direction={"column"} position="relative" zIndex={"10000"}>
+            <Flex
+              direction={"column"}
+              position="relative"
+              zIndex={"10000"}
+              gap="20px"
+            >
               <Flex justify={"space-around"} flex="1" gap="1rem">
                 {store.battleData &&
                   store.battleData?.map((data, idx) => {

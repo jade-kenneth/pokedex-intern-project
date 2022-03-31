@@ -45,7 +45,8 @@ import useBattleState from "src/hooks/useBattleState";
 import Loading from "src/components/Homepage/widgets/Loading";
 import { useSession } from "next-auth/react";
 import useBattleStateStore from "src/hooks/useBattleStageStore";
-
+import NextImageWithFallback from "src/components/widgets/NextImageWithFallback";
+import fallBackImage from "public/backgrounds/unknownPokemon.png";
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
 
@@ -159,12 +160,13 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
         {/** Profile*/}
         <VStack spacing="2.188rem">
           <Stack w={"20.313rem"} h={"24.313rem"} position="relative">
-            <Image
+            <NextImageWithFallback
               src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemonDetails?.id}.png`}
               alt="profile"
               width={10}
               height={10}
               layout="responsive"
+              fallbackSrc={fallBackImage}
             />
           </Stack>
 
@@ -195,11 +197,12 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
                       router.push(`/home/pokemon-details/${data.id}`);
                     }}
                   >
-                    <Image
+                    <NextImageWithFallback
                       src={data.img}
                       alt="profile"
                       width={"100%"}
                       height={"100%"}
+                      fallbackSrc={fallBackImage}
                     />
                   </Box>
                 );

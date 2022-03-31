@@ -1,4 +1,4 @@
-import { Button, Flex, Grid } from "@chakra-ui/react";
+import { Button, Flex, Grid, Tag, VStack } from "@chakra-ui/react";
 import React from "react";
 import useBattleStateStore from "src/hooks/useBattleStageStore";
 
@@ -10,19 +10,19 @@ const Skills = () => {
         {store.battleData &&
           store.battleData[0]?.moves.map((move, mvIdx) => {
             return (
-              <Button
-                borderRadius={"0px"}
+              <Tag
+                borderRadius={"10px"}
                 key={move.move?.name}
-                border={
+                alignItems="center"
+                bg={
                   mvIdx === store.attackIdx && store.turn[0] === "opponent"
-                    ? "3px solid red"
-                    : "none"
+                    ? "red.400"
+                    : "white"
                 }
-                colorScheme={"green"}
-                fontSize={"0.8rem"}
+                color="green"
               >
                 {move.move?.name} {move.move?.pp}
-              </Button>
+              </Tag>
             );
           })}
       </Grid>
@@ -30,19 +30,18 @@ const Skills = () => {
         {store.battleData &&
           store.battleData[1]?.moves.map((move, mvIdx) => {
             return (
-              <Button
-                borderRadius={"0px"}
+              <Tag
+                borderRadius={"10px"}
                 key={move.move?.name}
-                border={
-                  mvIdx === store.attackIdx && store.turn[0] === "player"
-                    ? "3px solid red"
-                    : "none"
+                bg={
+                  mvIdx === store.attackIdx && store.turn[1] === "opponent"
+                    ? "red.400"
+                    : "white"
                 }
-                colorScheme={"red"}
-                fontSize={"0.8rem"}
+                color="red"
               >
                 {move.move?.name} {move.move?.pp}
-              </Button>
+              </Tag>
             );
           })}
       </Grid>

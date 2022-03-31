@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Box,
   Image as CustomImage,
   ImageProps as CustomImageProps,
 } from "@chakra-ui/react";
@@ -57,22 +58,28 @@ const ImageWithFallback = ({
   }, [src]);
 
   return (
-    <>
-      {!!loading && loader}
+    <Box position={"relative"}>
+      {!!loading && (
+        <Box
+          position={"absolute"}
+          top={"50%"}
+          left={"50%"}
+          border="3px solid green"
+          transform={"translate(-50%, -50%)"}
+        >
+          {loader}
+        </Box>
+      )}
       {!loading && (
         <CustomImage
           src={!error ? src : fallbackImage}
-          height={error ? "6rem" : "inherit"}
-          width={error ? "6rem" : "inherit"}
-          position={error ? "absolute" : "relative"}
           top={error ? "50%" : ""}
-          transform={error ? "translate(-50%, -50%)" : ""}
           left={error ? "50%" : ""}
           loading="lazy"
           {...props}
         />
       )}
-    </>
+    </Box>
   );
 };
 

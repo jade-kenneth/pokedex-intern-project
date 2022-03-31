@@ -2,6 +2,10 @@ import { Box, Flex, VStack, Text } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import useBattleStateStore from "src/hooks/useBattleStageStore";
 import Image from "next/image";
+import LoadingState from "src/components/widgets/LoadingState";
+import ImageWithFallback from "src/components/widgets/ImageWithFallback";
+import fallBackImage from "public/backgrounds/unknownPokemon.png";
+import NextImageWithFallback from "src/components/widgets/NextImageWithFallback";
 const Players = () => {
   const store = useBattleStateStore((state) => state);
   // console.log(store.turn);
@@ -45,11 +49,21 @@ const Players = () => {
           width={"15.625rem"}
           transform={"scaleX(-1)"}
         >
-          <Image
-            alt="myPokemon"
+          <ImageWithFallback
             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/shiny/${store.battleData[0]?.id}.gif`}
-            layout="fill"
+            fallbackImage="/backgrounds/unknownPokemon.png"
+            width="100%"
+            height="100%"
+            loader={<LoadingState />}
           />
+          {/* <NextImageWithFallback
+            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/shiny/${store.battleData[0]?.id}.gif`}
+            alt="profile"
+            width={10}
+            height={10}
+            layout="responsive"
+            fallbackSrc={fallBackImage}
+          /> */}
         </Box>
       </VStack>
       <VStack>
@@ -79,10 +93,21 @@ const Players = () => {
             : store.popUp.damage > 0 && `-${store.popUp.damage}`}
         </Text>
         <Box position={"relative"} height="15.625rem" width={"15.625rem"}>
-          <Image
-            alt="myPokemon"
+          {/** next image dont support gif */}
+          {/* <NextImageWithFallback
             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/shiny/${store.battleData[1]?.id}.gif`}
-            layout="fill"
+            alt="profile"
+            width={10}
+            height={10}
+            layout="responsive"
+            fallbackSrc={fallBackImage}
+          /> */}
+          <ImageWithFallback
+            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/shiny/${store.battleData[1]?.id}.gif`}
+            fallbackImage="/backgrounds/unknownPokemon.png"
+            width="100%"
+            height="100%"
+            loader={<LoadingState />}
           />
         </Box>
       </VStack>
