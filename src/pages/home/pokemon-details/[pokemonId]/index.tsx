@@ -84,7 +84,6 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
 
   useEffect(() => {
     store.setPokemonDetails(pokemonDetails!);
-    battleState.setOpponent(parseInt(router.query.pokemonId as string));
     state.addToRecentView(
       pokemonDetails?.id!,
       `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemonDetails?.id}.png`

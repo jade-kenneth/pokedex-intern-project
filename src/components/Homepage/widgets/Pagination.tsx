@@ -99,6 +99,7 @@ const Pagination: React.FC<PaginationProps> = ({
           return (
             <>
               <Center
+                key={page}
                 width={"2rem"}
                 height={"100%"}
                 borderRadius={"sm"}

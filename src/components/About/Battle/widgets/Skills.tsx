@@ -6,7 +6,11 @@ const Skills = () => {
   const store = useBattleStateStore((state) => state);
   return (
     <Flex justify={"space-around"} flex="1" align={"center"} gap="1rem">
-      <Grid templateColumns={"repeat(5,1fr)"} gap="0.5rem">
+      <Grid
+        templateColumns={"repeat(5,1fr)"}
+        templateRows={"repeat(2,50px)"}
+        gap="0.5rem"
+      >
         {store.battleData &&
           store.battleData[0]?.moves.map((move, mvIdx) => {
             return (
@@ -26,7 +30,11 @@ const Skills = () => {
             );
           })}
       </Grid>
-      <Grid templateColumns={"repeat(5,1fr)"} gap="0.5rem">
+      <Grid
+        templateColumns={"repeat(5,1fr)"}
+        templateRows={"repeat(2,50px)"}
+        gap="0.5rem"
+      >
         {store.battleData &&
           store.battleData[1]?.moves.map((move, mvIdx) => {
             return (

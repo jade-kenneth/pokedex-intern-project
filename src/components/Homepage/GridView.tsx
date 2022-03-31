@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import Image from "next/image";
 import loginBg from "public/backgrounds/loginBg.png";
@@ -19,18 +19,14 @@ const GridView = ({ loading, pokemons }: GridViewProps) => {
   const battleState = useBattleState((state) => state);
 
   if (loading) return <Loading type="loading" />;
+
   return (
     <Grid
       templateColumns={{
         base: "repeat(1,1fr)",
 
         md: "repeat(2,1fr)",
-        lg: battleState.mode === "battle" ? "repeat(5,1fr)" : "repeat(5, 1fr)",
-      }}
-      templateRows={{
-        base: "repeat(auto,16.188rem)",
-        md: "repeat(4,16.188rem)",
-        lg: "repeat(2, 16.188rem)",
+        lg: "repeat(5,1fr)",
       }}
       gap={battleState.mode === "battle" ? "1rem" : "2rem"}
     >
@@ -38,11 +34,11 @@ const GridView = ({ loading, pokemons }: GridViewProps) => {
       {pokemons.map((pokemon) => {
         const { id, types, name } = pokemon;
         return (
-          <React.Fragment key={id}>
-            <EachPokemon id={id} types={types}>
+          <>
+            <EachPokemon key={id} id={id} types={types}>
               {name}
             </EachPokemon>
-          </React.Fragment>
+          </>
         );
       })}
     </Grid>

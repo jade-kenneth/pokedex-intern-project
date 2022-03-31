@@ -72,7 +72,6 @@ const ImageWithFallback = ({
       {!loading && (
         <CustomImage
           src={!error ? src : fallbackImage}
-          height={!error ? "200px" : "50px"}
           width={!error ? "100px" : "50px"}
           top={error ? "50%" : ""}
           left={error ? "50%" : ""}
