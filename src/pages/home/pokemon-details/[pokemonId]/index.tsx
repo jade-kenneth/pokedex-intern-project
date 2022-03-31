@@ -49,7 +49,7 @@ import useBattleStateStore from "src/hooks/useBattleStageStore";
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { params } = context;
 
-  const { data } = await apolloClient.query<
+  const { data, errors } = await apolloClient.query<
     GetEachPokemon,
     GetEachPokemonVariables
   >({
@@ -57,7 +57,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     variables: { id: parseInt(params?.pokemonId as string) },
     context: { clientName: "pokeapi" },
   });
-
+  if (!data.pokemonDetails) {
+    return { notFound: true };
+  }
   return {
     props: {
       pokemonDetails: data.pokemonDetails,
@@ -75,7 +77,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
   const { handleNext, data, handlePrev, setCurrentPage } = usePagination(6, {
     pokemons: state.recents,
   });
-  console.log(pokemonDetails);
+
   useEffect(() => {
     store.setPokemonDetails(pokemonDetails!);
     battleState.setOpponent(parseInt(router.query.pokemonId as string));
@@ -103,7 +105,8 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
   const routerLink = router.asPath.split("/");
 
   if (!pokemonDetails) return <Loading type="loading" />;
-
+  // if (pokemonDetails && pokemonDetails === "error")
+  //   return <Loading type="error" message="Who's that Pokemon?" />;
   return (
     <Box mt={"1.375rem"} w={"container.lg"} mx="auto">
       <Breadcrumb
