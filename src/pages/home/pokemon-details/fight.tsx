@@ -172,8 +172,7 @@ const Fight = () => {
         store.playerBuffs[`${store.turn[1]}`][1]?.attack !== undefined
           ? store.playerBuffs[`${store.turn[1]}`][1].attack
           : 0;
-      console.log("effect1", effect1);
-      console.log("effect2", effect2);
+
       store.setAttacking(true);
       store.setBeforeAttack(5);
       store.setPopUp({ attackName: "", damage: 0 });
@@ -252,121 +251,117 @@ const Fight = () => {
   }, []);
 
   return (
-    <Stack>
-      <Drawer isOpen={true} placement="top" onClose={onClose}>
-        <Box position={"relative"} zIndex={1000}>
-          <Image src={beginBattleBg} alt="bg" layout="responsive" />
-        </Box>
-        <DrawerContent backgroundColor="transparent">
-          <DrawerBody>
+    <Drawer isOpen={true} placement="top" onClose={onClose}>
+      <Box position={"relative"} zIndex={1000}>
+        <Image src={beginBattleBg} alt="bg" layout="responsive" />
+      </Box>
+      <DrawerContent backgroundColor="transparent">
+        <DrawerBody>
+          <Flex
+            direction={"column"}
+            position="relative"
+            zIndex={"10000"}
+            gap="20px"
+          >
+            <Flex justify={"space-around"} flex="1" gap="1rem">
+              {store.battleData &&
+                store.battleData?.map((data, idx) => {
+                  return (
+                    <Flex key={idx} flex="1">
+                      <VStack
+                        align={
+                          idx === store.battleData.length - 1 ? "end" : "start"
+                        }
+                        width={"100%"}
+                      >
+                        {/** NAME AND TYPE */}
+                        <NameType data={data!} idx={idx} />
+
+                        {/**HP BAR  */}
+                        <HPBar data={data!} idx={idx} />
+                        {idx === store.battleData.length - 1
+                          ? store.playerBuffs.player.map((data, idx) => {
+                              return (
+                                <HStack key={idx}>
+                                  <Tag
+                                    bg={getPokemonElementColor(
+                                      data.fromPlayerWeakness
+                                    )}
+                                  >
+                                    {data.fromPlayerWeakness} effect
+                                  </Tag>
+                                  <Tag>Attack +{data.attack}</Tag>
+                                </HStack>
+                              );
+                            })
+                          : store.playerBuffs.opponent.map((data, idx) => {
+                              return (
+                                <HStack key={idx}>
+                                  <Tag
+                                    bg={getPokemonElementColor(
+                                      data.fromPlayerWeakness
+                                    )}
+                                  >
+                                    {data.fromPlayerWeakness} effect
+                                  </Tag>
+                                  <Tag>Attack +{data.attack}</Tag>
+                                </HStack>
+                              );
+                            })}
+                      </VStack>
+                    </Flex>
+                  );
+                })}
+            </Flex>
+            <Players />
             <Flex
               direction={"column"}
-              position="relative"
-              zIndex={"10000"}
-              gap="20px"
+              position="absolute"
+              top="50%"
+              left={"50%"}
+              align="center"
+              transform={"translate(-50%,-50%)"}
             >
-              <Flex justify={"space-around"} flex="1" gap="1rem">
-                {store.battleData &&
-                  store.battleData?.map((data, idx) => {
-                    return (
-                      <Flex key={idx} flex="1">
-                        <VStack
-                          align={
-                            idx === store.battleData.length - 1
-                              ? "end"
-                              : "start"
-                          }
-                          width={"100%"}
-                        >
-                          {/** NAME AND TYPE */}
-                          <NameType data={data!} idx={idx} />
+              {time !== 0 && (
+                <Text
+                  fontSize={"5xl"}
+                  color="red"
+                  fontWeight={"bold"}
+                  fontStyle={"italic"}
+                >
+                  {store.wins ? "" : `Battle starts in ${time}`}
+                </Text>
+              )}
 
-                          {/**HP BAR  */}
-                          <HPBar data={data!} idx={idx} />
-                          {idx === store.battleData.length - 1
-                            ? store.playerBuffs.player.map((data, idx) => {
-                                return (
-                                  <HStack key={idx}>
-                                    <Tag
-                                      bg={getPokemonElementColor(
-                                        data.fromPlayerWeakness
-                                      )}
-                                    >
-                                      {data.fromPlayerWeakness} effect
-                                    </Tag>
-                                    <Tag>Attack +{data.attack}</Tag>
-                                  </HStack>
-                                );
-                              })
-                            : store.playerBuffs.opponent.map((data, idx) => {
-                                return (
-                                  <HStack key={idx}>
-                                    <Tag
-                                      bg={getPokemonElementColor(
-                                        data.fromPlayerWeakness
-                                      )}
-                                    >
-                                      {data.fromPlayerWeakness} effect
-                                    </Tag>
-                                    <Tag>Attack +{data.attack}</Tag>
-                                  </HStack>
-                                );
-                              })}
-                        </VStack>
-                      </Flex>
-                    );
-                  })}
-              </Flex>
-              <Players />
-              <Flex
-                direction={"column"}
-                position="absolute"
-                top="50%"
-                left={"50%"}
-                align="center"
-                transform={"translate(-50%,-50%)"}
-              >
-                {time !== 0 && (
-                  <Text
-                    fontSize={"5xl"}
-                    color="red"
-                    fontWeight={"bold"}
-                    fontStyle={"italic"}
-                  >
-                    {store.wins ? "" : `Battle starts in ${time}`}
-                  </Text>
-                )}
-
-                {time === 0 && (
-                  <Text
-                    fontSize={"5xl"}
-                    color="red"
-                    fontWeight={"bold"}
-                    fontStyle={"italic"}
-                  >
-                    {store.wins
-                      ? store.playerHp.opponent > 0
-                        ? " Victory"
-                        : " Defeat "
-                      : "FIGHT!!!"}
-                  </Text>
-                )}
-                {store.wins && (
-                  <VStack>
-                    <Button onClick={() => handleRematch()}>Rematch</Button>
-                    <Button>
-                      <a href={`/home`}>Go home</a>
-                    </Button>
-                  </VStack>
-                )}
-              </Flex>
-
-              <Skills />
+              {time === 0 && (
+                <Text
+                  fontSize={"5xl"}
+                  color="red"
+                  fontWeight={"bold"}
+                  fontStyle={"italic"}
+                >
+                  {store.wins
+                    ? store.playerHp.opponent > 0
+                      ? " Victory"
+                      : " Defeat "
+                    : "FIGHT!!!"}
+                </Text>
+              )}
+              {store.wins && (
+                <VStack>
+                  <Button onClick={() => handleRematch()}>Rematch</Button>
+                  <Button>
+                    <a href={`/home`}>Go home</a>
+                  </Button>
+                </VStack>
+              )}
             </Flex>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-    </Stack>
+
+            <Skills />
+          </Flex>
+        </DrawerBody>
+      </DrawerContent>
+    </Drawer>
   );
 };
 

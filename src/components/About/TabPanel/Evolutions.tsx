@@ -47,8 +47,8 @@ const Evolutions = () => {
             ? names[`${state.pokemonDetails.id}`]
             : names[`${state.pokemonDetails.id - 1}`]}
         </Text>{" "}
-        which costs {typeof levelCost === "number" ? levelCost : 0} minimum
-        level.
+        which costs {typeof levelCost === "number" ? levelCost : "Unknown"}{" "}
+        minimum level.
       </Text>
       <Stack
         py={"2rem"}
