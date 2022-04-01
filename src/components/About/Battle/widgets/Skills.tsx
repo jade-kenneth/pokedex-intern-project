@@ -8,7 +8,7 @@ const Skills = () => {
     <Flex justify={"space-around"} flex="1" align={"center"} gap="1rem">
       <Grid
         templateColumns={"repeat(5,1fr)"}
-        templateRows={"repeat(2,50px)"}
+        templateRows={"repeat(2,2.5rem)"}
         gap="0.5rem"
       >
         {store.battleData &&
@@ -32,7 +32,7 @@ const Skills = () => {
       </Grid>
       <Grid
         templateColumns={"repeat(5,1fr)"}
-        templateRows={"repeat(2,50px)"}
+        templateRows={"repeat(2,2.5rem)"}
         gap="0.5rem"
       >
         {store.battleData &&
