@@ -76,14 +76,8 @@ const useBattleStateStore = create<IStore>(
     attackIdx: 0,
     popUp: { attackName: "", damage: 0 },
     playerBuffs: {
-      opponent: [
-        { attack: 0, fromPlayerWeakness: "" },
-        { attack: 0, fromPlayerWeakness: "" },
-      ],
-      player: [
-        { attack: 0, fromPlayerWeakness: "" },
-        { attack: 0, fromPlayerWeakness: "" },
-      ],
+      opponent: [{ attack: 0, fromPlayerWeakness: "" }],
+      player: [{ attack: 0, fromPlayerWeakness: "" }],
     },
     beforeAttack: 5,
 

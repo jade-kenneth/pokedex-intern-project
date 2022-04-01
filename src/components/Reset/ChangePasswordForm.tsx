@@ -8,7 +8,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import InputWithValidator from "../Form/InputWithValidator";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -38,7 +38,7 @@ let schema = yup.object().shape({
 const ChangePasswordForm = () => {
   const [resetPassword, {}] = useMutation<resetPassword>(RESET_PASSWORD);
   const router = useRouter();
-
+  const [loading, setLoading] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -51,6 +51,7 @@ const ChangePasswordForm = () => {
   const toast = useToast();
 
   const onSubmit: SubmitHandler<ChangePasswordInput> = async (data) => {
+    setLoading(true);
     try {
       const { data: reset } = await resetPassword({
         variables: {
@@ -61,21 +62,34 @@ const ChangePasswordForm = () => {
       });
 
       if (reset?.resetPassword.token) {
-        await signIn("credentials", {
+        const response = await signIn<"credentials">("credentials", {
           email: router.query.email,
           password: data.confirmPassword,
           redirect: false,
         });
-      }
-      toast({
-        position: "top",
 
-        render: () => (
-          <Box borderRadius={"10px"} color="white" p={3} bg="green">
-            {`Successfully resets password!`}
-          </Box>
-        ),
-      });
+        if (response?.error) {
+          toast({
+            position: "top",
+
+            render: () => (
+              <Box borderRadius={"10px"} color="white" p={3} bg="red">
+                {`🧐 ${response.error}`}
+              </Box>
+            ),
+          });
+        } else {
+          toast({
+            position: "top",
+
+            render: () => (
+              <Box borderRadius={"10px"} color="white" p={3} bg="green">
+                {`Successfully resets password!`}
+              </Box>
+            ),
+          });
+        }
+      }
     } catch (error: any) {
       toast({
         position: "top",
@@ -87,6 +101,7 @@ const ChangePasswordForm = () => {
         ),
       });
     }
+    setLoading(false);
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -114,7 +129,9 @@ const ChangePasswordForm = () => {
           Confirm new password
         </InputWithValidator>
 
-        <FormButton>Reset Password</FormButton>
+        <FormButton isLoading={loading} loadingText="Resetting password...">
+          Reset Password
+        </FormButton>
 
         <Stack>
           <Text align={"center"}>

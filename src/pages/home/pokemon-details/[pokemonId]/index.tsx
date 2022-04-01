@@ -84,6 +84,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
 
   useEffect(() => {
     store.setPokemonDetails(pokemonDetails!);
+
     state.addToRecentView(
       pokemonDetails?.id!,
       `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemonDetails?.id}.png`
