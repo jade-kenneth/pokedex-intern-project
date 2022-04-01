@@ -5,7 +5,14 @@ import useBattleStateStore from "src/hooks/useBattleStageStore";
 const Skills = () => {
   const store = useBattleStateStore((state) => state);
   return (
-    <Flex justify={"space-around"} flex="1" align={"center"} gap="1rem">
+    <Flex
+      justify={"space-around"}
+      flex="1"
+      align={"center"}
+      position={"relative"}
+      zIndex={"1000"}
+      gap="1rem"
+    >
       <Grid
         templateColumns={"repeat(5,1fr)"}
         templateRows={"repeat(2,2.5rem)"}
