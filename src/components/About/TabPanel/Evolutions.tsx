@@ -104,7 +104,7 @@ const Evolutions = () => {
                     ? evovleTrigger[0].min_level === null
                       ? "?"
                       : evovleTrigger[0].min_level
-                    : "0"}
+                    : "1"}
                 </Text>
               </VStack>
               <VStack align="center">
