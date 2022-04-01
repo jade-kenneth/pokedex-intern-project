@@ -106,11 +106,11 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
       setLoading(false);
     }
   }, [pokemonDetails]);
-  const routerLink = router.asPath.split("/");
 
   if (!pokemonDetails) return <Loading type="loading" />;
   // if (pokemonDetails && pokemonDetails === "error")
   //   return <Loading type="error" message="Who's that Pokemon?" />;
+  console.log(router);
   return (
     <Box mt={"1.375rem"} w={"container.lg"} mx="auto">
       <Breadcrumb
@@ -118,7 +118,20 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
         separator={<ChevronRightIcon color="gray.500" />}
         mb={"2.625rem"}
       >
-        {routerLink.map((link, idx) => {
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/home">Home</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink
+            href={`/home/pokemon-details/${router.query.pokemonId}`}
+          >
+            Pokemon Details
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/home"></BreadcrumbLink>
+        </BreadcrumbItem>
+        {/* {routerLink.map((link, idx) => {
           return (
             idx !== 0 &&
             idx !== routerLink.length - 1 && (
@@ -152,7 +165,7 @@ const About = ({ pokemonDetails }: GetEachPokemon) => {
               </BreadcrumbItem>
             )
           );
-        })}
+        })} */}
       </Breadcrumb>
 
       <Stack
