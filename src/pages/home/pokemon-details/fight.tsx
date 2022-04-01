@@ -251,7 +251,13 @@ const Fight = () => {
   }, []);
 
   return (
-    <Flex direction={"column"} position={"relative"} minH={"100vh"} gap="20px">
+    <Flex
+      direction={"column"}
+      position={"relative"}
+      p={5}
+      minH={"100vh"}
+      gap="20px"
+    >
       <Image src={beginBattleBg} alt="bg" layout="fill" />
 
       <Flex
