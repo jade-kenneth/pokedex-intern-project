@@ -59,14 +59,7 @@ const Fight = () => {
     { id: `${battleState.opponentId}` },
     { id: `${battleState.playerId}` },
   ];
-  const effect1 =
-    store.playerBuffs[`${store.turn[0]}`][0]?.attack !== undefined
-      ? store.playerBuffs[`${store.turn[0]}`][0].attack
-      : 0;
-  const effect2 =
-    store.playerBuffs[`${store.turn[0]}`][1]?.attack !== undefined
-      ? store.playerBuffs[`${store.turn[0]}`][1].attack
-      : 0;
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (running) {
@@ -171,6 +164,16 @@ const Fight = () => {
       });
       store.setAttacking(false);
     } else if (!running) {
+      const effect1 =
+        store.playerBuffs[`${store.turn[1]}`][0]?.attack !== undefined
+          ? store.playerBuffs[`${store.turn[1]}`][0].attack
+          : 0;
+      const effect2 =
+        store.playerBuffs[`${store.turn[1]}`][1]?.attack !== undefined
+          ? store.playerBuffs[`${store.turn[1]}`][1].attack
+          : 0;
+      console.log("effect1", effect1);
+      console.log("effect2", effect2);
       store.setAttacking(true);
       store.setBeforeAttack(5);
       store.setPopUp({ attackName: "", damage: 0 });
@@ -352,11 +355,7 @@ const Fight = () => {
                   <VStack>
                     <Button onClick={() => handleRematch()}>Rematch</Button>
                     <Button>
-                      <a
-                        href={`/home/pokemon-details/${battleState.opponentId}`}
-                      >
-                        Go home
-                      </a>
+                      <a href={`/home`}>Go home</a>
                     </Button>
                   </VStack>
                 )}
