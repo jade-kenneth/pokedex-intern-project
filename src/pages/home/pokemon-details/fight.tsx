@@ -76,16 +76,16 @@ const Fight = () => {
     return () => clearInterval(timer);
   }, [running, time]);
   const handleRematch = () => {
+    store.setTurn(["opponent", "player"]);
+    setRunning(true);
+    store.setWins(false);
     store.setPlayerHP({
       opponent: rematchPlayerHp.opponent,
       player: rematchPlayerHp.player,
     });
     store.setPopUp({ attackName: "", damage: 0 });
-    store.setTurn(["opponent", "player"]);
-    setTime(3);
     store.setBeforeAttack(5);
-    setRunning(true);
-    store.setWins(false);
+    setTime(3);
   };
 
   useEffect(() => {
@@ -151,6 +151,7 @@ const Fight = () => {
       }, 1000);
     }
     return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.attacking, store.beforeAttack]);
 
   useEffect(() => {
@@ -191,6 +192,7 @@ const Fight = () => {
               effect2,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.turn]);
 
   useEffect(() => {
